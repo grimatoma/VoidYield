@@ -1,85 +1,391 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hud"]
+
+; Palette (matches _shared.md tokens):
+;   bg.console  #2a2a2e  = Color(0.165, 0.165, 0.18, 1)
+;   bg.deep     #15151a  = Color(0.082, 0.082, 0.102, 1)
+;   bg.row      #1a1a1d  = Color(0.102, 0.102, 0.114, 1)
+;   rim         #4a4a50  = Color(0.29,  0.29,  0.31,  1)
+;   text.pri    #d4a843  = Color(0.831, 0.659, 0.263, 1)
+;   text.sec    #a88a4a  = Color(0.659, 0.541, 0.290, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rail"]
+bg_color = Color(0.165, 0.165, 0.18, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.29, 0.29, 0.31, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_row"]
+bg_color = Color(0.102, 0.102, 0.114, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_row_deep"]
+bg_color = Color(0.082, 0.082, 0.102, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_credits"]
+bg_color = Color(0.165, 0.165, 0.18, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.29, 0.29, 0.31, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_area"]
+bg_color = Color(0.165, 0.165, 0.18, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.29, 0.29, 0.31, 1)
 
 [node name="HUD" type="CanvasLayer"]
 layer = 10
 script = ExtResource("1_hud")
 
-[node name="TopBar" type="HBoxContainer" parent="."]
-anchors_preset = 10
-anchor_right = 1.0
+; ─── Resource Rail (top-left, matches mock 01 left panel) ─────────────────────
+
+[node name="ResourceRail" type="PanelContainer" parent="."]
 offset_left = 8
-offset_top = 4
-offset_bottom = 32
-theme_override_constants/separation = 16
+offset_top = 8
+offset_right = 180
+custom_minimum_size = Vector2(172, 0)
+theme_override_styles/panel = SubResource("StyleBoxFlat_rail")
 
-[node name="InventoryLabel" type="Label" parent="TopBar"]
+[node name="RailVBox" type="VBoxContainer" parent="ResourceRail"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.83, 0.66, 0.27, 1)
-text = "INV: 0/10"
+theme_override_constants/separation = 1
 
-[node name="RareOreLabel" type="Label" parent="TopBar"]
+; Header
+[node name="RailHeader" type="PanelContainer" parent="ResourceRail/RailVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.35, 1.0, 1)
-text = "KRYSITE: 0"
-visible = false
+custom_minimum_size = Vector2(0, 14)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row_deep")
 
-[node name="ShardsLabel" type="Label" parent="TopBar"]
+[node name="RailHeaderRow" type="HBoxContainer" parent="ResourceRail/RailVBox/RailHeader"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.85, 0.95, 1)
-text = "◆0"
-visible = false
+theme_override_constants/separation = 4
 
-[node name="MaterialsLabel" type="Label" parent="TopBar"]
+[node name="RailTitle" type="Label" parent="ResourceRail/RailVBox/RailHeader/RailHeaderRow"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+text = "RESOURCES"
+
+[node name="RailPlanet" type="Label" parent="ResourceRail/RailVBox/RailHeader/RailHeaderRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.29, 0.29, 0.31, 1)
+theme_override_font_sizes/font_size = 7
+vertical_alignment = 1
+text = "A1"
+
+; ── ORE row ──────────────────────────────────────────────────────────────────
+
+[node name="OreRow" type="PanelContainer" parent="ResourceRail/RailVBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 22)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row")
+
+[node name="OreHBox" type="HBoxContainer" parent="ResourceRail/RailVBox/OreRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="OreIcon" type="ColorRect" parent="ResourceRail/RailVBox/OreRow/OreHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(14, 14)
+size_flags_vertical = 4
+color = Color(0.545, 0.353, 0.165, 1)
+
+[node name="OreLabels" type="VBoxContainer" parent="ResourceRail/RailVBox/OreRow/OreHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="OreType" type="Label" parent="ResourceRail/RailVBox/OreRow/OreHBox/OreLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 7
+text = "ORE"
+
+[node name="OreValue" type="Label" parent="ResourceRail/RailVBox/OreRow/OreHBox/OreLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
+theme_override_font_sizes/font_size = 10
+text = "0000"
+
+[node name="OrePool" type="Label" parent="ResourceRail/RailVBox/OreRow/OreHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 6
+horizontal_alignment = 2
+vertical_alignment = 1
+text = "POOL\n0/50"
+
+; ── CRYSTAL row ───────────────────────────────────────────────────────────────
+
+[node name="CrystalRow" type="PanelContainer" parent="ResourceRail/RailVBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 22)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row")
+
+[node name="CrystalHBox" type="HBoxContainer" parent="ResourceRail/RailVBox/CrystalRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CrystalIcon" type="ColorRect" parent="ResourceRail/RailVBox/CrystalRow/CrystalHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(14, 14)
+size_flags_vertical = 4
+color = Color(0.353, 0.561, 0.659, 1)
+
+[node name="CrystalLabels" type="VBoxContainer" parent="ResourceRail/RailVBox/CrystalRow/CrystalHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="CrystalType" type="Label" parent="ResourceRail/RailVBox/CrystalRow/CrystalHBox/CrystalLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 7
+text = "CRYSTAL"
+
+[node name="CrystalValue" type="Label" parent="ResourceRail/RailVBox/CrystalRow/CrystalHBox/CrystalLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
+theme_override_font_sizes/font_size = 10
+text = "000"
+
+[node name="CrystalPool" type="Label" parent="ResourceRail/RailVBox/CrystalRow/CrystalHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 6
+horizontal_alignment = 2
+vertical_alignment = 1
+text = "POOL\n0/50"
+
+; ── FUEL CRYSTAL row (rare / krysite) ─────────────────────────────────────────
+
+[node name="FuelRow" type="PanelContainer" parent="ResourceRail/RailVBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 22)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row")
+
+[node name="FuelHBox" type="HBoxContainer" parent="ResourceRail/RailVBox/FuelRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="FuelIcon" type="ColorRect" parent="ResourceRail/RailVBox/FuelRow/FuelHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(14, 14)
+size_flags_vertical = 4
+color = Color(0.486, 0.722, 0.486, 1)
+
+[node name="FuelLabels" type="VBoxContainer" parent="ResourceRail/RailVBox/FuelRow/FuelHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="FuelType" type="Label" parent="ResourceRail/RailVBox/FuelRow/FuelHBox/FuelLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 7
+text = "FUEL CRYSTAL"
+
+[node name="FuelValue" type="Label" parent="ResourceRail/RailVBox/FuelRow/FuelHBox/FuelLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
+theme_override_font_sizes/font_size = 10
+text = "000"
+
+[node name="FuelRareTag" type="Label" parent="ResourceRail/RailVBox/FuelRow/FuelHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 7
+vertical_alignment = 1
+text = "RARE"
+
+; ── RARE METAL row (locked – planet A3) ───────────────────────────────────────
+
+[node name="RareMetalRow" type="PanelContainer" parent="ResourceRail/RailVBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 22)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row")
+modulate = Color(1, 1, 1, 0.4)
+
+[node name="RareMetalHBox" type="HBoxContainer" parent="ResourceRail/RailVBox/RareMetalRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="RareMetalIcon" type="ColorRect" parent="ResourceRail/RailVBox/RareMetalRow/RareMetalHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(14, 14)
+size_flags_vertical = 4
+color = Color(0.545, 0.478, 0.314, 1)
+
+[node name="RareMetalLabels" type="VBoxContainer" parent="ResourceRail/RailVBox/RareMetalRow/RareMetalHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="RareMetalType" type="Label" parent="ResourceRail/RailVBox/RareMetalRow/RareMetalHBox/RareMetalLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 7
+text = "RARE METAL"
+
+[node name="RareMetalValue" type="Label" parent="ResourceRail/RailVBox/RareMetalRow/RareMetalHBox/RareMetalLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.29, 0.29, 0.31, 1)
+theme_override_font_sizes/font_size = 10
+text = "---"
+
+[node name="RareMetalLock" type="Label" parent="ResourceRail/RailVBox/RareMetalRow/RareMetalHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.29, 0.29, 0.31, 1)
+theme_override_font_sizes/font_size = 7
+vertical_alignment = 1
+text = "A3 LOCK"
+
+; ── VOID STONE row (locked – planet A3) ───────────────────────────────────────
+
+[node name="VoidStoneRow" type="PanelContainer" parent="ResourceRail/RailVBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 22)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row")
+modulate = Color(1, 1, 1, 0.4)
+
+[node name="VoidStoneHBox" type="HBoxContainer" parent="ResourceRail/RailVBox/VoidStoneRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="VoidStoneIcon" type="ColorRect" parent="ResourceRail/RailVBox/VoidStoneRow/VoidStoneHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(14, 14)
+size_flags_vertical = 4
+color = Color(0.227, 0.165, 0.290, 1)
+
+[node name="VoidStoneLabels" type="VBoxContainer" parent="ResourceRail/RailVBox/VoidStoneRow/VoidStoneHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="VoidStoneType" type="Label" parent="ResourceRail/RailVBox/VoidStoneRow/VoidStoneHBox/VoidStoneLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 7
+text = "VOID STONE"
+
+[node name="VoidStoneValue" type="Label" parent="ResourceRail/RailVBox/VoidStoneRow/VoidStoneHBox/VoidStoneLabels"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.29, 0.29, 0.31, 1)
+theme_override_font_sizes/font_size = 10
+text = "---"
+
+[node name="VoidStoneLock" type="Label" parent="ResourceRail/RailVBox/VoidStoneRow/VoidStoneHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.29, 0.29, 0.31, 1)
+theme_override_font_sizes/font_size = 7
+vertical_alignment = 1
+text = "A3 LOCK"
+
+; ── INVENTORY row (carried ore) ───────────────────────────────────────────────
+
+[node name="InvRow" type="PanelContainer" parent="ResourceRail/RailVBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 22)
+theme_override_styles/panel = SubResource("StyleBoxFlat_row_deep")
+
+[node name="InvHBox" type="HBoxContainer" parent="ResourceRail/RailVBox/InvRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="InvType" type="Label" parent="ResourceRail/RailVBox/InvRow/InvHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 7
+vertical_alignment = 1
+text = "INVENTORY"
+
+[node name="InvValue" type="Label" parent="ResourceRail/RailVBox/InvRow/InvHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
+theme_override_font_sizes/font_size = 10
+vertical_alignment = 1
+text = "00/10"
+
+; ─── Credits Panel (top-right, matches mock 01 credits box) ───────────────────
+
+[node name="CreditsPanel" type="PanelContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160
+offset_top = 8
+offset_right = -8
+custom_minimum_size = Vector2(152, 28)
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_credits")
+
+[node name="CreditsHBox" type="HBoxContainer" parent="CreditsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CogIcon" type="ColorRect" parent="CreditsPanel/CreditsHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(16, 16)
+size_flags_vertical = 4
+color = Color(0.831, 0.659, 0.263, 1)
+
+[node name="CreditsVBox" type="VBoxContainer" parent="CreditsPanel/CreditsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="CRLabel" type="Label" parent="CreditsPanel/CreditsHBox/CreditsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 8
+text = "CR"
+
+[node name="CreditsLabel" type="Label" parent="CreditsPanel/CreditsHBox/CreditsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
+theme_override_font_sizes/font_size = 12
+text = "000,000"
+
+; ─── Area Indicator (below credits, "A1 · IRON ROCK") ────────────────────────
+
+[node name="AreaIndicator" type="PanelContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160
+offset_top = 40
+offset_right = -8
+custom_minimum_size = Vector2(152, 20)
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_area")
+
+[node name="AreaLabel" type="Label" parent="AreaIndicator"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+text = "A1 · IRON ROCK"
+
+; ─── Materials label (crafting scrap / shards — shown when > 0) ───────────────
+
+[node name="MaterialsLabel" type="Label" parent="."]
+offset_left = 8
+offset_top = 184
 theme_override_colors/font_color = Color(0.6, 0.75, 0.9, 1)
 theme_override_font_sizes/font_size = 10
 text = ""
 visible = false
 
-[node name="Spacer" type="Control" parent="TopBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CreditsLabel" type="Label" parent="TopBar"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.49, 0.72, 0.49, 1)
-text = "CR: 0"
-
-[node name="StorageTank" type="VBoxContainer" parent="."]
-anchor_left = 1.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 0.0
-offset_left = -44
-offset_top = 4
-offset_right = -4
-offset_bottom = 128
-theme_override_constants/separation = 2
-grow_horizontal = 0
-
-[node name="StorageTitleLabel" type="Label" parent="StorageTank"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.5, 0.3, 1)
-theme_override_font_sizes/font_size = 9
-text = "STORAGE"
-horizontal_alignment = 1
-
-[node name="StorageBar" type="ProgressBar" parent="StorageTank"]
-layout_mode = 2
-size_flags_horizontal = 4
-custom_minimum_size = Vector2(20, 88)
-max_value = 50.0
-fill_mode = 3
-show_percentage = false
-
-[node name="StorageCountLabel" type="Label" parent="StorageTank"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.83, 0.66, 0.27, 1)
-theme_override_font_sizes/font_size = 9
-text = "0/50"
-horizontal_alignment = 1
+; ─── Interaction Prompt (world-space, floats above nearest interactable) ───────
 
 [node name="InteractionPrompt" type="Label" parent="."]
 anchors_preset = 7
@@ -91,10 +397,12 @@ offset_left = -100
 offset_top = -60
 offset_right = 100
 offset_bottom = -40
-theme_override_colors/font_color = Color(0.83, 0.66, 0.27, 1)
+theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
 text = "[E] Interact"
 horizontal_alignment = 1
 visible = false
+
+; ─── Mining Progress Bar (floating above player while mining) ─────────────────
 
 [node name="MiningProgressBar" type="ProgressBar" parent="."]
 offset_left = 400

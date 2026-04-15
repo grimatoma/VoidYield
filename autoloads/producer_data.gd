@@ -130,14 +130,14 @@ var ship_parts: Dictionary = {
 		"credits_cost": 0,
 	},
 	"ion_drive": {
-		"name": "Ion Drive",
+		"name": "Engine Core",
 		"description": "Krysite-powered plasma thruster for deep space.",
 		"requires_ore": 0,
 		"requires_rare": 5,   # TODO: restore to 30 after testing
 		"credits_cost": 50,   # TODO: restore to 300 after testing
 	},
 	"navigation_core": {
-		"name": "Navigation Core",
+		"name": "Nav Module",
 		"description": "Star chart processor and gravitational scanner.",
 		"requires_ore": 8,    # TODO: restore to 50 after testing
 		"requires_rare": 3,   # TODO: restore to 20 after testing
@@ -149,6 +149,7 @@ var ship_parts: Dictionary = {
 		"requires_ore": 12,   # TODO: restore to 60 after testing
 		"requires_rare": 2,   # TODO: restore to 15 after testing
 		"credits_cost": 0,
+		"optional": true,  # Not required for first launch — shown dimmed in SHIP BAY
 	},
 }
 
