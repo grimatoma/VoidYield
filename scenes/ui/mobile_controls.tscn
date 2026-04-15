@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/mobile_controls.gd" id="1_mobile"]
+
+[node name="MobileControls" type="CanvasLayer"]
+layer = 11
+script = ExtResource("1_mobile")
+
+[node name="JoystickOuter" type="Control" parent="."]
+offset_left = 20
+offset_top = 400
+offset_right = 140
+offset_bottom = 520
+
+[node name="JoystickBG" type="ColorRect" parent="JoystickOuter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.2, 0.2, 0.2, 0.3)
+
+[node name="JoystickInner" type="Control" parent="JoystickOuter"]
+offset_left = 35
+offset_top = 35
+offset_right = 85
+offset_bottom = 85
+
+[node name="JoystickKnob" type="ColorRect" parent="JoystickOuter/JoystickInner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.5, 0.5, 0.5, 0.6)
+
+[node name="ActionButton" type="Button" parent="."]
+offset_left = 840
+offset_top = 440
+offset_right = 940
+offset_bottom = 520
+text = "ACT"
+visible = false

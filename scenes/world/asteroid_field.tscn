@@ -1,0 +1,420 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/asteroid_field.gd" id="1_field"]
+[ext_resource type="Script" path="res://scenes/world/ore_node.gd" id="2_orenode"]
+[ext_resource type="Script" path="res://scenes/world/sell_terminal.gd" id="3_sell"]
+[ext_resource type="Script" path="res://scenes/world/shop_terminal.gd" id="4_shop"]
+[ext_resource type="Script" path="res://scenes/world/storage_depot.gd" id="5_storage"]
+[ext_resource type="Script" path="res://scenes/world/drone_bay.gd" id="6_bay"]
+[ext_resource type="Script" path="res://scenes/world/spaceship.gd" id="7_ship"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_field"]
+vertices = PackedVector2Array(-150, -150, 2500, -150, 2500, 1700, -150, 1700)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+outlines = [PackedVector2Array(-150, -150, 2500, -150, 2500, 1700, -150, 1700)]
+
+[sub_resource type="RectangleShape2D" id="RectShape_wall_h"]
+size = Vector2(368, 6)
+
+[sub_resource type="RectangleShape2D" id="RectShape_wall_half"]
+size = Vector2(140, 6)
+
+[sub_resource type="RectangleShape2D" id="RectShape_wall_v"]
+size = Vector2(4, 288)
+
+[sub_resource type="CircleShape2D" id="CircleShape_ore"]
+radius = 14.0
+
+[sub_resource type="RectangleShape2D" id="RectShape_terminal"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectShape_building"]
+size = Vector2(40, 40)
+
+[node name="AsteroidField" type="Node2D"]
+script = ExtResource("1_field")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_left = -200
+offset_top = -200
+offset_right = 2600
+offset_bottom = 1800
+color = Color(0.08, 0.07, 0.1, 1)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_field")
+
+[node name="Outpost" type="Node2D" parent="."]
+position = Vector2(200, 200)
+
+[node name="OutpostFloor" type="ColorRect" parent="Outpost"]
+offset_left = -100
+offset_top = -80
+offset_right = 260
+offset_bottom = 310
+color = Color(0.18, 0.17, 0.16, 1)
+
+[node name="WallTop" type="StaticBody2D" parent="Outpost"]
+position = Vector2(80, -80)
+collision_layer = 2
+
+[node name="Sprite" type="ColorRect" parent="Outpost/WallTop"]
+offset_left = -184
+offset_top = -3
+offset_right = 184
+offset_bottom = 3
+color = Color(0.25, 0.22, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/WallTop"]
+shape = SubResource("RectShape_wall_h")
+
+[node name="WallBottomLeft" type="StaticBody2D" parent="Outpost"]
+position = Vector2(-30, 200)
+collision_layer = 2
+
+[node name="Sprite" type="ColorRect" parent="Outpost/WallBottomLeft"]
+offset_left = -74
+offset_top = -3
+offset_right = 74
+offset_bottom = 3
+color = Color(0.25, 0.22, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/WallBottomLeft"]
+shape = SubResource("RectShape_wall_half")
+
+[node name="WallBottomRight" type="StaticBody2D" parent="Outpost"]
+position = Vector2(190, 200)
+collision_layer = 2
+
+[node name="Sprite" type="ColorRect" parent="Outpost/WallBottomRight"]
+offset_left = -74
+offset_top = -3
+offset_right = 74
+offset_bottom = 3
+color = Color(0.25, 0.22, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/WallBottomRight"]
+shape = SubResource("RectShape_wall_half")
+
+[node name="WallLeft" type="StaticBody2D" parent="Outpost"]
+position = Vector2(-100, 60)
+collision_layer = 2
+
+[node name="Sprite" type="ColorRect" parent="Outpost/WallLeft"]
+offset_left = -3
+offset_top = -144
+offset_right = 3
+offset_bottom = 144
+color = Color(0.25, 0.22, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/WallLeft"]
+shape = SubResource("RectShape_wall_v")
+
+[node name="WallRight" type="StaticBody2D" parent="Outpost"]
+position = Vector2(260, 60)
+collision_layer = 2
+
+[node name="Sprite" type="ColorRect" parent="Outpost/WallRight"]
+offset_left = -3
+offset_top = -144
+offset_right = 3
+offset_bottom = 144
+color = Color(0.25, 0.22, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/WallRight"]
+shape = SubResource("RectShape_wall_v")
+
+[node name="SellTerminal" type="Area2D" parent="Outpost" groups=["sell_terminal"]]
+position = Vector2(30, 20)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("3_sell")
+
+[node name="Sprite" type="ColorRect" parent="Outpost/SellTerminal"]
+offset_left = -16
+offset_top = -16
+offset_right = 16
+offset_bottom = 16
+color = Color(0.83, 0.66, 0.27, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/SellTerminal"]
+shape = SubResource("RectShape_terminal")
+
+[node name="ShopTerminal" type="Area2D" parent="Outpost" groups=["shop_terminal"]]
+position = Vector2(130, 20)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("4_shop")
+
+[node name="Sprite" type="ColorRect" parent="Outpost/ShopTerminal"]
+offset_left = -16
+offset_top = -16
+offset_right = 16
+offset_bottom = 16
+color = Color(0.65, 0.45, 0.25, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/ShopTerminal"]
+shape = SubResource("RectShape_terminal")
+
+[node name="StorageDepot" type="Area2D" parent="Outpost" groups=["storage_depot"]]
+position = Vector2(30, 110)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_storage")
+
+[node name="Sprite" type="ColorRect" parent="Outpost/StorageDepot"]
+offset_left = -20
+offset_top = -20
+offset_right = 20
+offset_bottom = 20
+color = Color(0.35, 0.3, 0.28, 1)
+
+[node name="FillIndicator" type="ColorRect" parent="Outpost/StorageDepot"]
+offset_left = -18
+offset_top = 18
+offset_right = 18
+offset_bottom = 20
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/StorageDepot"]
+shape = SubResource("RectShape_building")
+
+[node name="DroneBay" type="Area2D" parent="Outpost" groups=["drone_bay"]]
+position = Vector2(130, 110)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("6_bay")
+
+[node name="Sprite" type="ColorRect" parent="Outpost/DroneBay"]
+offset_left = -20
+offset_top = -20
+offset_right = 20
+offset_bottom = 20
+color = Color(0.3, 0.4, 0.35, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/DroneBay"]
+shape = SubResource("RectShape_building")
+
+[node name="Spaceship" type="Area2D" parent="Outpost" groups=["spaceship"]]
+position = Vector2(80, 230)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("7_ship")
+
+[node name="Sprite" type="ColorRect" parent="Outpost/Spaceship"]
+offset_left = -28
+offset_top = -20
+offset_right = 28
+offset_bottom = 20
+color = Color(0.2, 0.25, 0.4, 1)
+
+[node name="ReadyIndicator" type="ColorRect" parent="Outpost/Spaceship"]
+offset_left = -6
+offset_top = -24
+offset_right = 6
+offset_bottom = -18
+color = Color(0.3, 0.55, 0.85, 1)
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/Spaceship"]
+shape = SubResource("RectShape_building")
+
+[node name="OreNodes" type="Node2D" parent="."]
+
+[node name="Ore1" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(550, 100)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore1"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore1"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore2" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(620, 250)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore2"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore2"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore3" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(480, 350)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore3"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore3"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore4" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(750, 180)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore4"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore4"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore5" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(850, 350)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore5"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore5"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore6" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(700, 450)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore6"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore6"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore7" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(400, 550)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore7"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore7"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore8" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(600, 600)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore8"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore8"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore9" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(900, 550)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore9"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore9"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Ore10" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(1100, 200)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Ore10"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.85, 0.45, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Ore10"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Krysite1" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(1000, 420)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+ore_type = "rare"
+min_ore = 2
+max_ore = 4
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Krysite1"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.45, 0.15, 0.85, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Krysite1"]
+shape = SubResource("CircleShape_ore")
+
+[node name="Krysite2" type="Area2D" parent="OreNodes" groups=["ore_nodes"]]
+position = Vector2(780, 680)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_orenode")
+ore_type = "rare"
+min_ore = 2
+max_ore = 4
+
+[node name="Sprite" type="ColorRect" parent="OreNodes/Krysite2"]
+offset_left = -12
+offset_top = -12
+offset_right = 12
+offset_bottom = 12
+color = Color(0.45, 0.15, 0.85, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OreNodes/Krysite2"]
+shape = SubResource("CircleShape_ore")
