@@ -1,5 +1,0 @@
-res://scenes/main.tscn
-res://autoloads/save_manager.gd
-res://autoloads/game_state.gd
-res://autoloads/producer_data.gd
-res://scenes/ui/spaceship_panel.gd

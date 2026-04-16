@@ -13,6 +13,7 @@ signal building_constructed(building_id: String)
 signal interaction_target_changed(target: Node2D)
 signal materials_changed(scrap: int, shards: int)
 signal ship_part_crafted(part_id: String)
+signal storage_changed(stored: int, capacity: int)
 
 # --- Player Stats ---
 var player_move_speed: float = 120.0
@@ -38,6 +39,14 @@ var ore_prices: Dictionary = {
 
 # --- Economy ---
 var credits: int = 500  # TODO: restore to 0 after testing
+
+# --- Storage Pool (depot) ---
+var storage_ore: int = 0
+var storage_capacity: int = 50
+var storage_rare_ore: int = 0
+var storage_aethite: int = 0
+var storage_voidstone: int = 0
+var storage_shards: int = 0
 
 # --- Crafting Materials ---
 var scrap_metal: int = 0
@@ -149,6 +158,88 @@ func sell_all_carried() -> int:
 	for t in ["common", "rare", "aethite", "voidstone", "shards"]:
 		total += sell_resource(t, get_carried_of(t))
 	return total
+
+
+# --- Storage Pool (depot) ---
+
+func dump_inventory_to_storage() -> int:
+	## Transfers all carried ore into the depot storage pool.
+	## Returns the amount actually deposited.
+	var space = storage_capacity - storage_ore
+	var to_deposit = mini(player_carried_ore, space)
+	if to_deposit <= 0:
+		return 0
+
+	# Transfer subsets proportionally (deposit what we can)
+	var common_carried = get_common_carried()
+	var common_to_deposit = mini(common_carried, to_deposit)
+	var remaining = to_deposit - common_to_deposit
+
+	# Deposit rare types up to whatever room is left
+	var rare_to_deposit = mini(player_rare_ore, remaining)
+	remaining -= rare_to_deposit
+	var aethite_to_deposit = mini(player_aethite, remaining)
+	remaining -= aethite_to_deposit
+	var voidstone_to_deposit = mini(player_voidstone, remaining)
+	remaining -= voidstone_to_deposit
+	var shards_to_deposit = mini(player_carried_shards, remaining)
+
+	# Update storage
+	storage_ore += to_deposit
+	storage_rare_ore += rare_to_deposit
+	storage_aethite += aethite_to_deposit
+	storage_voidstone += voidstone_to_deposit
+	storage_shards += shards_to_deposit
+
+	# Update player inventory
+	player_carried_ore -= to_deposit
+	player_rare_ore -= rare_to_deposit
+	player_aethite -= aethite_to_deposit
+	player_voidstone -= voidstone_to_deposit
+	player_carried_shards -= shards_to_deposit
+
+	inventory_changed.emit(player_carried_ore, player_max_carry)
+	storage_changed.emit(storage_ore, storage_capacity)
+	if shards_to_deposit > 0:
+		materials_changed.emit(scrap_metal, player_carried_shards)
+	return to_deposit
+
+
+func sell_all_ore() -> int:
+	## Sells everything in the storage pool + player inventory.
+	## Returns total credits earned.
+	var total_earned: int = 0
+
+	# Sell from storage pool first
+	var common_stored = storage_ore - storage_rare_ore - storage_aethite - storage_voidstone - storage_shards
+	if common_stored > 0:
+		total_earned += common_stored * ore_prices.get("common", 1)
+	if storage_rare_ore > 0:
+		total_earned += storage_rare_ore * ore_prices.get("rare", 5)
+	if storage_aethite > 0:
+		total_earned += storage_aethite * ore_prices.get("aethite", 8)
+	if storage_voidstone > 0:
+		total_earned += storage_voidstone * ore_prices.get("voidstone", 15)
+	if storage_shards > 0:
+		total_earned += storage_shards * ore_prices.get("shards", 3)
+
+	var had_storage = storage_ore > 0
+	storage_ore = 0
+	storage_rare_ore = 0
+	storage_aethite = 0
+	storage_voidstone = 0
+	storage_shards = 0
+
+	# Also sell anything the player is still carrying
+	total_earned += sell_all_carried()
+
+	if total_earned > 0:
+		credits += total_earned
+		credits_changed.emit(credits)
+		ore_sold.emit(storage_ore, total_earned)
+	if had_storage:
+		storage_changed.emit(storage_ore, storage_capacity)
+	return total_earned
 
 
 # --- Credits ---
@@ -318,6 +409,12 @@ func get_save_data() -> Dictionary:
 		"player_max_carry": player_max_carry,
 		"player_move_speed": player_move_speed,
 		"player_mine_time": player_mine_time,
+		"storage_ore": storage_ore,
+		"storage_capacity": storage_capacity,
+		"storage_rare_ore": storage_rare_ore,
+		"storage_aethite": storage_aethite,
+		"storage_voidstone": storage_voidstone,
+		"storage_shards": storage_shards,
 		"scrap_metal": scrap_metal,
 		"spaceship_parts_crafted": spaceship_parts_crafted.duplicate(),
 		"current_planet": current_planet,
@@ -337,6 +434,12 @@ func load_save_data(data: Dictionary) -> void:
 	player_max_carry      = data.get("player_max_carry", 10)
 	player_move_speed     = data.get("player_move_speed", 120.0)
 	player_mine_time      = data.get("player_mine_time", 1.5)
+	storage_ore           = data.get("storage_ore", 0)
+	storage_capacity      = data.get("storage_capacity", 50)
+	storage_rare_ore      = data.get("storage_rare_ore", 0)
+	storage_aethite       = data.get("storage_aethite", 0)
+	storage_voidstone     = data.get("storage_voidstone", 0)
+	storage_shards        = data.get("storage_shards", 0)
 	scrap_metal           = data.get("scrap_metal", 0)
 	current_planet        = data.get("current_planet", "asteroid_a1")
 	max_fleet_size        = data.get("max_fleet_size", 1)

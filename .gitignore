@@ -1,0 +1,8 @@
+# Godot editor binaries
+Godot_*.exe
+
+# Godot internal cache
+.godot/
+
+# Build exports
+exports/
