@@ -162,6 +162,32 @@ func sell_all_carried() -> int:
 
 # --- Storage Pool (depot) ---
 
+func is_storage_full() -> bool:
+	return storage_ore >= storage_capacity
+
+
+func deposit_to_storage(amount: int, ore_type: String = "common") -> int:
+	## Deposits `amount` of `ore_type` into the depot storage pool (e.g., from a drone).
+	## Returns the amount actually deposited.
+	if amount <= 0:
+		return 0
+	var space = storage_capacity - storage_ore
+	var to_deposit = mini(amount, space)
+	if to_deposit <= 0:
+		return 0
+
+	storage_ore += to_deposit
+	match ore_type:
+		"rare":      storage_rare_ore  += to_deposit
+		"aethite":   storage_aethite   += to_deposit
+		"voidstone": storage_voidstone += to_deposit
+		"shards":    storage_shards    += to_deposit
+		# "common" — no subset; only total increases
+
+	storage_changed.emit(storage_ore, storage_capacity)
+	return to_deposit
+
+
 func dump_inventory_to_storage() -> int:
 	## Transfers all carried ore into the depot storage pool.
 	## Returns the amount actually deposited.
@@ -274,8 +300,9 @@ func can_craft_ship_part(part_id: String) -> bool:
 		return false
 	if credits < part.get("credits_cost", 0):
 		return false
-	if player_carried_shards < part.get("requires_shards", 0): return false
-	if player_rare_ore       < part.get("requires_rare",   0): return false
+	var common_stored = storage_ore - storage_rare_ore - storage_aethite - storage_voidstone - storage_shards
+	if common_stored     < part.get("requires_ore",  0): return false
+	if storage_rare_ore  < part.get("requires_rare", 0): return false
 	return true
 
 
@@ -284,17 +311,16 @@ func craft_ship_part(part_id: String) -> bool:
 		return false
 	var part = ProducerData.get_ship_part(part_id)
 	spend_credits(part.get("credits_cost", 0))
-	var shard_cost = part.get("requires_shards", 0)
-	var rare_cost  = part.get("requires_rare",   0)
-	var total_cost = shard_cost + rare_cost
+	var ore_cost  = part.get("requires_ore",  0)
+	var rare_cost = part.get("requires_rare", 0)
 
-	player_carried_shards -= shard_cost
-	player_rare_ore       -= rare_cost
-	player_carried_ore    -= total_cost
+	# Consume from storage pool (UI shows storage values, so spend from storage).
+	# storage_ore is the total across all subtypes, so subtract both costs from it.
+	storage_rare_ore -= rare_cost
+	storage_ore      -= (ore_cost + rare_cost)
 
 	spaceship_parts_crafted[part_id] = true
-	inventory_changed.emit(player_carried_ore, player_max_carry)
-	materials_changed.emit(scrap_metal, player_carried_shards)
+	storage_changed.emit(storage_ore, storage_capacity)
 	ship_part_crafted.emit(part_id)
 	return true
 

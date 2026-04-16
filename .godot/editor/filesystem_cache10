@@ -1,9 +1,6 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1776228795
+::res://::1776311463
 export_presets.cfg::TextFile::-1::1776228775::0::1::::<><><>0<>0<><>::
-Void Yield.apple-touch-icon.png::CompressedTexture2D::6988709198139484942::1776220263::1776220096::1::::<><><>0<>0<>537edd164ac63c15ee70481e69636a24<>res://.godot/imported/Void Yield.apple-touch-icon.png-e8228de2bf2aa526b7ef95c5e543bea5.ctex::
-Void Yield.icon.png::CompressedTexture2D::4215639859632335987::1776220263::1776228568::1::::<><><>0<>0<>d747505b2bd19ef9298c23b94e33a063<>res://.godot/imported/Void Yield.icon.png-fac203884fdab8cf9e98263b41bb7d87.ctex::
-Void Yield.png::CompressedTexture2D::6053190743391129503::1776220263::1776220096::1::::<><><>0<>0<>2d311a6ac6d0e53d01b6d00dcf31c7ed<>res://.godot/imported/Void Yield.png-ceb3f268646116ddc354c5c663b02461.ctex::
 VOID_YIELD_GDD.md::TextFile/TextFile::-1::1776041120::0::1::::<><><>0<>0<><>::
 VOID_YIELD_UI_PRD.md::TextFile/TextFile::-1::1776217335::0::1::::<><><>0<>0<><>::
 ::res://assets/::1776041811
@@ -14,25 +11,30 @@ VOID_YIELD_UI_PRD.md::TextFile/TextFile::-1::1776217335::0::1::::<><><>0<>0<><>:
 VoidYieldTerminal.ttf::FontFile/FontFile::2145739130110859756::1776041120::1776042263::1::::<><><>0<>0<>66e98e457492ea1ff70c7d6056f7a68f<>res://.godot/imported/VoidYieldTerminal.ttf-0c351e8e17c1b22e0ae58de47486b8c2.fontdata::
 ::res://assets/sprites/::1776041811
 ::res://assets/sprites/buildings/::1776041811
-::res://assets/sprites/drones/::1776041811
+::res://assets/sprites/drones/::1776311758
+miner_frames.tres::SpriteFrames::-1::1776311693::0::1::::<><><>0<>0<><>::
+miner_spritesheet.png::CompressedTexture2D::7548461766741148397::1776311615::1776311758::1::::<><><>0<>0<>dca27ab3d3d484b3908693140fbe8746<>res://.godot/imported/miner_spritesheet.png-8dae1d424cb2ba1aa163652f14f50a5c.ctex::
 ::res://assets/sprites/effects/::1776041811
 ::res://assets/sprites/player/::1776041811
 ::res://assets/sprites/ui/::1776041811
 ::res://assets/sprites/world/::1776041811
-::res://autoloads/::1776218186
-game_state.gd::GDScript::3315345436041330311::1776219670::0::1::::<>Node<><>0<>0<><>::
+::res://autoloads/::1776311367
+game_state.gd::GDScript::3315345436041330311::1776311367::0::1::::<>Node<><>0<>0<><>::
 producer_data.gd::GDScript::1410951556269495761::1776217685::0::1::::<>Node<><>0<>0<><>::
 save_manager.gd::GDScript::4521571932791439374::1776217295::0::1::::<>Node<><>0<>0<><>::
 ::res://exports/::1776228795
-::res://exports/web/::1776228795
+::res://exports/web/::1776310890
+index.apple-touch-icon.png::CompressedTexture2D::5601669693504091809::1776228798::1776310890::1::::<><><>0<>0<>129f64158d4de6e188826b20ff3171c1<>res://.godot/imported/index.apple-touch-icon.png-bec44240503e0edb75d852ab0cc26d58.ctex::
+index.icon.png::CompressedTexture2D::8954275786903992236::1776228798::1776310890::1::::<><><>0<>0<>5b32c199bd12c0c6d154fbcbb2c5c2bb<>res://.godot/imported/index.icon.png-8466b9836b3b13bcc45e53125321ef39.ctex::
+index.png::CompressedTexture2D::5625940287024996784::1776228798::1776310890::1::::<><><>0<>0<>c06bceee3924e2eacf01b1e89c02e195<>res://.godot/imported/index.png-d03311572afeb237347e3aea48014cb0.ctex::
 ::res://New folder/::1776123812
 ::res://New folder (2)/::1776123818
-::res://scenes/::1776217267
-main.gd::GDScript/GDScript::4979519808121138533::1776126842::0::1::::<>Node2D<><>0<>0<><>::
+::res://scenes/::1776311532
+main.gd::GDScript::4979519808121138533::1776311532::0::1::::<>Node2D<><>0<>0<><>::
 main.tscn::PackedScene::9204286178739329500::1776217267::0::1::::<><><>0<>0<><>::uid://cc7d71cfqk8ov::::res://scenes/main.gd<>res://scenes/ui/hud.tscn<>res://scenes/ui/shop_panel.tscn<>res://scenes/ui/mobile_controls.tscn<>res://scenes/ui/spaceship_panel.tscn
-::res://scenes/drones/::1776126156
-scout_drone.gd::GDScript/GDScript::2606413326580290877::1776087594::0::1::::ScoutDrone<>CharacterBody2D<><>0<>0<><>::
-scout_drone.tscn::PackedScene/PackedScene::-1::1776126156::0::1::::<><><>0<>0<><>::res://scenes/drones/scout_drone.gd
+::res://scenes/drones/::1776311764
+scout_drone.gd::GDScript::2606413326580290877::1776311764::0::1::::ScoutDrone<>CharacterBody2D<><>0<>0<><>::
+scout_drone.tscn::PackedScene::-1::1776311709::0::1::::<><><>0<>0<><>::res://scenes/drones/scout_drone.gd<>res://assets/sprites/drones/miner_frames.tres
 ::res://scenes/player/::1776047619
 player.gd::GDScript/GDScript::691065041653540450::1776047619::0::1::::<>CharacterBody2D<><>0<>0<><>::
 player.tscn::PackedScene/PackedScene::-1::1776047212::0::1::::<><><>0<>0<><>::res://scenes/player/player.gd
@@ -64,9 +66,9 @@ storage_depot.gd::GDScript/GDScript::3011651790993419417::1776087635::0::1::::<>
 storage_depot.tscn::PackedScene/PackedScene::-1::1776042410::0::1::::<><><>0<>0<><>::res://scenes/world/storage_depot.gd
 ::res://scripts/::1776126732
 interactable.gd::GDScript/GDScript::683683516787132656::1776126732::0::1::::Interactable<>Area2D<><>0<>0<><>::
-::res://scripts/utils/::1776088238
+::res://scripts/utils/::1776311679
 number_format.gd::GDScript/GDScript::1406905271019247215::1776088238::0::1::::NumberFormat<>RefCounted<><>0<>0<><>::
-::res://ui_mocks/::1776219131
+::res://ui_mocks/::1776310890
 _shared.md::TextFile/TextFile::-1::1776217510::0::1::::<><><>0<>0<><>::
 01_hud_desktop.svg::CompressedTexture2D/CompressedTexture2D::6671211422408674330::1776217790::1776217830::1::::<><><>0<>0<>68d401d9aef397db4dacd4bddd32cf74<>res://.godot/imported/01_hud_desktop.svg-d1b833eb4253afb61b3e640739065437.ctex::
 02_hud_mobile.svg::CompressedTexture2D/CompressedTexture2D::2486710905239037433::1776217823::1776217830::1::::<><><>0<>0<>1fc48a661bea203fd6422f9d3cc7a820<>res://.godot/imported/02_hud_mobile.svg-83986bbd5ecb976effffaeb4703b8eb7.ctex::
@@ -79,3 +81,7 @@ _shared.md::TextFile/TextFile::-1::1776217510::0::1::::<><><>0<>0<><>::
 09_ship_bay.svg::CompressedTexture2D/CompressedTexture2D::5054463744835784056::1776217746::1776217830::1::::<><><>0<>0<>e4e124f81f96b66e8556390ebcef42e9<>res://.godot/imported/09_ship_bay.svg-18258acfbc30a2698f40e8e277dbd3aa.ctex::
 10_galaxy_map.svg::CompressedTexture2D/CompressedTexture2D::6120723452642298319::1776217857::1776219131::1::::<><><>0<>0<>98915db5d5a7630e2d606e18dbc9ac04<>res://.godot/imported/10_galaxy_map.svg-b54e75ec6afa44c468414f59f205953c.ctex::
 11_cargo_dock.svg::CompressedTexture2D/CompressedTexture2D::1457787900446245961::1776217894::1776219131::1::::<><><>0<>0<>ecb87a26876637b6fbc2b15aaf919786<>res://.godot/imported/11_cargo_dock.svg-aaa31d3660fc8e3b67290b452a89b153.ctex::
+12_asteroid_b_world.svg::CompressedTexture2D::329724109564430915::1776304178::1776310890::1::::<><><>0<>0<>14089b4fb170061dccdc809b749c46ad<>res://.godot/imported/12_asteroid_b_world.svg-60111ba1c66135c2bcdfb36cd744b545.ctex::
+13_relay_station_panel.svg::CompressedTexture2D::5337550098225422688::1776304178::1776310890::1::::<><><>0<>0<>d15101cd58ceca16fad52815b4b81d99<>res://.godot/imported/13_relay_station_panel.svg-c0076b36e93adb99f77a83fa86da3041.ctex::
+14_launch_transition.svg::CompressedTexture2D::3880819710705774667::1776304178::1776310890::1::::<><><>0<>0<>f20e9c11a566568b5feae75672337688<>res://.godot/imported/14_launch_transition.svg-fe8a3fc667ba995ea763fa566d2e0b45.ctex::
+15_boot_splash.svg::CompressedTexture2D::3402024368569923265::1776304178::1776310890::1::::<><><>0<>0<>8db3fcbbd7cddc09f5cbeb2cdd28ad07<>res://.godot/imported/15_boot_splash.svg-9f848816c0c24dc44e284b44d905c9bc.ctex::

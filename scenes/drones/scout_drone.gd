@@ -42,14 +42,21 @@ const SEEK_TIMEOUT: float = 8.0
 
 # --- Node References ---
 @onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
-@onready var sprite: ColorRect = $Sprite
+@onready var sprite: AnimatedSprite2D = $Sprite
 @onready var mine_progress_bar: ProgressBar = $MineProgressBar
 
-const COLOR_IDLE      = Color(0.3, 0.55, 0.3)
-const COLOR_SEEKING   = Color(0.4, 0.6, 0.3)
-const COLOR_MINING    = Color(0.7, 0.5, 0.2)
-const COLOR_RETURNING = Color(0.5, 0.7, 0.3)
 const IDLE_RETRY_INTERVAL: float = 2.0
+
+# --- Animation state ---
+# Cached facing angle (radians, Godot convention: 0=+X east, PI/2=+Y south).
+# Remembered across IDLE so the drone doesn't snap to a default direction.
+var _facing_angle: float = PI / 2.0  # default: face south
+var _current_anim: String = ""
+# Below this speed the drone is treated as stationary (walk anim pauses).
+const _IDLE_SPEED_THRESHOLD: float = 6.0
+# 8 compass directions, indexed by sector = round(angle * 8 / TAU) % 8
+# starting from +X (east) and rotating clockwise (toward +Y = south).
+const _DIR_SUFFIXES: Array[String] = ["e", "se", "s", "sw", "w", "nw", "n", "ne"]
 
 ## Human-readable assignment label for UI
 static func assignment_display(assignment: String) -> String:
@@ -68,10 +75,10 @@ static func next_assignment(current: String) -> String:
 
 
 func _ready() -> void:
-	sprite.color = COLOR_IDLE
 	nav_agent.path_desired_distance = arrival_threshold
 	nav_agent.target_desired_distance = arrival_threshold
 	_change_state(State.IDLE)
+	_update_animation()
 
 
 func _physics_process(delta: float) -> void:
@@ -81,6 +88,7 @@ func _physics_process(delta: float) -> void:
 		State.MINING:     _process_mining(delta)
 		State.RETURNING:  _process_returning(delta)
 		State.DEPOSITING: _process_depositing(delta)
+	_update_animation()
 
 
 # --- State Processing ---
@@ -187,13 +195,11 @@ func _change_state(new_state: State) -> void:
 	current_state = new_state
 	match new_state:
 		State.IDLE:
-			sprite.color = COLOR_IDLE
 			velocity = Vector2.ZERO
 			idle_retry_timer = 0.0
 			nav_agent.target_position = drone_bay_position
 
 		State.SEEKING:
-			sprite.color = COLOR_SEEKING
 			_seek_elapsed = 0.0
 			_stuck_timer = 0.0
 			_last_position = global_position
@@ -201,25 +207,66 @@ func _change_state(new_state: State) -> void:
 				nav_agent.target_position = target_node.global_position
 
 		State.MINING:
-			sprite.color = COLOR_MINING
 			velocity = Vector2.ZERO
 			mine_timer = 0.0
 			mine_progress_bar.value = 0.0
 			mine_progress_bar.visible = true
 
 		State.RETURNING:
-			sprite.color = COLOR_RETURNING
 			mine_progress_bar.visible = false
 			_stuck_timer = 0.0
 			_last_position = global_position
 			nav_agent.target_position = storage_position
 
 		State.DEPOSITING:
-			sprite.color = COLOR_MINING
 			deposit_timer = 0.0
 			mine_progress_bar.value = 0.0
 			mine_progress_bar.visible = true
 			velocity = Vector2.ZERO
+
+
+# --- Animation ---
+
+## Map a facing angle (radians, Godot convention) to one of 8 compass suffixes.
+func _dir_suffix(angle: float) -> String:
+	var a: float = fposmod(angle, TAU)
+	var sector: int = int(round(a * 8.0 / TAU)) % 8
+	return _DIR_SUFFIXES[sector]
+
+
+## Pick and play the right animation for the current state + facing.
+## Refreshes _facing_angle from velocity or the active target when it matters.
+func _update_animation() -> void:
+	var anim: String = ""
+	match current_state:
+		State.MINING:
+			# Face the ore node so the mining drill animation reads correctly.
+			if is_instance_valid(target_node):
+				_facing_angle = (target_node.global_position - global_position).angle()
+			anim = "mining"
+		State.DEPOSITING:
+			# Face the storage depot while unloading.
+			_facing_angle = (storage_position - global_position).angle()
+			anim = "unloading"
+		_:
+			if velocity.length() > _IDLE_SPEED_THRESHOLD:
+				_facing_angle = velocity.angle()
+			anim = "walk_" + _dir_suffix(_facing_angle)
+
+	if anim != _current_anim:
+		sprite.play(anim)
+		_current_anim = anim
+
+	# Pause the walk cycle on frame 0 when the drone isn't actually moving,
+	# so IDLE drones don't look like they're jogging in place.
+	if anim.begins_with("walk_"):
+		var moving: bool = velocity.length() > _IDLE_SPEED_THRESHOLD
+		if moving:
+			if not sprite.is_playing():
+				sprite.play(anim)
+		else:
+			sprite.pause()
+			sprite.frame = 0
 
 
 # --- Utility ---

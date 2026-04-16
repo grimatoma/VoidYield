@@ -38,6 +38,10 @@ func _input(event: InputEvent) -> void:
 	if not mb.pressed or mb.button_index != MOUSE_BUTTON_LEFT:
 		return
 
+	# Don't teleport if the click landed on an open UI panel.
+	if _is_click_over_open_panel(mb.position):
+		return
+
 	var player: Node2D = get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
@@ -66,6 +70,14 @@ func _input(event: InputEvent) -> void:
 			obj.interact(player)
 			get_viewport().set_input_as_handled()
 			return
+
+
+func _is_click_over_open_panel(screen_pos: Vector2) -> bool:
+	## Returns true if the click falls inside any currently-open UI panel.
+	for panel in [shop_panel, spaceship_panel]:
+		if panel.visible and panel.is_open and panel.get_global_rect().has_point(screen_pos):
+			return true
+	return false
 
 
 # --- Planet Transition ---

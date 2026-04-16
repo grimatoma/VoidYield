@@ -1,0 +1,366 @@
+[gd_resource type="SpriteFrames" load_steps=46 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/drones/miner_spritesheet.png" id="1_sheet"]
+
+[sub_resource type="AtlasTexture" id="atl_walk_n_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_n_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_n_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_n_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_ne_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 20, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_ne_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 20, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_ne_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 20, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_ne_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 20, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_e_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 40, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_e_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 40, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_e_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 40, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_e_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 40, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_se_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 60, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_se_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 60, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_se_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 60, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_se_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 60, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_s_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 80, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_s_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 80, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_s_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 80, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_s_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 80, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_sw_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 100, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_sw_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 100, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_sw_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 100, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_sw_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 100, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_w_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 120, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_w_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 120, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_w_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 120, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_w_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 120, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_nw_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 140, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_nw_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 140, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_nw_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 140, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_walk_nw_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 140, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_mining_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 160, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_mining_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 160, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_mining_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 160, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_mining_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 160, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_mining_4"]
+atlas = ExtResource("1_sheet")
+region = Rect2(80, 160, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_mining_5"]
+atlas = ExtResource("1_sheet")
+region = Rect2(100, 160, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_unloading_0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 180, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_unloading_1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(20, 180, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_unloading_2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 180, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_unloading_3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(60, 180, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_unloading_4"]
+atlas = ExtResource("1_sheet")
+region = Rect2(80, 180, 20, 20)
+
+[sub_resource type="AtlasTexture" id="atl_unloading_5"]
+atlas = ExtResource("1_sheet")
+region = Rect2(100, 180, 20, 20)
+
+[resource]
+animations = [
+{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_n_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_n_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_n_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_n_3")
+}],
+"loop": true,
+"name": &"walk_n",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_ne_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_ne_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_ne_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_ne_3")
+}],
+"loop": true,
+"name": &"walk_ne",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_e_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_e_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_e_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_e_3")
+}],
+"loop": true,
+"name": &"walk_e",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_se_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_se_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_se_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_se_3")
+}],
+"loop": true,
+"name": &"walk_se",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_s_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_s_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_s_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_s_3")
+}],
+"loop": true,
+"name": &"walk_s",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_sw_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_sw_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_sw_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_sw_3")
+}],
+"loop": true,
+"name": &"walk_sw",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_w_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_w_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_w_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_w_3")
+}],
+"loop": true,
+"name": &"walk_w",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_walk_nw_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_nw_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_nw_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_walk_nw_3")
+}],
+"loop": true,
+"name": &"walk_nw",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_mining_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_mining_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_mining_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_mining_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_mining_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_mining_5")
+}],
+"loop": true,
+"name": &"mining",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("atl_unloading_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_unloading_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_unloading_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_unloading_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_unloading_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("atl_unloading_5")
+}],
+"loop": false,
+"name": &"unloading",
+"speed": 8.0
+}
+]
