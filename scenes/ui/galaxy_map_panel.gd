@@ -121,10 +121,7 @@ func _build_ui() -> void:
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
 
-	# Starfield dots (static, decorative)
-	_add_stars()
-
-	# Header bar
+	# Header bar (stars are painted in _draw())
 	_build_header()
 
 	# Bodies + routes are drawn in _draw(); overlay clickable buttons for bodies
@@ -135,14 +132,6 @@ func _build_ui() -> void:
 
 	# Action panel (bottom-right)
 	_build_action_panel()
-
-
-func _add_stars() -> void:
-	var stars := Control.new()
-	stars.set_anchors_preset(Control.PRESET_FULL_RECT)
-	stars.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stars.set_script(preload("res://scenes/ui/galaxy_map_starfield.gd"))
-	add_child(stars)
 
 
 func _build_header() -> void:
@@ -334,6 +323,9 @@ func _build_action_panel() -> void:
 # ---------- Drawing (routes + bodies) ----------
 
 func _draw() -> void:
+	# Decorative starfield (deterministic — no flicker on redraw)
+	_draw_starfield()
+
 	# Routes first (so bodies draw on top)
 	for route in ROUTES:
 		var a: Vector2 = PLANETS[route["from"]]["pos"]
@@ -347,8 +339,8 @@ func _draw() -> void:
 	for i in PLANETS.size():
 		var p: Dictionary = PLANETS[i]
 		var center: Vector2 = p["pos"]
-		var is_current := p["id"] == GameState.current_planet
-		var is_locked := p["status"] == "locked"
+		var is_current: bool = p["id"] == GameState.current_planet
+		var is_locked: bool = p["status"] == "locked"
 		var is_selected := i == _selected_index
 
 		# Current-location dashed ring
@@ -390,8 +382,8 @@ func _draw() -> void:
 	for i in PLANETS.size():
 		var p: Dictionary = PLANETS[i]
 		var center: Vector2 = p["pos"]
-		var is_current := p["id"] == GameState.current_planet
-		var is_locked := p["status"] == "locked"
+		var is_current: bool = p["id"] == GameState.current_planet
+		var is_locked: bool = p["status"] == "locked"
 		var name_col: Color = COL_RIM if is_locked else COL_AMBER
 		var tagline_col: Color = COL_RIM if is_locked else (COL_GOOD if is_current else COL_AMBER_DIM)
 
@@ -413,6 +405,25 @@ func _draw() -> void:
 				glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, COL_RIM)
 
 
+func _draw_starfield() -> void:
+	# Fixed seed so stars stay put between redraws.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 0xC0FFEE
+	var palette := [COL_AMBER, COL_AMBER_DIM, COL_INFO, COL_GOOD, COL_RIM]
+	for _i in 120:
+		var x := rng.randf_range(0.0, 960.0)
+		var y := rng.randf_range(44.0, 536.0)
+		# Avoid drawing under the legend / action panel rectangles
+		if x >= 16 and x <= 296 and y >= 430 and y <= 522:
+			continue
+		if x >= 600 and x <= 944 and y >= 438 and y <= 522:
+			continue
+		var size := 1.0 if rng.randf() > 0.15 else 2.0
+		var col: Color = palette[rng.randi() % palette.size()]
+		col.a = rng.randf_range(0.4, 0.9)
+		draw_rect(Rect2(Vector2(x, y), Vector2(size, size)), col, true)
+
+
 func _draw_dashed_line(a: Vector2, b: Vector2, col: Color, width: float,
 		dash_len: float, gap_len: float) -> void:
 	var dir := (b - a).normalized()
@@ -420,8 +431,8 @@ func _draw_dashed_line(a: Vector2, b: Vector2, col: Color, width: float,
 	var travelled := 0.0
 	while travelled < total:
 		var start := a + dir * travelled
-		var end_len := min(dash_len, total - travelled)
-		var end_pt := a + dir * (travelled + end_len)
+		var end_len: float = min(dash_len, total - travelled)
+		var end_pt: Vector2 = a + dir * (travelled + end_len)
 		draw_line(start, end_pt, col, width)
 		travelled += dash_len + gap_len
 
@@ -499,8 +510,3 @@ func _known_body_count() -> int:
 		if p["status"] != "hidden":
 			n += 1
 	return n
-
-
-# Expose rect for main.gd's click-through blocker
-func get_global_rect() -> Rect2:
-	return Rect2(global_position, size)

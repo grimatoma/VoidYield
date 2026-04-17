@@ -78,9 +78,10 @@ func _populate() -> void:
 	for part_id in PART_ORDER:
 		_add_part_row(part_id)
 
-	# Launch button state
+	# Launch button state — when ready, the button opens the Galaxy Map so the
+	# player can choose a destination.
 	launch_button.disabled = not GameState.is_ship_ready()
-	launch_button.text = "LAUNCH TO PLANET B" if GameState.is_ship_ready() else "LAUNCH (incomplete)"
+	launch_button.text = "LAUNCH → GALAXY MAP" if GameState.is_ship_ready() else "LAUNCH (incomplete)"
 	launch_button.modulate = Color(0.3, 0.8, 0.4) if GameState.is_ship_ready() else Color(0.5, 0.5, 0.5)
 
 

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://d4evipnagt8t1"]
+[gd_scene load_steps=7 format=3 uid="uid://d4evipnagt8t1"]
 
 [ext_resource type="Script" uid="uid://cc7d71cfqk8ov" path="res://scenes/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/shop_panel.tscn" id="5_shop"]
 [ext_resource type="PackedScene" path="res://scenes/ui/mobile_controls.tscn" id="6_mobile"]
 [ext_resource type="PackedScene" path="res://scenes/ui/spaceship_panel.tscn" id="7_shipui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/galaxy_map_panel.tscn" id="8_gmap"]
 
 [node name="Main" type="Node2D" groups=["main_scene"]]
 script = ExtResource("1_main")
@@ -18,14 +19,17 @@ layer = 10
 
 [node name="ShopPanel" parent="UILayer" instance=ExtResource("5_shop")]
 offset_left = 960.0
-offset_top = 40.0
-offset_right = 1220.0
-offset_bottom = 500.0
+offset_top = 30.0
+offset_right = 1280.0
+offset_bottom = 570.0
 
 [node name="SpaceshipPanel" parent="UILayer" instance=ExtResource("7_shipui")]
 offset_left = 960.0
 offset_top = 40.0
 offset_right = 1220.0
 offset_bottom = 500.0
+
+[node name="GalaxyMapPanel" parent="UILayer" instance=ExtResource("8_gmap")]
+visible = false
 
 [node name="MobileControls" parent="." instance=ExtResource("6_mobile")]

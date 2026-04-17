@@ -4,10 +4,17 @@ extends Node2D
 @onready var world_container: Node2D = $WorldContainer
 @onready var shop_panel: PanelContainer = $UILayer/ShopPanel
 @onready var spaceship_panel: PanelContainer = $UILayer/SpaceshipPanel
+@onready var galaxy_map_panel: Control = $UILayer/GalaxyMapPanel
 
 const ASTEROID_FIELD_SCENE = preload("res://scenes/world/asteroid_field.tscn")
 const PLANET_B_SCENE       = preload("res://scenes/world/planet_b.tscn")
 const PLAYER_SCENE         = preload("res://scenes/player/player.tscn")
+
+# Maps galaxy-map destination ids to (scene, spawn) for world loading.
+const DESTINATIONS := {
+	"asteroid_a1": {"scene": ASTEROID_FIELD_SCENE, "spawn": Vector2(280, 420)},
+	"planet_b":    {"scene": PLANET_B_SCENE,       "spawn": Vector2(280, 330)},
+}
 
 var _player: Node2D = null
 var _current_world: Node2D = null
@@ -17,9 +24,11 @@ func _ready() -> void:
 	add_to_group("main_scene")
 	shop_panel.add_to_group("shop_panel")
 	spaceship_panel.add_to_group("spaceship_panel")
+	galaxy_map_panel.add_to_group("galaxy_map_panel")
 
-	# Connect SpaceshipPanel launch signal
+	# Ship LAUNCH and LaunchPad open the galaxy map; the map emits travel_requested.
 	spaceship_panel.launch_requested.connect(_on_launch_requested)
+	galaxy_map_panel.travel_requested.connect(_on_galaxy_travel_requested)
 
 	# Load initial world (A1)
 	_load_world(ASTEROID_FIELD_SCENE, Vector2(280, 420))
@@ -77,29 +86,44 @@ func _is_click_over_open_panel(screen_pos: Vector2) -> bool:
 	for panel in [shop_panel, spaceship_panel]:
 		if panel.visible and panel.is_open and panel.get_global_rect().has_point(screen_pos):
 			return true
+	if galaxy_map_panel.visible and galaxy_map_panel.is_open:
+		return true  # full-screen modal — block clicks everywhere
 	return false
 
 
 # --- Planet Transition ---
 
 func _on_launch_requested() -> void:
-	_travel_to_planet_b()
+	# Fired by the ship panel's LAUNCH button — show the galaxy map so the
+	# player can pick a destination.
+	open_galaxy_map()
 
 
-func _travel_to_planet_b() -> void:
+func open_galaxy_map() -> void:
+	galaxy_map_panel.open()
+
+
+func _on_galaxy_travel_requested(destination_id: String) -> void:
+	if not DESTINATIONS.has(destination_id):
+		push_warning("[Main] Unknown galaxy map destination: %s" % destination_id)
+		return
+	if destination_id == GameState.current_planet:
+		return  # already there — no-op
+	var dest: Dictionary = DESTINATIONS[destination_id]
+	_travel_to(destination_id, dest["scene"], dest["spawn"])
+
+
+func _travel_to(destination_id: String, scene: PackedScene, spawn: Vector2) -> void:
 	GameState.despawn_all_drones()
-	GameState.current_planet = "planet_b"
+	GameState.current_planet = destination_id
+	_load_world(scene, spawn)
+	print("[Main] Traveled to %s." % destination_id)
 
-	_load_world(PLANET_B_SCENE, Vector2(280, 330))
-	print("[Main] Arrived at Planet B — Vortex Drift.")
 
-
+# Back-compat shim — Planet B's launch pad used to call this directly.
+# The launch pad now opens the galaxy map instead, but older callers may remain.
 func return_to_a1() -> void:
-	GameState.despawn_all_drones()
-	GameState.current_planet = "asteroid_a1"
-
-	_load_world(ASTEROID_FIELD_SCENE, Vector2(280, 420))
-	print("[Main] Returned to Asteroid A1.")
+	_on_galaxy_travel_requested("asteroid_a1")
 
 
 func _load_world(scene: PackedScene, player_spawn: Vector2) -> void:
@@ -108,6 +132,8 @@ func _load_world(scene: PackedScene, player_spawn: Vector2) -> void:
 		shop_panel.close()
 	if spaceship_panel.is_open:
 		spaceship_panel.close()
+	if galaxy_map_panel.is_open:
+		galaxy_map_panel.close()
 
 	# Clear interaction target
 	GameState.current_interaction_target = null
