@@ -2,20 +2,32 @@
 
 [ext_resource type="Script" path="res://scenes/ui/spaceship_panel.gd" id="1_sp"]
 
+; Palette (matches _shared.md):
+;   bg.console  #2a2a2e  = Color(0.165, 0.165, 0.18, 1)
+;   bg.deep     #15151a  = Color(0.082, 0.082, 0.102, 1)
+;   rim         #4a4a50  = Color(0.29,  0.29,  0.31,  1)
+;   text.pri    #d4a843  = Color(0.831, 0.659, 0.263, 1)
+;   text.sec    #a88a4a  = Color(0.659, 0.541, 0.290, 1)
+;   warn        #8b3a2a  = Color(0.545, 0.227, 0.165, 1)
+;   good        #7cb87c  = Color(0.486, 0.722, 0.486, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.07, 0.09, 0.14, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.3, 0.5, 0.8, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.165, 0.165, 0.18, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.29, 0.29, 0.31, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0.082, 0.082, 0.102, 1)
 
 [node name="SpaceshipPanel" type="PanelContainer"]
-custom_minimum_size = Vector2(260, 460)
+offset_left = 960
+offset_top = 0
+offset_right = 1280
+offset_bottom = 540
+custom_minimum_size = Vector2(320, 490)
 theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
 script = ExtResource("1_sp")
 
@@ -24,28 +36,48 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 0
 
-[node name="TitleRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+; ── Header ────────────────────────────────────────────────────────────────────
+
+[node name="TitlePanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 34)
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="TitleRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TitlePanel"]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/TitleRow"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/TitlePanel/TitleRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.5, 0.75, 1.0, 1)
-text = "SHIPYARD"
+theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
+theme_override_font_sizes/font_size = 13
+vertical_alignment = 1
+text = "SHIP BAY"
 
-[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer/TitleRow"]
+[node name="ProgressLabel" type="Label" parent="MarginContainer/VBoxContainer/TitlePanel/TitleRow"]
 layout_mode = 2
-custom_minimum_size = Vector2(24, 24)
+theme_override_colors/font_color = Color(0.486, 0.722, 0.486, 1)
+theme_override_font_sizes/font_size = 12
+vertical_alignment = 1
+text = "0%"
+
+[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer/TitlePanel/TitleRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(18, 18)
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.545, 0.227, 0.165, 1)
 text = "X"
+
+; ── Content (scrollable component list) ───────────────────────────────────────
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -57,8 +89,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+; ── LAUNCH button ─────────────────────────────────────────────────────────────
+
 [node name="LaunchButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 36)
-text = "LAUNCH (incomplete)"
+text = "LAUNCH LOCKED"
 disabled = true

@@ -1,25 +1,44 @@
 extends PanelContainer
 ## ShopPanel — Side-sliding purchase panel for drones and upgrades.
-## Opened by ShopTerminal or DroneBay interaction.
+## Opened by ShopTerminal (DRONES tab default) or DroneBay interaction.
+## Layout matches ui_mocks/03_shop_panel.svg.
 
 signal item_purchased(item_id: String, item_type: String)
 
-@onready var item_list: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/ItemList
-@onready var title_label: Label = $MarginContainer/VBoxContainer/TitleRow/TitleLabel
-@onready var close_button: Button = $MarginContainer/VBoxContainer/TitleRow/CloseButton
+enum Tab { DRONES, UPGRADES, BUILD }
+
+@onready var item_list:           VBoxContainer = $VBoxContainer/ScrollContainer/ItemList
+@onready var title_label:         Label         = $VBoxContainer/Header/HeaderRow/TitleLabel
+@onready var close_button:        Button        = $VBoxContainer/Header/HeaderRow/CloseButton
+@onready var panel_credits_label: Label         = $VBoxContainer/CreditsRow/CreditsHBox/PanelCreditsLabel
+@onready var drones_tab:          Button        = $VBoxContainer/TabRow/TabHBox/DronesTab
+@onready var upgrades_tab:        Button        = $VBoxContainer/TabRow/TabHBox/UpgradesTab
+@onready var build_tab:           Button        = $VBoxContainer/TabRow/TabHBox/BuildTab
 
 var is_open: bool = false
 var shop_terminal_ref: Node2D = null
-var _bay_mode: bool = false
+var _active_tab: Tab = Tab.DRONES
+
+# Amber / dimmed colors for tab active state
+const COLOR_ACTIVE  = Color(0.831, 0.659, 0.263, 1)  # #d4a843
+const COLOR_DIMMED  = Color(0.659, 0.541, 0.290, 1)  # #a88a4a
 
 
 func _ready() -> void:
 	visible = false
 	position.x = get_viewport_rect().size.x
 	close_button.pressed.connect(close)
-	GameState.credits_changed.connect(func(_amt): if is_open: _populate_items())
+	drones_tab.pressed.connect(func(): _set_tab(Tab.DRONES))
+	upgrades_tab.pressed.connect(func(): _set_tab(Tab.UPGRADES))
+	build_tab.pressed.connect(func(): _set_tab(Tab.BUILD))
+
+	GameState.credits_changed.connect(func(amt):
+		panel_credits_label.text = NumberFormat.format_number(amt)
+		if is_open: _populate_items())
 	GameState.drone_deployed.connect(func(_d): if is_open: _populate_items())
 	GameState.upgrade_purchased.connect(func(_id): if is_open: _populate_items())
+
+	panel_credits_label.text = NumberFormat.format_number(GameState.credits)
 
 
 func _process(_delta: float) -> void:
@@ -38,14 +57,16 @@ func _input(event: InputEvent) -> void:
 
 
 func open(terminal: Node2D = null) -> void:
-	_bay_mode = false
 	shop_terminal_ref = terminal
+	title_label.text = "SHOP TERMINAL"
+	_set_tab(Tab.DRONES)
 	_open_panel()
 
 
 func open_drone_bay(bay: Node2D = null) -> void:
-	_bay_mode = true
 	shop_terminal_ref = bay
+	title_label.text = "DRONE BAY"
+	_set_tab(Tab.DRONES)
 	_open_panel()
 
 
@@ -57,15 +78,14 @@ func _open_panel() -> void:
 	var panel_width: float = max(size.x, custom_minimum_size.x)
 	var target_x: float = get_viewport_rect().size.x - panel_width
 	var tween = create_tween()
-	tween.tween_property(self, "position:x", target_x, 0.2).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "position:x", target_x, 0.18).set_ease(Tween.EASE_OUT)
 
 
 func close() -> void:
 	if not is_open: return
 	is_open = false
-	_bay_mode = false
 	var tween = create_tween()
-	tween.tween_property(self, "position:x", get_viewport_rect().size.x, 0.2).set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "position:x", get_viewport_rect().size.x, 0.18).set_ease(Tween.EASE_IN)
 	tween.tween_callback(func(): visible = false)
 	if shop_terminal_ref and shop_terminal_ref.has_method("close_shop"):
 		shop_terminal_ref.close_shop()
@@ -73,33 +93,62 @@ func close() -> void:
 		shop_terminal_ref.close_bay()
 
 
+func _set_tab(tab: Tab) -> void:
+	_active_tab = tab
+	drones_tab.add_theme_color_override("font_color",
+		COLOR_ACTIVE if tab == Tab.DRONES else COLOR_DIMMED)
+	upgrades_tab.add_theme_color_override("font_color",
+		COLOR_ACTIVE if tab == Tab.UPGRADES else COLOR_DIMMED)
+	build_tab.add_theme_color_override("font_color",
+		COLOR_ACTIVE if tab == Tab.BUILD else COLOR_DIMMED)
+	if is_open:
+		_populate_items()
+
+
 func _populate_items() -> void:
 	for child in item_list.get_children():
 		child.queue_free()
 
-	if _bay_mode:
-		title_label.text = "DRONE BAY"
-		_add_section_header("DRONES")
-		for drone in ProducerData.get_shop_drones():
-			_add_drone_item(drone)
-		_add_section_header("DRONE UPGRADES")
-		for upgrade in ProducerData.get_shop_upgrades():
-			if upgrade.get("bay_only", false):
-				_add_upgrade_item(upgrade)
-		_add_section_header("ASSIGNMENTS")
-		_add_drone_assignment_section()
-	else:
-		title_label.text = "SHOP"
-		_add_section_header("UPGRADES")
-		for upgrade in ProducerData.get_shop_upgrades():
-			if not upgrade.get("bay_only", false):
-				_add_upgrade_item(upgrade)
+	match _active_tab:
+		Tab.DRONES:
+			_add_section_header("DRONES")
+			for drone in ProducerData.get_shop_drones():
+				_add_drone_item(drone)
+			_add_section_header("FLEET LICENSE")
+			for upgrade in ProducerData.get_shop_upgrades():
+				if upgrade.get("id") == "fleet_license":
+					_add_upgrade_item(upgrade)
+			_add_section_header("ASSIGNMENTS")
+			_add_drone_assignment_section()
+
+		Tab.UPGRADES:
+			_add_section_header("PLAYER")
+			for upgrade in ProducerData.get_shop_upgrades():
+				if upgrade.get("category") == "player" or upgrade.get("category") == "outpost":
+					_add_upgrade_item(upgrade)
+			_add_section_header("DRONE MODS")
+			for upgrade in ProducerData.get_shop_upgrades():
+				if upgrade.get("bay_only", false) and upgrade.get("id") != "fleet_license":
+					_add_upgrade_item(upgrade)
+			_add_section_header("AUTOMATION")
+			for upgrade in ProducerData.get_shop_upgrades():
+				if upgrade.get("category") == "automation":
+					_add_upgrade_item(upgrade)
+
+		Tab.BUILD:
+			_add_section_header("BUILD")
+			var placeholder = Label.new()
+			placeholder.text = "Coming soon — build outpost structures."
+			placeholder.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+			placeholder.add_theme_font_size_override("font_size", 10)
+			placeholder.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			item_list.add_child(placeholder)
 
 
 func _add_section_header(text: String) -> void:
 	var label = Label.new()
 	label.text = "— %s —" % text
-	label.add_theme_color_override("font_color", Color(0.6, 0.5, 0.3))
+	label.add_theme_color_override("font_color", Color(0.659, 0.541, 0.290))
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	item_list.add_child(label)
 
@@ -109,14 +158,14 @@ func _add_drone_item(drone: Dictionary) -> void:
 	var can_deploy = GameState.can_deploy_drone()
 	var enabled = can_afford and can_deploy
 	var row = _make_item_row(
-		"%s  —  %d CR" % [drone["name"], drone["cost"]],
+		drone["name"],
 		drone["description"],
+		"%d CR" % drone["cost"],
+		can_afford,
 		enabled,
 		func(): _purchase_drone(drone["id"])
 	)
-	if not can_afford:
-		row.modulate = Color(0.55, 0.55, 0.55)
-	elif not can_deploy:
+	if not can_deploy and can_afford:
 		row.modulate = Color(0.75, 0.55, 0.55)
 		row.tooltip_text = "Fleet full — buy Fleet License"
 	item_list.add_child(row)
@@ -127,13 +176,13 @@ func _add_upgrade_item(upgrade: Dictionary) -> void:
 	var cost = upgrade["actual_cost"]
 	var can_afford = GameState.can_afford(cost)
 	var row = _make_item_row(
-		"%s  —  %d CR" % [upgrade["name"], cost],
+		upgrade["name"],
 		upgrade["description"],
+		"%d CR" % cost,
+		can_afford,
 		can_afford,
 		func(): _purchase_upgrade(upgrade["id"])
 	)
-	if not can_afford:
-		row.modulate = Color(0.55, 0.55, 0.55)
 	item_list.add_child(row)
 
 
@@ -150,7 +199,6 @@ func _add_drone_assignment_section() -> void:
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		item_list.add_child(lbl)
 		return
-
 	for i in drones.size():
 		var drone = drones[i]
 		if not is_instance_valid(drone): continue
@@ -181,7 +229,14 @@ func _add_assignment_row(drone: Node, index: int) -> void:
 	item_list.add_child(row)
 
 
-func _make_item_row(title: String, description: String, enabled: bool, on_press: Callable) -> HBoxContainer:
+func _make_item_row(
+	title_text: String,
+	desc_text: String,
+	cost_text: String,
+	_can_afford: bool,
+	enabled: bool,
+	on_press: Callable
+) -> HBoxContainer:
 	var row = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 
@@ -189,19 +244,31 @@ func _make_item_row(title: String, description: String, enabled: bool, on_press:
 	text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	var name_label = Label.new()
-	name_label.text = title
-	name_label.add_theme_color_override("font_color", Color(0.83, 0.66, 0.27))
+	name_label.text = title_text
+	name_label.add_theme_color_override("font_color",
+		Color(0.831, 0.659, 0.263) if enabled else Color(0.659, 0.541, 0.290))
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text_col.add_child(name_label)
 
 	var desc_label = Label.new()
-	desc_label.text = description
-	desc_label.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65))
+	desc_label.text = desc_text
+	desc_label.add_theme_color_override("font_color", Color(0.659, 0.541, 0.290))
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc_label.add_theme_font_size_override("font_size", 10)
+	desc_label.add_theme_font_size_override("font_size", 8)
 	text_col.add_child(desc_label)
 
 	row.add_child(text_col)
+
+	# Cost pill — amber stroke if affordable, rust-red if not
+	var cost_vbox = VBoxContainer.new()
+	cost_vbox.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+	var cost_label = Label.new()
+	cost_label.text = cost_text
+	cost_label.add_theme_color_override("font_color",
+		Color(0.831, 0.659, 0.263) if enabled else Color(0.545, 0.227, 0.165))
+	cost_label.add_theme_font_size_override("font_size", 11)
+	cost_vbox.add_child(cost_label)
 
 	var btn = Button.new()
 	btn.text = "BUY"
@@ -209,8 +276,9 @@ func _make_item_row(title: String, description: String, enabled: bool, on_press:
 	btn.custom_minimum_size = Vector2(40, 0)
 	btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	btn.pressed.connect(on_press)
-	row.add_child(btn)
+	cost_vbox.add_child(btn)
 
+	row.add_child(cost_vbox)
 	return row
 
 

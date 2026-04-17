@@ -4,10 +4,11 @@ extends PanelContainer
 
 signal launch_requested
 
-@onready var item_list: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/ItemList
-@onready var title_label: Label = $MarginContainer/VBoxContainer/TitleRow/TitleLabel
-@onready var close_button: Button = $MarginContainer/VBoxContainer/TitleRow/CloseButton
-@onready var launch_button: Button = $MarginContainer/VBoxContainer/LaunchButton
+@onready var item_list:       VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/ItemList
+@onready var title_label:     Label         = $MarginContainer/VBoxContainer/TitlePanel/TitleRow/TitleLabel
+@onready var progress_label:  Label         = $MarginContainer/VBoxContainer/TitlePanel/TitleRow/ProgressLabel
+@onready var close_button:    Button        = $MarginContainer/VBoxContainer/TitlePanel/TitleRow/CloseButton
+@onready var launch_button:   Button        = $MarginContainer/VBoxContainer/LaunchButton
 
 var is_open: bool = false
 var spaceship_ref: Node2D = null
@@ -67,21 +68,27 @@ func _populate() -> void:
 	for child in item_list.get_children():
 		child.queue_free()
 
-	title_label.text = "SHIPYARD"
+	title_label.text = "SHIP BAY"
+
+	# Progress percentage
+	var pct = GameState.parts_built_count() * 25
+	progress_label.text = "%d%%" % pct
+	progress_label.modulate = Color(0.486, 0.722, 0.486) if pct == 100 else Color(0.831, 0.659, 0.263)
 
 	# Materials header
 	_add_header("MATERIALS")
 	_add_materials_row()
 
 	# Parts
-	_add_header("SHIP PARTS")
+	_add_header("COMPONENTS")
 	for part_id in PART_ORDER:
 		_add_part_row(part_id)
 
 	# Launch button state
-	launch_button.disabled = not GameState.is_ship_ready()
-	launch_button.text = "LAUNCH TO PLANET B" if GameState.is_ship_ready() else "LAUNCH (incomplete)"
-	launch_button.modulate = Color(0.3, 0.8, 0.4) if GameState.is_ship_ready() else Color(0.5, 0.5, 0.5)
+	var ready = GameState.is_ship_ready()
+	launch_button.disabled = not ready
+	launch_button.text = "LAUNCH TO PLANET B" if ready else "LAUNCH LOCKED"
+	launch_button.modulate = Color(0.486, 0.722, 0.486) if ready else Color(0.29, 0.29, 0.31)
 
 
 func _add_header(text: String) -> void:
@@ -120,11 +127,14 @@ func _add_part_row(part_id: String) -> void:
 	var part = ProducerData.get_ship_part(part_id)
 	if part.is_empty(): return
 
-	var crafted = GameState.spaceship_parts_crafted.get(part_id, false)
+	var crafted   = GameState.spaceship_parts_crafted.get(part_id, false)
 	var can_craft = GameState.can_craft_ship_part(part_id)
+	var optional  = part.get("optional", false)
 
 	var vbox = VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 2)
+	if optional and not crafted:
+		vbox.modulate = Color(1, 1, 1, 0.55)
 
 	# Part name row
 	var title_row = HBoxContainer.new()
@@ -132,15 +142,24 @@ func _add_part_row(part_id: String) -> void:
 	name_lbl.text = part["name"]
 	name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_lbl.add_theme_color_override("font_color",
-		Color(0.4, 0.85, 0.5) if crafted else Color(0.83, 0.66, 0.27))
+		Color(0.486, 0.722, 0.486) if crafted else Color(0.831, 0.659, 0.263))
 	title_row.add_child(name_lbl)
 
 	if crafted:
 		var done_lbl = Label.new()
-		done_lbl.text = "✓ BUILT"
-		done_lbl.add_theme_color_override("font_color", Color(0.35, 0.8, 0.45))
-		done_lbl.add_theme_font_size_override("font_size", 10)
+		done_lbl.text = "INSTALLED"
+		done_lbl.add_theme_color_override("font_color", Color(0.486, 0.722, 0.486))
+		done_lbl.add_theme_font_size_override("font_size", 9)
 		title_row.add_child(done_lbl)
+	elif optional:
+		var opt_lbl = Label.new()
+		opt_lbl.text = "NOT REQUIRED FOR FIRST LAUNCH"
+		opt_lbl.add_theme_color_override("font_color", Color(0.29, 0.29, 0.31))
+		opt_lbl.add_theme_font_size_override("font_size", 8)
+		vbox.add_child(title_row)
+		vbox.add_child(opt_lbl)
+		item_list.add_child(vbox)
+		return
 	else:
 		var craft_btn = Button.new()
 		craft_btn.text = "CRAFT"
@@ -153,8 +172,8 @@ func _add_part_row(part_id: String) -> void:
 
 	vbox.add_child(title_row)
 
-	# Requirements line
-	if not crafted:
+	# Requirements line (not shown for crafted or optional parts)
+	if not crafted and not optional:
 		var req_parts = []
 		var common_stored = GameState.storage_ore - GameState.storage_rare_ore \
 			- GameState.storage_aethite - GameState.storage_voidstone - GameState.storage_shards

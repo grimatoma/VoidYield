@@ -1,15 +1,24 @@
 extends CanvasLayer
-## HUD — Displays ore count, credits, storage tank, and interaction prompt.
+## HUD — Resource rail (top-left), credits panel (top-right), interaction prompt,
+## and floating mining progress bar.  Layout matches ui_mocks/01_hud_desktop.svg.
 
-@onready var inventory_label: Label = $TopBar/InventoryLabel
-@onready var rare_ore_label: Label = $TopBar/RareOreLabel
-@onready var shards_label: Label = $TopBar/ShardsLabel
-@onready var materials_label: Label = $TopBar/MaterialsLabel
-@onready var credits_label: Label = $TopBar/CreditsLabel
-@onready var storage_bar: ProgressBar = $StorageTank/StorageBar
-@onready var storage_count_label: Label = $StorageTank/StorageCountLabel
-@onready var interaction_prompt: Label = $InteractionPrompt
-@onready var mining_progress_bar: ProgressBar = $MiningProgressBar
+# ── Resource Rail ─────────────────────────────────────────────────────────────
+@onready var ore_value_label:     Label = $ResourceRail/RailVBox/OreRow/OreHBox/OreLabels/OreValue
+@onready var ore_pool_label:      Label = $ResourceRail/RailVBox/OreRow/OreHBox/OrePool
+@onready var crystal_value_label: Label = $ResourceRail/RailVBox/CrystalRow/CrystalHBox/CrystalLabels/CrystalValue
+@onready var crystal_pool_label:  Label = $ResourceRail/RailVBox/CrystalRow/CrystalHBox/CrystalPool
+@onready var fuel_value_label:    Label = $ResourceRail/RailVBox/FuelRow/FuelHBox/FuelLabels/FuelValue
+@onready var inv_value_label:     Label = $ResourceRail/RailVBox/InvRow/InvHBox/InvValue
+
+# ── Credits Panel ─────────────────────────────────────────────────────────────
+@onready var credits_label: Label = $CreditsPanel/CreditsHBox/CreditsVBox/CreditsLabel
+
+# ── Crafting materials pill (shown only when scrap or shards > 0) ─────────────
+@onready var materials_label: Label = $MaterialsLabel
+
+# ── World-space interaction / mining ──────────────────────────────────────────
+@onready var interaction_prompt:   Label       = $InteractionPrompt
+@onready var mining_progress_bar:  ProgressBar = $MiningProgressBar
 
 
 func _ready() -> void:
@@ -24,7 +33,7 @@ func _ready() -> void:
 	_on_inventory_changed(GameState.player_carried_ore, GameState.player_max_carry)
 	_on_storage_changed(GameState.storage_ore, GameState.storage_capacity)
 	_on_interaction_target_changed(null)
-	_on_materials_changed(GameState.scrap_metal, GameState.storage_shards)
+	_on_materials_changed(GameState.scrap_metal, GameState.player_carried_shards)
 
 	mining_progress_bar.visible = false
 
@@ -48,35 +57,35 @@ func _process(_delta: float) -> void:
 		mining_progress_bar.visible = false
 
 
-# --- Signal Handlers ---
+# ── Signal Handlers ────────────────────────────────────────────────────────────
 
 func _on_credits_changed(new_amount: int) -> void:
-	credits_label.text = "CR: %s" % NumberFormat.format_number(new_amount)
+	credits_label.text = NumberFormat.format_number(new_amount)
 	_bounce_label(credits_label)
 
 
 func _on_inventory_changed(carried: int, max_carry: int) -> void:
-	inventory_label.text = "INV: %d/%d" % [carried, max_carry]
+	inv_value_label.text = "%02d/%d" % [carried, max_carry]
 	if carried > 0:
-		_bounce_label(inventory_label)
-	var rare = GameState.player_rare_ore
-	rare_ore_label.visible = rare > 0
-	if rare > 0:
-		rare_ore_label.text = "KRYSITE: %d" % rare
-	var shards = GameState.player_carried_shards
-	shards_label.visible = shards > 0
-	if shards > 0:
-		shards_label.text = "◆%d" % shards
+		_bounce_label(inv_value_label)
+
+	# ORE row — common (Vorax) carried
+	var common = GameState.get_common_carried()
+	ore_value_label.text = "%04d" % common
+
+	# CRYSTAL row — carried shards
+	crystal_value_label.text = "%03d" % GameState.player_carried_shards
+
+	# FUEL CRYSTAL row — carried krysite (rare)
+	fuel_value_label.text = "%03d" % GameState.player_rare_ore
 
 
 func _on_storage_changed(stored: int, capacity: int) -> void:
-	storage_bar.max_value = capacity
-	storage_bar.value = stored
-	storage_count_label.text = "%d/%d" % [stored, capacity]
-	if float(stored) / float(capacity) >= 0.9:
-		storage_bar.modulate = Color(0.9, 0.3, 0.2)
-	else:
-		storage_bar.modulate = Color(0.85, 0.65, 0.2)
+	# Pool labels show what is in the shared storage, not player inventory
+	var common_stored = stored - GameState.storage_rare_ore \
+		- GameState.storage_aethite - GameState.storage_voidstone - GameState.storage_shards
+	ore_pool_label.text    = "POOL\n%d/%d" % [common_stored,             capacity]
+	crystal_pool_label.text = "POOL\n%d/%d" % [GameState.storage_shards, capacity]
 
 
 func _on_materials_changed(scrap: int, shards: int) -> void:
@@ -98,11 +107,9 @@ func _on_interaction_target_changed(target: Node2D) -> void:
 
 func _on_ore_sold(_amount: int, _credits_earned: int) -> void:
 	_bounce_label(credits_label)
-	rare_ore_label.visible = GameState.player_rare_ore > 0
-	shards_label.visible = GameState.player_carried_shards > 0
 
 
-# --- Juice ---
+# ── Juice ──────────────────────────────────────────────────────────────────────
 
 func _bounce_label(label: Control) -> void:
 	var tween = create_tween()
