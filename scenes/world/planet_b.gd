@@ -38,7 +38,6 @@ func _setup_navigation() -> void:
 
 
 func _on_return_requested() -> void:
-	# Bubble up to main.gd via a group call
-	var main = get_tree().get_first_node_in_group("main_scene")
-	if main and main.has_method("return_to_a1"):
-		main.return_to_a1()
+	# The launch pad now opens the galaxy map itself via Main. This handler
+	# remains only so anything still relying on the old signal is harmless.
+	pass

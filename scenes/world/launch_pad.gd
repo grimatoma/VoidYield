@@ -1,7 +1,8 @@
 extends Interactable
-## LaunchPad — Planet B return point. Sends the player back to Asteroid A1.
+## LaunchPad — On-planet launch point. Opens the galaxy map so the player
+## can pick a destination (including returning to A1).
 
-signal return_requested
+signal return_requested  # legacy alias — still emitted for backward compatibility
 
 @onready var sprite: ColorRect = $Sprite
 
@@ -14,10 +15,15 @@ func _ready() -> void:
 
 
 func get_prompt_text() -> String:
-	return "[E] Launch Pad — Return to A1"
+	return "[E] Launch Pad — Open Galaxy Map"
 
 
 func interact(_player: Node2D) -> void:
+	# Preferred path: open the galaxy map directly through Main.
+	var main := get_tree().get_first_node_in_group("main_scene")
+	if main and main.has_method("open_galaxy_map"):
+		main.open_galaxy_map()
+	# Kept for any external listeners still wired to the old signal.
 	return_requested.emit()
 
 
