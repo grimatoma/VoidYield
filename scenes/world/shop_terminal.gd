@@ -5,15 +5,13 @@ extends Interactable
 signal shop_opened
 signal shop_closed
 
-@onready var sprite: ColorRect = $Sprite
+@onready var sprite: Sprite2D = $Sprite
 
-const COLOR_ACTIVE = Color(0.65, 0.45, 0.25)  # Rust brown
 var is_shop_open: bool = false
 
 
 func _ready() -> void:
 	is_held_interaction = false
-	sprite.color = COLOR_ACTIVE
 
 
 func get_prompt_text() -> String:

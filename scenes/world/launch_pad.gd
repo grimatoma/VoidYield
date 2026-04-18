@@ -4,14 +4,11 @@ extends Interactable
 
 signal return_requested  # legacy alias — still emitted for backward compatibility
 
-@onready var sprite: ColorRect = $Sprite
-
-const COLOR_PAD = Color(0.3, 0.55, 0.85)  # Same blue as the spaceship when ready
+@onready var sprite: Sprite2D = $Sprite
 
 
 func _ready() -> void:
 	is_held_interaction = false
-	sprite.color = COLOR_PAD
 
 
 func get_prompt_text() -> String:
