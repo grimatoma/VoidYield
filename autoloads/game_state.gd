@@ -38,14 +38,6 @@ var ore_prices: Dictionary = {
 	"shards": 3,
 }
 
-# --- Storage Pool ---
-var storage_ore: int = 0
-var storage_capacity: int = 50
-var storage_rare_ore: int = 0
-var storage_aethite: int = 0
-var storage_voidstone: int = 0
-var storage_shards: int = 0
-
 # --- Economy ---
 var credits: int = 500  # TODO: restore to 0 after testing
 
@@ -169,7 +161,7 @@ func sell_all_carried() -> int:
 	return total
 
 
-# --- Per-resource buy / sell (storage pool) -----------------------------------
+# --- Per-resource buy / sell (storage pool) ---
 # Used by the Shop Terminal "RESOURCES" tab so the player can trade individual
 # ore types in/out of the depot pool with credits.
 
@@ -360,6 +352,7 @@ func sell_all_ore() -> int:
 	return total_earned
 
 
+
 # --- Credits ---
 
 func can_afford(cost: int) -> bool:
@@ -391,11 +384,9 @@ func can_craft_ship_part(part_id: String) -> bool:
 	var part = ProducerData.get_ship_part(part_id)
 	if part.is_empty():
 		return false
-	if credits < part.get("credits_cost", 0):
-		return false
-	var common_stored = storage_ore - storage_rare_ore - storage_aethite - storage_voidstone - storage_shards
-	if common_stored     < part.get("requires_ore",  0): return false
-	if storage_rare_ore  < part.get("requires_rare", 0): return false
+	if credits      < part.get("credits_cost",    0): return false
+	if scrap_metal  < part.get("requires_scrap",  0): return false
+	if storage_shards < part.get("requires_shards", 0): return false
 	return true
 
 
@@ -404,16 +395,18 @@ func craft_ship_part(part_id: String) -> bool:
 		return false
 	var part = ProducerData.get_ship_part(part_id)
 	spend_credits(part.get("credits_cost", 0))
-	var ore_cost  = part.get("requires_ore",  0)
-	var rare_cost = part.get("requires_rare", 0)
+	var scrap_cost  = part.get("requires_scrap",  0)
+	var shards_cost = part.get("requires_shards", 0)
 
-	# Consume from storage pool (UI shows storage values, so spend from storage).
-	# storage_ore is the total across all subtypes, so subtract both costs from it.
-	storage_rare_ore -= rare_cost
-	storage_ore      -= (ore_cost + rare_cost)
+	scrap_metal    -= scrap_cost
+	storage_shards -= shards_cost
+	if shards_cost > 0:
+		storage_ore -= shards_cost  # shards are a subset of storage_ore total
 
 	spaceship_parts_crafted[part_id] = true
-	storage_changed.emit(storage_ore, storage_capacity)
+	materials_changed.emit(scrap_metal, player_carried_shards)
+	if shards_cost > 0:
+		storage_changed.emit(storage_ore, storage_capacity)
 	ship_part_crafted.emit(part_id)
 	return true
 
@@ -566,12 +559,6 @@ func load_save_data(data: Dictionary) -> void:
 	storage_voidstone     = data.get("storage_voidstone", 0)
 	storage_shards        = data.get("storage_shards", 0)
 	scrap_metal           = data.get("scrap_metal", 0)
-	storage_ore           = data.get("storage_ore", 0)
-	storage_capacity      = data.get("storage_capacity", 50)
-	storage_rare_ore      = data.get("storage_rare_ore", 0)
-	storage_aethite       = data.get("storage_aethite", 0)
-	storage_voidstone     = data.get("storage_voidstone", 0)
-	storage_shards        = data.get("storage_shards", 0)
 	current_planet        = data.get("current_planet", "asteroid_a1")
 	max_fleet_size        = data.get("max_fleet_size", 1)
 	purchased_upgrades    = data.get("purchased_upgrades", {})
@@ -636,6 +623,12 @@ func try_unlock_planet(planet_id: String) -> bool:
 		planet_unlocked.emit(planet_id)
 		return true
 	return false
+
+
+func launch_to_planet_b() -> void:
+	current_planet = "planet_b"
+	print("[GameState] Launching to Planet B.")
+	get_tree().change_scene_to_file("res://scenes/planet_b/planet_b.tscn")
 
 
 func reset_to_defaults() -> void:
