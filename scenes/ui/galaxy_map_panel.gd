@@ -5,7 +5,7 @@ extends Control
 signal travel_requested(destination_id: String)
 signal closed
 
-# --- Palette (from ui_mocks/_shared.md) ---
+# --- Palette (from design_mocks/_shared.md) ---
 const COL_AMBER     := Color("d4a843")
 const COL_AMBER_DIM := Color("a88a4a")
 const COL_GOOD      := Color("7cb87c")

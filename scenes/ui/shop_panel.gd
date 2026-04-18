@@ -5,7 +5,7 @@ extends PanelContainer
 ##   sell      — Sell Terminal:  opens straight to RESOURCES tab
 ##   bay       — Drone Bay:     tabs DRONES / UPGRADES / ASSIGNMENTS
 ##
-## Visual style mirrors ui_mocks/03_shop_panel.svg — dark amber industrial CRT.
+## Visual style mirrors design_mocks/13_shop_panel.svg — dark amber industrial CRT.
 
 signal item_purchased(item_id: String, item_type: String)
 

@@ -49,14 +49,6 @@ var storage_shards: int = 0
 # --- Economy ---
 var credits: int = 500  # TODO: restore to 0 after testing
 
-# --- Storage Pool (depot) ---
-var storage_ore: int = 10000      # TODO: restore to 0 after testing (2000 × 5 types)
-var storage_capacity: int = 10000  # TODO: restore to 50 after testing
-var storage_rare_ore: int = 2000  # TODO: restore to 0 after testing
-var storage_aethite: int = 2000   # TODO: restore to 0 after testing
-var storage_voidstone: int = 2000 # TODO: restore to 0 after testing
-var storage_shards: int = 2000    # TODO: restore to 0 after testing
-
 # --- Crafting Materials ---
 var scrap_metal: int = 2000  # TODO: restore to 0 after testing
 
@@ -350,14 +342,27 @@ func sell_all_ore() -> int:
 	storage_shards = 0
 
 	# Also sell anything the player is still carrying
-	total_earned += sell_all_carried()
+	var common_carried = get_common_carried()
+	total_earned += common_carried         * ore_prices.get("common",    1)
+	total_earned += player_rare_ore        * ore_prices.get("rare",      5)
+	total_earned += player_aethite         * ore_prices.get("aethite",   8)
+	total_earned += player_voidstone       * ore_prices.get("voidstone", 15)
+	total_earned += player_carried_shards  * ore_prices.get("shards",    3)
+	var had_carried = player_carried_ore > 0
+	player_carried_ore    = 0
+	player_rare_ore       = 0
+	player_aethite        = 0
+	player_voidstone      = 0
+	player_carried_shards = 0
 
 	if total_earned > 0:
 		credits += total_earned
 		credits_changed.emit(credits)
-		ore_sold.emit(storage_ore, total_earned)
+		ore_sold.emit(total_earned, total_earned)
 	if had_storage:
 		storage_changed.emit(storage_ore, storage_capacity)
+	if had_carried:
+		inventory_changed.emit(player_carried_ore, player_max_carry)
 	return total_earned
 
 
@@ -374,62 +379,6 @@ func spend_credits(cost: int) -> bool:
 		return true
 	return false
 
-
-# --- Storage Pool ---
-
-func dump_inventory_to_storage() -> int:
-	## Deposits all player-carried ore into the shared storage pool.
-	## Returns the number of units actually deposited.
-	var space = storage_capacity - storage_ore
-	if space <= 0 or player_carried_ore <= 0:
-		return 0
-	var to_deposit = mini(player_carried_ore, space)
-
-	# Deposit proportionally by subtype
-	var rare_dep   = mini(player_rare_ore,       to_deposit)
-	var shards_dep = mini(player_carried_shards, to_deposit - rare_dep)
-	var common_dep = to_deposit - rare_dep - shards_dep
-
-	storage_ore       += to_deposit
-	storage_rare_ore  += rare_dep
-	storage_shards    += shards_dep
-
-	player_carried_ore    -= to_deposit
-	player_rare_ore       -= rare_dep
-	player_carried_shards -= shards_dep
-	_ = common_dep  # silence unused warning
-
-	inventory_changed.emit(player_carried_ore, player_max_carry)
-	storage_changed.emit(storage_ore, storage_capacity)
-	if shards_dep > 0:
-		materials_changed.emit(scrap_metal, player_carried_shards)
-	return to_deposit
-
-
-func sell_all_ore() -> void:
-	## Sells everything in the storage pool (called by auto-sell).
-	if storage_ore <= 0:
-		return
-	var common_stored = storage_ore - storage_rare_ore - storage_aethite \
-		- storage_voidstone - storage_shards
-	var earned = 0
-	earned += common_stored      * ore_prices.get("common",    1)
-	earned += storage_rare_ore   * ore_prices.get("rare",      5)
-	earned += storage_aethite    * ore_prices.get("aethite",   8)
-	earned += storage_voidstone  * ore_prices.get("voidstone", 15)
-	earned += storage_shards     * ore_prices.get("shards",    3)
-
-	var total_sold = storage_ore
-	storage_ore      = 0
-	storage_rare_ore = 0
-	storage_aethite  = 0
-	storage_voidstone = 0
-	storage_shards   = 0
-
-	credits += earned
-	credits_changed.emit(credits)
-	storage_changed.emit(storage_ore, storage_capacity)
-	ore_sold.emit(total_sold, earned)
 
 
 # --- Crafting Materials ---
@@ -595,12 +544,6 @@ func get_save_data() -> Dictionary:
 		"storage_voidstone": storage_voidstone,
 		"storage_shards": storage_shards,
 		"scrap_metal": scrap_metal,
-		"storage_ore": storage_ore,
-		"storage_capacity": storage_capacity,
-		"storage_rare_ore": storage_rare_ore,
-		"storage_aethite": storage_aethite,
-		"storage_voidstone": storage_voidstone,
-		"storage_shards": storage_shards,
 		"spaceship_parts_crafted": spaceship_parts_crafted.duplicate(),
 		"current_planet": current_planet,
 		"max_fleet_size": max_fleet_size,

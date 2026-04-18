@@ -6,3 +6,17 @@ Godot_*.exe
 
 # Build exports
 exports/
+
+# Claude Code internal
+.claude/worktrees/
+.claude/settings.local.json
+
+# Editor settings
+.vscode/
+
+# Skill files (internal tooling)
+*.skill
+
+# Python cache
+__pycache__/
+*.pyc

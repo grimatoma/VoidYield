@@ -11,7 +11,10 @@ const C_TEXT_DIM := Color(0.290, 0.290, 0.313)
 const C_BORDER   := Color(0.250, 0.250, 0.280)
 const C_BG_CARD  := Color(0.040, 0.040, 0.070)
 
+const OptionsPanelScene := preload("res://scenes/ui/options_panel.tscn")
+
 var _saved_label: Label = null
+var _options: Control   = null
 
 
 func _ready() -> void:
@@ -19,6 +22,9 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	_build_ui()
+	_options = OptionsPanelScene.instantiate()
+	_options.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_options)
 
 
 func toggle() -> void:
@@ -84,6 +90,10 @@ func _build_ui() -> void:
 	save_btn.pressed.connect(_on_save)
 	vbox.add_child(save_btn)
 
+	var opt_btn := _make_button("[ OPTIONS ]", C_AMBER)
+	opt_btn.pressed.connect(_on_options)
+	vbox.add_child(opt_btn)
+
 	vbox.add_child(_make_sep())
 
 	var quit_btn := _make_button("[ SAVE & QUIT ]", C_TEXT_DIM)
@@ -148,6 +158,11 @@ func _on_save() -> void:
 		get_tree().create_timer(2.0, true).timeout.connect(
 			func(): if is_instance_valid(_saved_label): _saved_label.visible = false
 		)
+
+
+func _on_options() -> void:
+	if _options:
+		_options.show_panel()
 
 
 func _on_save_and_quit() -> void:

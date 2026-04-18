@@ -1,6 +1,6 @@
 extends CanvasLayer
 ## HUD — Resource rail (top-left), credits panel (top-right), interaction prompt,
-## and floating mining progress bar.  Layout matches ui_mocks/01_hud_desktop.svg.
+## and floating mining progress bar.  Layout matches design_mocks/11_hud_desktop.svg.
 
 # ── Resource Rail ─────────────────────────────────────────────────────────────
 @onready var ore_value_label:     Label = $ResourceRail/RailVBox/OreRow/OreHBox/OreLabels/OreValue
