@@ -5,15 +5,13 @@ extends Interactable
 signal sell_opened
 signal sell_closed
 
-@onready var sprite: ColorRect = $Sprite
+@onready var sprite: Sprite2D = $Sprite
 
-const COLOR_ACTIVE = Color(0.83, 0.66, 0.27)  # Dirty amber
 var is_sell_open: bool = false
 
 
 func _ready() -> void:
 	is_held_interaction = false
-	sprite.color = COLOR_ACTIVE
 
 
 func get_prompt_text() -> String:

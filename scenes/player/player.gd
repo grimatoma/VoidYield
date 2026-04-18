@@ -3,8 +3,11 @@ extends CharacterBody2D
 
 # --- Node References ---
 @onready var interaction_area: Area2D = $InteractionArea
-@onready var sprite: ColorRect = $Sprite
+@onready var sprite: Sprite2D = $Sprite
 @onready var camera: Camera2D = $Camera2D
+
+# --- Directional textures ---
+var _dir_textures: Dictionary = {}
 
 # --- State ---
 var is_mining: bool = false
@@ -28,6 +31,23 @@ func _ready() -> void:
 	interaction_area.body_exited.connect(_on_interactable_exited)
 	interaction_area.area_entered.connect(_on_interactable_area_entered)
 	interaction_area.area_exited.connect(_on_interactable_area_exited)
+	_load_dir_textures()
+
+
+func _load_dir_textures() -> void:
+	for d in ["se", "sw", "ne", "nw"]:
+		var p := "res://assets/sprites/player/player_%s.png" % d
+		if ResourceLoader.exists(p):
+			_dir_textures[d] = load(p)
+	if _dir_textures.has("se"):
+		sprite.texture = _dir_textures["se"]
+
+
+func _facing_dir_key() -> String:
+	if facing_direction.y >= 0:
+		return "se" if facing_direction.x >= 0 else "sw"
+	else:
+		return "ne" if facing_direction.x >= 0 else "nw"
 
 
 func _physics_process(delta: float) -> void:
@@ -57,7 +77,9 @@ func _process_movement(delta: float) -> void:
 		input_dir = input_dir.normalized()
 		facing_direction = input_dir
 		velocity = input_dir * GameState.player_move_speed
-		# TODO: Update sprite direction based on facing_direction
+		var dk := _facing_dir_key()
+		if _dir_textures.has(dk):
+			sprite.texture = _dir_textures[dk]
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, GameState.player_move_speed * 8.0 * delta)
 

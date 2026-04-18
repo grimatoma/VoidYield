@@ -4,9 +4,8 @@ extends Interactable
 signal bay_opened
 signal bay_closed
 
-@onready var sprite: ColorRect = $Sprite
+@onready var sprite: Sprite2D = $Sprite
 
-const COLOR_BASE = Color(0.3, 0.4, 0.35)
 const DEFAULT_DRONE_SCENE = "res://scenes/drones/scout_drone.tscn"
 
 var active_drones: Array = []
@@ -15,7 +14,6 @@ var is_bay_open: bool = false
 
 func _ready() -> void:
 	is_held_interaction = false
-	sprite.color = COLOR_BASE
 	GameState.upgrade_purchased.connect(_on_upgrade_purchased)
 	if GameState.debug_click_mode:
 		# DEBUG: auto-deploy 2 drones at startup

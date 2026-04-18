@@ -2,7 +2,7 @@ extends Interactable
 class_name OreNode
 ## OreNode — A mineable resource node in the asteroid field.
 ## Has multiple charges, transitions through visual states, respawns after depletion.
-## ore_type controls colour, sell value, display name, and crafting material drops.
+## ore_type controls texture, sell value, display name, and crafting material drops.
 
 enum State { FULL, CRACKED, DEPLETED }
 
@@ -22,19 +22,13 @@ var claimed_by: Node2D = null
 var respawn_timer: float = 0.0
 
 # --- Node References ---
-@onready var sprite: ColorRect = $Sprite
+@onready var sprite: Sprite2D = $Sprite
 @onready var collision: CollisionShape2D = $CollisionShape2D
 
-# --- Colors ---
-const COLOR_FULL         = Color(0.85, 0.45, 0.15)   # Rust orange  (vorax)
-const COLOR_CRACKED      = Color(0.55, 0.35, 0.15)   # Darker orange
-const COLOR_RARE_FULL    = Color(0.45, 0.15, 0.85)   # Deep purple  (krysite)
-const COLOR_RARE_CRACKED = Color(0.3,  0.1,  0.6)
-const COLOR_AETH_FULL    = Color(0.2,  0.75, 0.85)   # Bright cyan  (aethite)
-const COLOR_AETH_CRACKED = Color(0.12, 0.5,  0.6)
-const COLOR_VOID_FULL    = Color(0.08, 0.0,  0.18)   # Near-void purple (voidstone)
-const COLOR_VOID_CRACKED = Color(0.06, 0.0,  0.12)
-const COLOR_DEPLETED     = Color(0.3,  0.3,  0.3)    # Grey
+# --- State modulates ---
+const MOD_FULL     = Color(1.0, 1.0, 1.0, 1.0)   # normal
+const MOD_CRACKED  = Color(0.65, 0.6, 0.55, 1.0)  # slightly dimmed / desaturated
+const MOD_DEPLETED = Color(0.32, 0.32, 0.32, 1.0) # grey-out
 
 # Scrap / shard drop chances per mine action (TODO: lower for production)
 const DROP_SCRAP_CHANCE  = 0.7   # common → scrap_metal
@@ -45,9 +39,22 @@ const DROP_VOID_SHARD    = 0.5   # voidstone → crystal_shards
 func _ready() -> void:
 	is_held_interaction = true
 	hold_duration = GameState.player_mine_time
+	_load_sprite_texture()
 	_respawn()
 	collision_layer = 4
 	collision_mask = 0
+
+
+func _load_sprite_texture() -> void:
+	var path: String
+	match ore_type:
+		"rare":      path = "res://assets/sprites/ores/ore_krysite.png"
+		"aethite":   path = "res://assets/sprites/ores/ore_aethite.png"
+		"voidstone": path = "res://assets/sprites/ores/ore_voidstone.png"
+		"shards":    path = "res://assets/sprites/ores/ore_shards.png"
+		_:           path = "res://assets/sprites/ores/ore_vorax.png"
+	if ResourceLoader.exists(path):
+		sprite.texture = load(path)
 
 
 func _process(delta: float) -> void:
@@ -145,31 +152,15 @@ func _set_state(new_state: State) -> void:
 	current_state = new_state
 	match new_state:
 		State.FULL:
-			sprite.color = _full_color()
+			sprite.modulate = MOD_FULL
 			collision.disabled = false
 		State.CRACKED:
-			sprite.color = _cracked_color()
+			sprite.modulate = MOD_CRACKED
 		State.DEPLETED:
-			sprite.color = COLOR_DEPLETED
+			sprite.modulate = MOD_DEPLETED
 			collision.disabled = true
 			release_claim()
 			respawn_timer = respawn_time
-
-
-func _full_color() -> Color:
-	match ore_type:
-		"rare":      return COLOR_RARE_FULL
-		"aethite":   return COLOR_AETH_FULL
-		"voidstone": return COLOR_VOID_FULL
-		_:           return COLOR_FULL
-
-
-func _cracked_color() -> Color:
-	match ore_type:
-		"rare":      return COLOR_RARE_CRACKED
-		"aethite":   return COLOR_AETH_CRACKED
-		"voidstone": return COLOR_VOID_CRACKED
-		_:           return COLOR_CRACKED
 
 
 func _ore_display_name() -> String:
