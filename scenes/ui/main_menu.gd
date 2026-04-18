@@ -10,13 +10,23 @@ const C_PANEL     := Color(0.058, 0.058, 0.101)
 const C_TEXT_DIM  := Color(0.290, 0.290, 0.313)
 const C_BORDER    := Color(0.250, 0.250, 0.280)
 
+const OptionsPanelScene := preload("res://scenes/ui/options_panel.tscn")
+
 var _stars: Array[Dictionary] = []
+var _options: Control = null
 
 
 func _ready() -> void:
+	# Scale the menu up to fill the screen properly on any resolution.
+	# We switch back to DISABLED in main.gd when gameplay starts.
+	get_tree().root.content_scale_mode   = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	get_tree().root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+	get_tree().root.content_scale_size   = Vector2i(960, 540)
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_generate_stars()
 	_build_ui()
+	_options = OptionsPanelScene.instantiate()
+	add_child(_options)
 
 
 func _draw() -> void:
@@ -81,6 +91,10 @@ func _build_ui() -> void:
 		cont_btn.modulate.a = 0.35
 	cont_btn.pressed.connect(_on_continue)
 	vbox.add_child(cont_btn)
+
+	var settings_btn := _make_button("[ SETTINGS ]", C_AMBER)
+	settings_btn.pressed.connect(_on_settings)
+	vbox.add_child(settings_btn)
 
 	vbox.add_child(_make_separator())
 
@@ -156,6 +170,21 @@ func _on_new_game() -> void:
 func _on_continue() -> void:
 	# SaveManager.load_game() already ran at startup (if not debug mode).
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
+
+
+func _on_settings() -> void:
+	if _options:
+		_options.show_panel()
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo \
+			and event.keycode == KEY_F11:
+		if Engine.has_singleton("SettingsManager"):
+			var sm := Engine.get_singleton("SettingsManager") as Node
+			if sm:
+				sm.call("set_fullscreen", not sm.get("fullscreen"))
+		get_viewport().set_input_as_handled()
 
 
 func _on_quit() -> void:

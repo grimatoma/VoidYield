@@ -13,7 +13,7 @@ const PLAYER_SCENE         = preload("res://scenes/player/player.tscn")
 
 # Maps galaxy-map destination ids to (scene, spawn) for world loading.
 const DESTINATIONS := {
-	"asteroid_a1": {"scene": ASTEROID_FIELD_SCENE, "spawn": Vector2(280, 420)},
+	"asteroid_a1": {"scene": ASTEROID_FIELD_SCENE, "spawn": Vector2(700, 450)},
 	"planet_b":    {"scene": PLANET_B_SCENE,       "spawn": Vector2(280, 330)},
 }
 
@@ -22,8 +22,11 @@ var _current_world: Node2D = null
 
 
 func _ready() -> void:
-	# Disabled mode: viewport = window size, so resizing shows more world
-	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
+	# Scale the game to fill the screen while keeping the 960x540 base aspect ratio.
+	# Canvas items mode means sprites and UI scale up on larger/fullscreen displays.
+	get_tree().root.content_scale_mode   = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	get_tree().root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+	get_tree().root.content_scale_size   = Vector2i(960, 540)
 
 	# HUD and UILayer must keep processing while the tree is paused (pause menu open)
 	$HUD.process_mode     = Node.PROCESS_MODE_ALWAYS
@@ -39,12 +42,19 @@ func _ready() -> void:
 	galaxy_map_panel.travel_requested.connect(_on_galaxy_travel_requested)
 
 	# Load initial world (A1)
-	_load_world(ASTEROID_FIELD_SCENE, Vector2(280, 420))
+	_load_world(ASTEROID_FIELD_SCENE, Vector2(700, 450))
 
 	print("[Main] VoidYield initialized.")
 
 
 func _input(event: InputEvent) -> void:
+	# F11 toggles fullscreen
+	if event is InputEventKey and event.pressed and not event.echo \
+			and event.keycode == KEY_F11:
+		SettingsManager.set_fullscreen(not SettingsManager.fullscreen)
+		get_viewport().set_input_as_handled()
+		return
+
 	# ESC toggles pause (but not if a full-screen panel is open)
 	if event.is_action_pressed("ui_cancel"):
 		if not galaxy_map_panel.is_open and not shop_panel.is_open and not spaceship_panel.is_open:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://scenes/world/asteroid_field.gd" id="1_field"]
 [ext_resource type="Script" path="res://scenes/world/ore_node.gd" id="2_orenode"]
@@ -12,6 +12,14 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/shop_terminal.png" id="10_shop"]
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/drone_bay.png" id="11_bay"]
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/spaceship.png" id="12_ship"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ground/tile_space_bg.png" id="13_spacebg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ground/tile_outpost_floor.png" id="14_floor"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ground/tile_asteroid.png" id="15_asteroid"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ground/rock_small.png" id="16_rs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ground/rock_medium.png" id="17_rm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ground/rock_large.png" id="18_rl"]
+[ext_resource type="Script" path="res://scenes/world/ore_node.gd" id="19_kryore"]
+[ext_resource type="Script" path="res://scenes/world/asteroid_background.gd" id="20_bgscript"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_field"]
 vertices = PackedVector2Array(-150, -150, 2500, -150, 2500, 1700, -150, 1700)
@@ -34,12 +42,9 @@ size = Vector2(48, 48)
 y_sort_enabled = true
 script = ExtResource("1_field")
 
-[node name="Background" type="ColorRect" parent="."]
-offset_left = -200
-offset_top = -200
-offset_right = 2600
-offset_bottom = 1800
-color = Color(0.06, 0.06, 0.08, 1)
+[node name="Background" type="Node2D" parent="."]
+z_index = -10
+script = ExtResource("20_bgscript")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_field")
@@ -48,12 +53,55 @@ navigation_polygon = SubResource("NavigationPolygon_field")
 position = Vector2(400, 300)
 y_sort_enabled = true
 
-[node name="OutpostFloor" type="ColorRect" parent="Outpost"]
-offset_left = -140
-offset_top = -110
-offset_right = 150
-offset_bottom = 250
-color = Color(0.14, 0.13, 0.12, 1)
+[node name="OutpostFloor" type="TextureRect" parent="Outpost"]
+z_index = -5
+offset_left = -160.0
+offset_top = -130.0
+offset_right = 170.0
+offset_bottom = 280.0
+texture = ExtResource("14_floor")
+expand_mode = 3
+stretch_mode = 5
+texture_repeat = 2
+
+[node name="OutpostBorder" type="ColorRect" parent="Outpost"]
+z_index = -4
+offset_left = -164.0
+offset_top = -134.0
+offset_right = 174.0
+offset_bottom = -126.0
+color = Color(0.35, 0.30, 0.50, 1)
+
+[node name="OutpostBorderB" type="ColorRect" parent="Outpost"]
+z_index = -4
+offset_left = -164.0
+offset_top = 272.0
+offset_right = 174.0
+offset_bottom = 284.0
+color = Color(0.35, 0.30, 0.50, 1)
+
+[node name="OutpostBorderL" type="ColorRect" parent="Outpost"]
+z_index = -4
+offset_left = -164.0
+offset_top = -134.0
+offset_right = -156.0
+offset_bottom = 284.0
+color = Color(0.35, 0.30, 0.50, 1)
+
+[node name="OutpostBorderR" type="ColorRect" parent="Outpost"]
+z_index = -4
+offset_left = 166.0
+offset_top = -134.0
+offset_right = 174.0
+offset_bottom = 284.0
+color = Color(0.35, 0.30, 0.50, 1)
+
+[node name="OutpostSign" type="Label" parent="Outpost"]
+z_index = 10
+position = Vector2(-90, -150)
+theme_override_colors/font_color = Color(0.75, 0.68, 1.0, 0.95)
+theme_override_font_sizes/font_size = 11
+text = "▸ OUTPOST ALPHA-1"
 
 [node name="DroneBay" type="Area2D" parent="Outpost" groups=["drone_bay"]]
 position = Vector2(-80, -60)
@@ -63,7 +111,14 @@ script = ExtResource("6_bay")
 
 [node name="Sprite" type="Sprite2D" parent="Outpost/DroneBay"]
 texture = ExtResource("11_bay")
-offset = Vector2(0, -28)
+offset = Vector2(0, -32)
+scale = Vector2(1.2, 1.2)
+
+[node name="Label" type="Label" parent="Outpost/DroneBay"]
+position = Vector2(-32, 14)
+theme_override_colors/font_color = Color(0.55, 0.90, 0.55, 1.0)
+theme_override_font_sizes/font_size = 10
+text = "DRONE BAY"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/DroneBay"]
 shape = SubResource("RectShape_building")
@@ -77,6 +132,13 @@ script = ExtResource("4_shop")
 [node name="Sprite" type="Sprite2D" parent="Outpost/ShopTerminal"]
 texture = ExtResource("10_shop")
 offset = Vector2(0, -32)
+scale = Vector2(1.2, 1.2)
+
+[node name="Label" type="Label" parent="Outpost/ShopTerminal"]
+position = Vector2(-18, 14)
+theme_override_colors/font_color = Color(1.0, 0.80, 0.35, 1.0)
+theme_override_font_sizes/font_size = 10
+text = "SHOP"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/ShopTerminal"]
 shape = SubResource("RectShape_terminal")
@@ -90,6 +152,13 @@ script = ExtResource("3_sell")
 [node name="Sprite" type="Sprite2D" parent="Outpost/SellTerminal"]
 texture = ExtResource("9_sell")
 offset = Vector2(0, -32)
+scale = Vector2(1.2, 1.2)
+
+[node name="Label" type="Label" parent="Outpost/SellTerminal"]
+position = Vector2(-16, 14)
+theme_override_colors/font_color = Color(1.0, 0.80, 0.35, 1.0)
+theme_override_font_sizes/font_size = 10
+text = "SELL"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/SellTerminal"]
 shape = SubResource("RectShape_terminal")
@@ -103,6 +172,13 @@ script = ExtResource("5_storage")
 [node name="Sprite" type="Sprite2D" parent="Outpost/StorageDepot"]
 texture = ExtResource("8_depot")
 offset = Vector2(0, -26)
+scale = Vector2(1.2, 1.2)
+
+[node name="Label" type="Label" parent="Outpost/StorageDepot"]
+position = Vector2(-32, 18)
+theme_override_colors/font_color = Color(1.0, 0.80, 0.35, 1.0)
+theme_override_font_sizes/font_size = 10
+text = "STORAGE"
 
 [node name="FillIndicator" type="ColorRect" parent="Outpost/StorageDepot"]
 offset_left = -14
@@ -122,18 +198,71 @@ script = ExtResource("7_ship")
 
 [node name="Sprite" type="Sprite2D" parent="Outpost/Spaceship"]
 texture = ExtResource("12_ship")
-offset = Vector2(0, -40)
+offset = Vector2(0, -44)
+scale = Vector2(1.3, 1.3)
+
+[node name="Label" type="Label" parent="Outpost/Spaceship"]
+position = Vector2(-34, 16)
+theme_override_colors/font_color = Color(0.6, 0.85, 1.0, 1.0)
+theme_override_font_sizes/font_size = 10
+text = "SHIPYARD"
 
 [node name="ReadyIndicator" type="ColorRect" parent="Outpost/Spaceship"]
 offset_left = -5
-offset_top = -72
+offset_top = -78
 offset_right = 5
-offset_bottom = -66
+offset_bottom = -72
 color = Color(0.3, 0.55, 0.85, 1)
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Outpost/Spaceship"]
 shape = SubResource("RectShape_ship")
+
+[node name="Decorations" type="Node2D" parent="."]
+z_index = -2
+
+[node name="Rock1" type="Sprite2D" parent="Decorations"]
+position = Vector2(570, 80)
+texture = ExtResource("18_rl")
+
+[node name="Rock2" type="Sprite2D" parent="Decorations"]
+position = Vector2(620, 410)
+texture = ExtResource("17_rm")
+
+[node name="Rock3" type="Sprite2D" parent="Decorations"]
+position = Vector2(300, 520)
+texture = ExtResource("18_rl")
+scale = Vector2(-1, 1)
+
+[node name="Rock4" type="Sprite2D" parent="Decorations"]
+position = Vector2(1200, 100)
+texture = ExtResource("17_rm")
+
+[node name="Rock5" type="Sprite2D" parent="Decorations"]
+position = Vector2(1180, 550)
+texture = ExtResource("18_rl")
+scale = Vector2(-1, 1)
+
+[node name="Rock6" type="Sprite2D" parent="Decorations"]
+position = Vector2(480, 200)
+texture = ExtResource("16_rs")
+
+[node name="Rock7" type="Sprite2D" parent="Decorations"]
+position = Vector2(640, 320)
+texture = ExtResource("16_rs")
+
+[node name="Rock8" type="Sprite2D" parent="Decorations"]
+position = Vector2(1050, 430)
+texture = ExtResource("16_rs")
+
+[node name="Rock9" type="Sprite2D" parent="Decorations"]
+position = Vector2(900, 600)
+texture = ExtResource("17_rm")
+scale = Vector2(1, -1)
+
+[node name="Rock10" type="Sprite2D" parent="Decorations"]
+position = Vector2(260, 150)
+texture = ExtResource("16_rs")
 
 [node name="OreNodes" type="Node2D" parent="."]
 y_sort_enabled = true

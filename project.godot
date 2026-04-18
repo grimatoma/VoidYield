@@ -25,11 +25,18 @@ GameState="*res://autoloads/game_state.gd"
 ProducerData="*res://autoloads/producer_data.gd"
 SaveManager="*res://autoloads/save_manager.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
+SettingsManager="*res://autoloads/settings_manager.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/TileMapDual/plugin.cfg")
 
 [display]
 
 window/size/viewport_width=960
 window/size/viewport_height=540
+window/size/mode=3
+window/size/initial_screen=0
 window/handheld/orientation="landscape"
 
 [dotnet]
