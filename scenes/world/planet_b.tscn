@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scenes/world/planet_b.gd" id="1_pb"]
 [ext_resource type="Script" path="res://scenes/world/ore_node.gd" id="2_ore"]
@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/sell_terminal.png" id="8_sell"]
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/drone_bay.png" id="9_bay"]
 [ext_resource type="Texture2D" path="res://assets/sprites/buildings/launch_pad.png" id="10_pad"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ground/tile_planet_b.png" id="11_tile"]
 
 [sub_resource type="NavigationPolygon" id="NavPoly_B"]
 vertices = PackedVector2Array(-150, -150, 2500, -150, 2500, 1700, -150, 1700)
@@ -46,13 +45,6 @@ offset_top = 80
 offset_right = 950
 offset_bottom = 650
 color = Color(0.05, 0.02, 0.10, 1)
-
-[node name="GroundTiles" type="Sprite2D" parent="."]
-position = Vector2(1150, 825)
-texture = ExtResource("11_tile")
-region_enabled = true
-region_rect = Rect2(-1350, -1025, 2700, 1850)
-texture_repeat = 2
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavPoly_B")
