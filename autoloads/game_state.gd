@@ -14,19 +14,20 @@ signal interaction_target_changed(target: Node2D)
 signal materials_changed(scrap: int, shards: int)
 signal ship_part_crafted(part_id: String)
 signal storage_changed(stored: int, capacity: int)
+signal planet_unlocked(planet_id: String)
 
 # --- Player Stats ---
 var player_move_speed: float = 120.0
-var player_max_carry: int = 10
+var player_max_carry: int = 10000  # TODO: restore to 10 after testing
 var player_mine_time: float = 1.5  # seconds per mine action
 
 # --- Inventory (player carried) — all types share player_max_carry ---
 # player_carried_ore is the TOTAL across all types (used for capacity)
-var player_carried_ore: int = 0
-var player_rare_ore: int = 0       # krysite subset
-var player_aethite: int = 0        # planet B common subset
-var player_voidstone: int = 0      # planet B rare subset
-var player_carried_shards: int = 0 # crystal shards subset
+var player_carried_ore: int = 10000  # TODO: restore to 0 after testing (2000 × 5 types)
+var player_rare_ore: int = 2000      # krysite subset  # TODO: restore to 0 after testing
+var player_aethite: int = 2000       # planet B common subset  # TODO: restore to 0 after testing
+var player_voidstone: int = 2000     # planet B rare subset  # TODO: restore to 0 after testing
+var player_carried_shards: int = 2000 # crystal shards subset  # TODO: restore to 0 after testing
 
 # --- Sell Prices ---
 var ore_prices: Dictionary = {
@@ -41,15 +42,15 @@ var ore_prices: Dictionary = {
 var credits: int = 500  # TODO: restore to 0 after testing
 
 # --- Storage Pool (depot) ---
-var storage_ore: int = 0
-var storage_capacity: int = 50
-var storage_rare_ore: int = 0
-var storage_aethite: int = 0
-var storage_voidstone: int = 0
-var storage_shards: int = 0
+var storage_ore: int = 10000      # TODO: restore to 0 after testing (2000 × 5 types)
+var storage_capacity: int = 10000  # TODO: restore to 50 after testing
+var storage_rare_ore: int = 2000  # TODO: restore to 0 after testing
+var storage_aethite: int = 2000   # TODO: restore to 0 after testing
+var storage_voidstone: int = 2000 # TODO: restore to 0 after testing
+var storage_shards: int = 2000    # TODO: restore to 0 after testing
 
 # --- Crafting Materials ---
-var scrap_metal: int = 0
+var scrap_metal: int = 2000  # TODO: restore to 0 after testing
 
 # --- Spaceship Parts ---
 var spaceship_parts_crafted: Dictionary = {
@@ -62,9 +63,13 @@ var spaceship_parts_crafted: Dictionary = {
 # --- Planet / World ---
 var current_planet: String = "asteroid_a1"
 var planet_a_spawn: Vector2 = Vector2(280, 420)
+## Planets the player can travel to. A1 + A2 accessible from the start.
+var unlocked_planets: Array[String] = ["asteroid_a1", "planet_b"]
+## Planets the player has physically visited (used for unlock conditions).
+var visited_planets: Array[String] = []
 
 # --- Drones ---
-var max_fleet_size: int = 1
+var max_fleet_size: int = 2  # TODO: restore to 1 after testing
 var active_drone_count: int = 0
 
 # --- Upgrades Purchased ---
@@ -158,6 +163,86 @@ func sell_all_carried() -> int:
 	for t in ["common", "rare", "aethite", "voidstone", "shards"]:
 		total += sell_resource(t, get_carried_of(t))
 	return total
+
+
+# --- Per-resource buy / sell (storage pool) -----------------------------------
+# Used by the Shop Terminal "RESOURCES" tab so the player can trade individual
+# ore types in/out of the depot pool with credits.
+
+const RESOURCE_BUY_MARKUP: float = 2.0  # buying costs 2x the sell price
+
+
+func get_storage_of(resource_type: String) -> int:
+	match resource_type:
+		"rare":      return storage_rare_ore
+		"aethite":   return storage_aethite
+		"voidstone": return storage_voidstone
+		"shards":    return storage_shards
+		_:           return storage_ore - storage_rare_ore - storage_aethite - storage_voidstone - storage_shards
+
+
+func get_resource_sell_price(resource_type: String) -> int:
+	return ore_prices.get(resource_type, 1)
+
+
+func get_resource_buy_price(resource_type: String) -> int:
+	return int(ceil(ore_prices.get(resource_type, 1) * RESOURCE_BUY_MARKUP))
+
+
+func sell_from_storage(resource_type: String, amount: int) -> int:
+	## Sells up to `amount` of `resource_type` directly from the depot pool.
+	## Returns credits earned.
+	if amount <= 0:
+		return 0
+	var available = get_storage_of(resource_type)
+	var to_sell = mini(amount, available)
+	if to_sell <= 0:
+		return 0
+
+	var earned = to_sell * get_resource_sell_price(resource_type)
+
+	match resource_type:
+		"rare":      storage_rare_ore  -= to_sell
+		"aethite":   storage_aethite   -= to_sell
+		"voidstone": storage_voidstone -= to_sell
+		"shards":    storage_shards    -= to_sell
+	storage_ore -= to_sell
+	credits += earned
+
+	storage_changed.emit(storage_ore, storage_capacity)
+	credits_changed.emit(credits)
+	ore_sold.emit(to_sell, earned)
+	return earned
+
+
+func buy_resource_to_storage(resource_type: String, amount: int) -> int:
+	## Spends credits to deposit `amount` of `resource_type` into the depot pool.
+	## Returns the amount actually purchased (clamped by credits & storage space).
+	if amount <= 0:
+		return 0
+	var price = get_resource_buy_price(resource_type)
+	if price <= 0:
+		return 0
+	var space = storage_capacity - storage_ore
+	if space <= 0:
+		return 0
+	var max_affordable = credits / price
+	var to_buy = mini(mini(amount, space), max_affordable)
+	if to_buy <= 0:
+		return 0
+
+	var cost = to_buy * price
+	credits -= cost
+	storage_ore += to_buy
+	match resource_type:
+		"rare":      storage_rare_ore  += to_buy
+		"aethite":   storage_aethite   += to_buy
+		"voidstone": storage_voidstone += to_buy
+		"shards":    storage_shards    += to_buy
+
+	storage_changed.emit(storage_ore, storage_capacity)
+	credits_changed.emit(credits)
+	return to_buy
 
 
 # --- Storage Pool (depot) ---
@@ -447,6 +532,8 @@ func get_save_data() -> Dictionary:
 		"max_fleet_size": max_fleet_size,
 		"purchased_upgrades": purchased_upgrades,
 		"constructed_buildings": constructed_buildings,
+		"unlocked_planets": unlocked_planets.duplicate(),
+		"visited_planets": visited_planets.duplicate(),
 	}
 
 
@@ -471,6 +558,16 @@ func load_save_data(data: Dictionary) -> void:
 	max_fleet_size        = data.get("max_fleet_size", 1)
 	purchased_upgrades    = data.get("purchased_upgrades", {})
 
+	var raw_unlocked = data.get("unlocked_planets", ["asteroid_a1", "planet_b"])
+	unlocked_planets.clear()
+	for p in raw_unlocked:
+		unlocked_planets.append(str(p))
+
+	var raw_visited = data.get("visited_planets", [])
+	visited_planets.clear()
+	for p in raw_visited:
+		visited_planets.append(str(p))
+
 	var raw_parts = data.get("spaceship_parts_crafted", {})
 	for part_id in spaceship_parts_crafted:
 		spaceship_parts_crafted[part_id] = raw_parts.get(part_id, false)
@@ -484,3 +581,64 @@ func load_save_data(data: Dictionary) -> void:
 	inventory_changed.emit(player_carried_ore, player_max_carry)
 	materials_changed.emit(scrap_metal, player_carried_shards)
 	interaction_target_changed.emit(current_interaction_target)
+
+
+# --- Planet Unlock ---
+
+func on_planet_visited(planet_id: String) -> void:
+	## Call this when the player successfully travels to a planet.
+	## Records the visit and triggers any unlock checks.
+	if planet_id not in visited_planets:
+		visited_planets.append(planet_id)
+	# Check if visiting this planet unlocks anything
+	try_unlock_planet("unknown_a3")
+
+
+func try_unlock_planet(planet_id: String) -> bool:
+	## Checks unlock conditions for planet_id. Unlocks and emits signal if met.
+	## Returns true if the planet was newly unlocked, false otherwise.
+	if planet_id in unlocked_planets:
+		return false  # already unlocked
+	var can_unlock := false
+	match planet_id:
+		"unknown_a3":
+			can_unlock = "planet_b" in visited_planets
+	if can_unlock:
+		unlocked_planets.append(planet_id)
+		planet_unlocked.emit(planet_id)
+		return true
+	return false
+
+
+func reset_to_defaults() -> void:
+	## Resets all runtime state to fresh-game values. Called by "New Game" on the main menu.
+	player_move_speed     = 120.0
+	player_max_carry      = 10
+	player_mine_time      = 1.5
+	player_carried_ore    = 0
+	player_rare_ore       = 0
+	player_aethite        = 0
+	player_voidstone      = 0
+	player_carried_shards = 0
+	credits               = 0
+	storage_ore           = 0
+	storage_capacity      = 50
+	storage_rare_ore      = 0
+	storage_aethite       = 0
+	storage_voidstone     = 0
+	storage_shards        = 0
+	scrap_metal           = 0
+	current_planet        = "asteroid_a1"
+	max_fleet_size        = 1
+	active_drone_count    = 0
+	purchased_upgrades    = {}
+	constructed_buildings = ["sell_terminal", "shop_terminal"]
+	for part_id in spaceship_parts_crafted:
+		spaceship_parts_crafted[part_id] = false
+	unlocked_planets = ["asteroid_a1", "planet_b"]
+	visited_planets  = []
+
+	credits_changed.emit(credits)
+	inventory_changed.emit(player_carried_ore, player_max_carry)
+	storage_changed.emit(storage_ore, storage_capacity)
+	materials_changed.emit(scrap_metal, player_carried_shards)

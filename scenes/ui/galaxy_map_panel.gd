@@ -18,6 +18,8 @@ const COL_SHADOW    := Color("15151a")
 
 # --- Planet registry ---
 # Ordered list; indices map to the A1/A2/A3 display slots in the mock.
+# NOTE: The "status" field here is legacy metadata only.
+#       Actual lock/unlock state is read from GameState.unlocked_planets at runtime.
 const PLANETS := [
 	{
 		"id": "asteroid_a1",
@@ -54,7 +56,9 @@ const PLANETS := [
 	},
 ]
 
-# Routes between planets by index. status: "travelable" | "locked"
+# Routes between planets by index.
+# Route "travelability" is determined dynamically from GameState.unlocked_planets
+# (the destination planet must be unlocked). The "status" field is unused at runtime.
 const ROUTES := [
 	{"from": 0, "to": 1, "status": "travelable"},
 	{"from": 1, "to": 2, "status": "locked"},
@@ -77,6 +81,12 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
+	# Re-draw whenever a planet is unlocked mid-session
+	GameState.planet_unlocked.connect(func(_id: String) -> void:
+		queue_redraw()
+		if _sector_label:
+			_sector_label.text = "SECTOR: UNNAMED · %d KNOWN BODIES" % _known_body_count()
+	)
 
 
 func _input(event: InputEvent) -> void:
@@ -114,12 +124,11 @@ func close() -> void:
 # ---------- UI construction ----------
 
 func _build_ui() -> void:
-	# Deep-space background
-	var bg := ColorRect.new()
-	bg.color = COL_BG_DEEP
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
+	# NOTE: The deep-space background is drawn as the first call in _draw()
+	# rather than as a child ColorRect.  In Godot 4 child nodes are composited
+	# ON TOP of their parent's _draw() output, so a full-screen ColorRect child
+	# would completely cover the routes, body circles and starfield that _draw()
+	# paints.
 
 	# Header bar (stars are painted in _draw())
 	_build_header()
@@ -323,6 +332,10 @@ func _build_action_panel() -> void:
 # ---------- Drawing (routes + bodies) ----------
 
 func _draw() -> void:
+	# Deep-space background — drawn first so it sits behind the starfield,
+	# routes, and body circles that follow (child nodes paint on top of this).
+	draw_rect(Rect2(Vector2.ZERO, size), COL_BG_DEEP)
+
 	# Decorative starfield (deterministic — no flicker on redraw)
 	_draw_starfield()
 
@@ -330,7 +343,9 @@ func _draw() -> void:
 	for route in ROUTES:
 		var a: Vector2 = PLANETS[route["from"]]["pos"]
 		var b: Vector2 = PLANETS[route["to"]]["pos"]
-		if route["status"] == "travelable":
+		var destination_id: String = PLANETS[route["to"]]["id"]
+		var route_open: bool = GameState.unlocked_planets.has(destination_id)
+		if route_open:
 			_draw_dashed_line(a, b, COL_AMBER, 2.0, 6.0, 4.0)
 		else:
 			_draw_dashed_line(a, b, COL_RIM, 1.0, 4.0, 4.0)
@@ -340,7 +355,7 @@ func _draw() -> void:
 		var p: Dictionary = PLANETS[i]
 		var center: Vector2 = p["pos"]
 		var is_current: bool = p["id"] == GameState.current_planet
-		var is_locked: bool = p["status"] == "locked"
+		var is_locked: bool = not GameState.unlocked_planets.has(p["id"])
 		var is_selected := i == _selected_index
 
 		# Current-location dashed ring
@@ -383,7 +398,7 @@ func _draw() -> void:
 		var p: Dictionary = PLANETS[i]
 		var center: Vector2 = p["pos"]
 		var is_current: bool = p["id"] == GameState.current_planet
-		var is_locked: bool = p["status"] == "locked"
+		var is_locked: bool = not GameState.unlocked_planets.has(p["id"])
 		var name_col: Color = COL_RIM if is_locked else COL_AMBER
 		var tagline_col: Color = COL_RIM if is_locked else (COL_GOOD if is_current else COL_AMBER_DIM)
 
@@ -463,7 +478,7 @@ func _on_travel_pressed() -> void:
 	if _selected_index < 0:
 		return
 	var p: Dictionary = PLANETS[_selected_index]
-	if p["status"] == "locked":
+	if not GameState.unlocked_planets.has(p["id"]):
 		return
 	if p["id"] == GameState.current_planet:
 		return
@@ -492,7 +507,7 @@ func _refresh_action_panel() -> void:
 		_selected_name_label.add_theme_color_override("font_color", COL_GOOD)
 		_travel_button.disabled = true
 		_travel_button.add_theme_color_override("font_color", COL_RIM)
-	elif p["status"] == "locked":
+	elif not GameState.unlocked_planets.has(p["id"]):
 		_selected_status_label.text = "LOCKED — %s" % p["tagline"]
 		_selected_name_label.add_theme_color_override("font_color", COL_RIM)
 		_travel_button.disabled = true
@@ -505,8 +520,5 @@ func _refresh_action_panel() -> void:
 
 
 func _known_body_count() -> int:
-	var n := 0
-	for p in PLANETS:
-		if p["status"] != "hidden":
-			n += 1
-	return n
+	## Returns the number of planets the player has unlocked.
+	return GameState.unlocked_planets.size()

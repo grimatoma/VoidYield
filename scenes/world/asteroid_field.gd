@@ -4,6 +4,7 @@ extends Node2D
 @onready var navigation_region: NavigationRegion2D = $NavigationRegion2D
 @onready var outpost: Node2D = $Outpost
 @onready var shop_terminal: Node2D = $Outpost/ShopTerminal
+@onready var sell_terminal: Node2D = $Outpost/SellTerminal
 @onready var drone_bay: Node2D = $Outpost/DroneBay
 @onready var spaceship: Node2D = $Outpost/Spaceship
 
@@ -20,6 +21,10 @@ func _ready() -> void:
 	if shop_terminal and shop_panel:
 		shop_terminal.shop_opened.connect(func(): shop_panel.open(shop_terminal))
 		shop_terminal.shop_closed.connect(func(): shop_panel.close())
+
+	if sell_terminal and shop_panel:
+		sell_terminal.sell_opened.connect(func(): shop_panel.open_resources(sell_terminal))
+		sell_terminal.sell_closed.connect(func(): shop_panel.close())
 
 	if drone_bay and shop_panel:
 		drone_bay.bay_opened.connect(func(): shop_panel.open_drone_bay(drone_bay))
