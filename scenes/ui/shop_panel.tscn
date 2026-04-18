@@ -1,40 +1,40 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/shop_panel.gd" id="1_shoppanel"]
 
-; Palette (matches _shared.md):
-;   bg.console  #2a2a2e  = Color(0.165, 0.165, 0.18, 1)
-;   bg.deep     #15151a  = Color(0.082, 0.082, 0.102, 1)
-;   rim         #4a4a50  = Color(0.29,  0.29,  0.31,  1)
-;   warn        #8b3a2a  = Color(0.545, 0.227, 0.165, 1)
-;   text.pri    #d4a843  = Color(0.831, 0.659, 0.263, 1)
-;   text.sec    #a88a4a  = Color(0.659, 0.541, 0.290, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.165, 0.165, 0.18, 1)
+bg_color = Color(0.164706, 0.164706, 0.180392, 0.96)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.29, 0.29, 0.31, 1)
+border_color = Color(0.290196, 0.290196, 0.313726, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
-bg_color = Color(0.082, 0.082, 0.102, 1)
+bg_color = Color(0.0823529, 0.0823529, 0.101961, 1)
+border_width_bottom = 1
+border_color = Color(0.290196, 0.290196, 0.313726, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_credits_row"]
-bg_color = Color(0.082, 0.082, 0.102, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_credits"]
+bg_color = Color(0.0588235, 0.0588235, 0.101961, 1)
+border_width_bottom = 1
+border_color = Color(0.290196, 0.290196, 0.313726, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabs"]
-bg_color = Color(0.165, 0.165, 0.18, 1)
+bg_color = Color(0.164706, 0.164706, 0.180392, 1)
+border_width_bottom = 1
+border_color = Color(0.290196, 0.290196, 0.313726, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_footer"]
-bg_color = Color(0.082, 0.082, 0.102, 1)
+bg_color = Color(0.0588235, 0.0588235, 0.101961, 1)
+border_width_top = 1
+border_color = Color(0.290196, 0.290196, 0.313726, 1)
 
 [node name="ShopPanel" type="PanelContainer"]
 offset_left = 960
-offset_top = 0
+offset_top = 30
 offset_right = 1280
-offset_bottom = 540
+offset_bottom = 570
 custom_minimum_size = Vector2(320, 540)
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 script = ExtResource("1_shoppanel")
@@ -43,115 +43,94 @@ script = ExtResource("1_shoppanel")
 layout_mode = 2
 theme_override_constants/separation = 0
 
-; ── Header row ────────────────────────────────────────────────────────────────
-
-[node name="Header" type="PanelContainer" parent="VBoxContainer"]
+[node name="HeaderPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 40)
 theme_override_styles/panel = SubResource("StyleBoxFlat_header")
 
-[node name="HeaderRow" type="HBoxContainer" parent="VBoxContainer/Header"]
+[node name="HeaderMargin" type="MarginContainer" parent="VBoxContainer/HeaderPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="TitleLabel" type="Label" parent="VBoxContainer/Header/HeaderRow"]
+[node name="TitleRow" type="HBoxContainer" parent="VBoxContainer/HeaderPanel/HeaderMargin"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/HeaderPanel/HeaderMargin/TitleRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
+size_flags_vertical = 5
+theme_override_colors/font_color = Color(0.831373, 0.658824, 0.270588, 1)
 theme_override_font_sizes/font_size = 14
-vertical_alignment = 1
 text = "SHOP TERMINAL"
 
-[node name="CloseButton" type="Button" parent="VBoxContainer/Header/HeaderRow"]
+[node name="CloseButton" type="Button" parent="VBoxContainer/HeaderPanel/HeaderMargin/TitleRow"]
 layout_mode = 2
-custom_minimum_size = Vector2(18, 18)
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.545, 0.227, 0.165, 1)
+custom_minimum_size = Vector2(22, 22)
+theme_override_colors/font_color = Color(0.545098, 0.227451, 0.164706, 1)
+theme_override_font_sizes/font_size = 12
 text = "X"
 
-; ── Credits row ───────────────────────────────────────────────────────────────
-
-[node name="CreditsRow" type="PanelContainer" parent="VBoxContainer"]
+[node name="CreditsPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 26)
-theme_override_styles/panel = SubResource("StyleBoxFlat_credits_row")
+theme_override_styles/panel = SubResource("StyleBoxFlat_credits")
 
-[node name="CreditsHBox" type="HBoxContainer" parent="VBoxContainer/CreditsRow"]
+[node name="CreditsMargin" type="MarginContainer" parent="VBoxContainer/CreditsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="CreditsRow" type="HBoxContainer" parent="VBoxContainer/CreditsPanel/CreditsMargin"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="CRLabel" type="Label" parent="VBoxContainer/CreditsRow/CreditsHBox"]
+[node name="CreditsPrefix" type="Label" parent="VBoxContainer/CreditsPanel/CreditsMargin/CreditsRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
-theme_override_font_sizes/font_size = 9
-vertical_alignment = 1
+theme_override_colors/font_color = Color(0.658824, 0.541176, 0.290196, 1)
+theme_override_font_sizes/font_size = 10
 text = "CR"
 
-[node name="PanelCreditsLabel" type="Label" parent="VBoxContainer/CreditsRow/CreditsHBox"]
+[node name="CreditsLabel" type="Label" parent="VBoxContainer/CreditsPanel/CreditsMargin/CreditsRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
-theme_override_font_sizes/font_size = 12
-vertical_alignment = 1
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.831373, 0.658824, 0.270588, 1)
+theme_override_font_sizes/font_size = 13
 text = "000,000"
 
-; ── Tab row (DRONES / UPGRADES / BUILD) ───────────────────────────────────────
-
-[node name="TabRow" type="PanelContainer" parent="VBoxContainer"]
+[node name="TabsPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 28)
 theme_override_styles/panel = SubResource("StyleBoxFlat_tabs")
 
-[node name="TabHBox" type="HBoxContainer" parent="VBoxContainer/TabRow"]
+[node name="TabsRow" type="HBoxContainer" parent="VBoxContainer/TabsPanel"]
 layout_mode = 2
 theme_override_constants/separation = 0
-
-[node name="DronesTab" type="Button" parent="VBoxContainer/TabRow/TabHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.831, 0.659, 0.263, 1)
-theme_override_font_sizes/font_size = 10
-text = "DRONES"
-flat = true
-
-[node name="UpgradesTab" type="Button" parent="VBoxContainer/TabRow/TabHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
-theme_override_font_sizes/font_size = 10
-text = "UPGRADES"
-flat = true
-
-[node name="BuildTab" type="Button" parent="VBoxContainer/TabRow/TabHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
-theme_override_font_sizes/font_size = 10
-text = "BUILD"
-flat = true
-
-; ── Item list (scrollable content area) ──────────────────────────────────────
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
-theme_override_constants/separation = 0
 
 [node name="ItemList" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
-; ── Footer hint ───────────────────────────────────────────────────────────────
-
-[node name="Footer" type="PanelContainer" parent="VBoxContainer"]
+[node name="FooterPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 28)
 theme_override_styles/panel = SubResource("StyleBoxFlat_footer")
 
-[node name="FooterLabel" type="Label" parent="VBoxContainer/Footer"]
+[node name="FooterMargin" type="MarginContainer" parent="VBoxContainer/FooterPanel"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.659, 0.541, 0.290, 1)
-theme_override_font_sizes/font_size = 8
-vertical_alignment = 1
-text = "[E] / TAP ROW TO BUY    ESC CLOSE"
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="FooterHint" type="Label" parent="VBoxContainer/FooterPanel/FooterMargin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.658824, 0.541176, 0.290196, 1)
+theme_override_font_sizes/font_size = 9
+text = "[E] / CLICK ROW TO BUY    ESC CLOSE"

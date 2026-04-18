@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://d4evipnagt8t1"]
+[gd_scene load_steps=8 format=3 uid="uid://d4evipnagt8t1"]
 
 [ext_resource type="Script" uid="uid://cc7d71cfqk8ov" path="res://scenes/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/mobile_controls.tscn" id="6_mobile"]
 [ext_resource type="PackedScene" path="res://scenes/ui/spaceship_panel.tscn" id="7_shipui"]
 [ext_resource type="PackedScene" path="res://scenes/ui/galaxy_map_panel.tscn" id="8_gmap"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="9_pm"]
 
 [node name="Main" type="Node2D" groups=["main_scene"]]
 script = ExtResource("1_main")
@@ -33,3 +34,5 @@ offset_bottom = 500.0
 visible = false
 
 [node name="MobileControls" parent="." instance=ExtResource("6_mobile")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("9_pm")]

@@ -1,10 +1,14 @@
 extends Interactable
-## SellTerminal — Converts ore from the storage pool into Credits.
-## Instant interaction.
+## SellTerminal — Opens the shop panel's RESOURCES tab for buying / selling ore.
+## Was instant-sell; now shows a proper trade menu.
+
+signal sell_opened
+signal sell_closed
 
 @onready var sprite: ColorRect = $Sprite
 
 const COLOR_ACTIVE = Color(0.83, 0.66, 0.27)  # Dirty amber
+var is_sell_open: bool = false
 
 
 func _ready() -> void:
@@ -15,33 +19,25 @@ func _ready() -> void:
 func get_prompt_text() -> String:
 	var total = GameState.player_carried_ore + GameState.storage_ore
 	if total <= 0:
-		return "[E] Sell (nothing)"
-	var rare = GameState.player_rare_ore + GameState.storage_rare_ore
-	if rare > 0:
-		return "[E] Sell All — %d ore (%d krysite)" % [total, rare]
-	return "[E] Sell All — %d ore" % total
+		return "[E] Trade Terminal"
+	return "[E] Trade Terminal — %d ore" % total
 
 
 func interact(_player: Node2D) -> void:
-	var earned = GameState.sell_all_ore()
-	if earned > 0:
-		# TODO: Play sell sound (cash register ding)
-		_spawn_credits_pop(earned)
+	if not is_sell_open:
+		is_sell_open = true
+		sell_opened.emit()
+
+
+func close_sell() -> void:
+	if is_sell_open:
+		is_sell_open = false
+		sell_closed.emit()
+
+
+func on_player_left() -> void:
+	close_sell()
 
 
 func is_interactable() -> bool:
-	return true  # Always interactable, even if empty (shows feedback)
-
-
-func _spawn_credits_pop(amount: int) -> void:
-	var label = Label.new()
-	label.text = "+%d CR" % amount
-	label.add_theme_color_override("font_color", Color(0.5, 0.85, 0.5))
-	label.position = Vector2(-16, -32)
-	add_child(label)
-
-	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(label, "position:y", label.position.y - 24, 0.6)
-	tween.tween_property(label, "modulate:a", 0.0, 0.6)
-	tween.chain().tween_callback(label.queue_free)
+	return not is_sell_open

@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Void Yield"
 config/description="A top-down 2D active incremental game set in space."
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
 [autoload]
@@ -24,12 +24,12 @@ config/features=PackedStringArray("4.6", "GL Compatibility")
 GameState="*res://autoloads/game_state.gd"
 ProducerData="*res://autoloads/producer_data.gd"
 SaveManager="*res://autoloads/save_manager.gd"
+AudioManager="*res://autoloads/audio_manager.gd"
 
 [display]
 
 window/size/viewport_width=960
 window/size/viewport_height=540
-window/stretch/mode="canvas_items"
 window/handheld/orientation="landscape"
 
 [dotnet]

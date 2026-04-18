@@ -5,6 +5,7 @@ extends Node2D
 @onready var shop_panel: PanelContainer = $UILayer/ShopPanel
 @onready var spaceship_panel: PanelContainer = $UILayer/SpaceshipPanel
 @onready var galaxy_map_panel: Control = $UILayer/GalaxyMapPanel
+@onready var _pause_menu: CanvasLayer = $PauseMenu
 
 const ASTEROID_FIELD_SCENE = preload("res://scenes/world/asteroid_field.tscn")
 const PLANET_B_SCENE       = preload("res://scenes/world/planet_b.tscn")
@@ -21,6 +22,13 @@ var _current_world: Node2D = null
 
 
 func _ready() -> void:
+	# Disabled mode: viewport = window size, so resizing shows more world
+	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
+
+	# HUD and UILayer must keep processing while the tree is paused (pause menu open)
+	$HUD.process_mode     = Node.PROCESS_MODE_ALWAYS
+	$UILayer.process_mode = Node.PROCESS_MODE_ALWAYS
+
 	add_to_group("main_scene")
 	shop_panel.add_to_group("shop_panel")
 	spaceship_panel.add_to_group("spaceship_panel")
@@ -37,6 +45,14 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	# ESC toggles pause (but not if a full-screen panel is open)
+	if event.is_action_pressed("ui_cancel"):
+		if not galaxy_map_panel.is_open and not shop_panel.is_open and not spaceship_panel.is_open:
+			get_tree().paused = not get_tree().paused
+			_pause_menu.toggle()
+			get_viewport().set_input_as_handled()
+			return
+
 	## Debug click-to-interact: left-click anywhere in the world to instantly
 	## interact with the nearest Interactable under the cursor.
 	if not GameState.debug_click_mode:
@@ -116,6 +132,7 @@ func _on_galaxy_travel_requested(destination_id: String) -> void:
 func _travel_to(destination_id: String, scene: PackedScene, spawn: Vector2) -> void:
 	GameState.despawn_all_drones()
 	GameState.current_planet = destination_id
+	GameState.on_planet_visited(destination_id)
 	_load_world(scene, spawn)
 	print("[Main] Traveled to %s." % destination_id)
 

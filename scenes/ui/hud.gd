@@ -51,10 +51,18 @@ func _process(_delta: float) -> void:
 	if player and player.is_mining:
 		mining_progress_bar.visible = true
 		mining_progress_bar.value = player.get_mining_progress() * 100.0
-		var screen_pos = player.get_global_transform_with_canvas().origin
-		mining_progress_bar.position = screen_pos + Vector2(-30, -40)
 	else:
 		mining_progress_bar.visible = false
+
+	# DEBUG: print viewport size every 2 seconds so we can see if it changes on resize
+	_debug_timer += _delta
+	if _debug_timer >= 2.0:
+		_debug_timer = 0.0
+		var vp_size = get_viewport().get_visible_rect().size
+		var scale_mode = get_tree().root.content_scale_mode
+		print("[HUD DEBUG] viewport=%s  content_scale_mode=%d" % [vp_size, scale_mode])
+
+var _debug_timer: float = 0.0
 
 
 # ── Signal Handlers ────────────────────────────────────────────────────────────
