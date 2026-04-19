@@ -161,6 +161,7 @@ func _set_state(new_state: State) -> void:
 			collision.disabled = true
 			release_claim()
 			respawn_timer = respawn_time
+			EventLog.add("Ore node depleted — respawning in %.1fs" % respawn_time, "MINING")
 
 
 func _ore_display_name() -> String:

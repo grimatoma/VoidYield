@@ -28,6 +28,10 @@ var debug_fill_button: Button = null
 # ── Research button ──────────────────────────────────────────────────────────────
 var research_button: Button = null
 
+# ── Event log widget ─────────────────────────────────────────────────────────────
+var event_log_container: Control = null
+var event_log_vbox: VBoxContainer = null
+
 
 func _ready() -> void:
 	GameState.credits_changed.connect(_on_credits_changed)
@@ -69,6 +73,25 @@ func _ready() -> void:
 	research_button.add_theme_stylebox_override("normal", style2)
 	research_button.pressed.connect(_on_research_pressed)
 	add_child(research_button)
+
+	# Setup event log widget (bottom-left corner)
+	event_log_container = Control.new()
+	event_log_container.custom_minimum_size = Vector2(280, 100)
+	event_log_container.anchors_left = 0.0
+	event_log_container.anchors_top = 1.0
+	event_log_container.offset_left = 10
+	event_log_container.offset_top = -110
+	event_log_container.visible = false
+	add_child(event_log_container)
+
+	event_log_vbox = VBoxContainer.new()
+	event_log_vbox.custom_minimum_size = Vector2(280, 100)
+	event_log_vbox.anchors_preset = Control.PRESET_BOTTOM_LEFT
+	event_log_vbox.offset_left = 10
+	event_log_vbox.offset_top = -110
+	add_child(event_log_vbox)
+
+	EventLog.entry_added.connect(_on_event_added)
 
 
 func _process(_delta: float) -> void:
@@ -168,3 +191,20 @@ func _on_research_pressed() -> void:
 	var tech_tree_panel = get_tree().get_first_node_in_group("tech_tree_panel")
 	if tech_tree_panel:
 		tech_tree_panel.open()
+
+
+func _on_event_added(message: String, category: String) -> void:
+	# Keep only last 5 entries
+	while event_log_vbox.get_child_count() >= 5:
+		event_log_vbox.get_child(0).queue_free()
+
+	var entry_label = Label.new()
+	entry_label.text = "[%s] %s" % [category.to_upper(), message]
+	entry_label.add_theme_color_override("font_color", Color(0.831, 0.658, 0.270))
+	entry_label.add_theme_font_size_override("font_size", 10)
+	entry_label.custom_minimum_size = Vector2(280, 0)
+	entry_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	event_log_vbox.add_child(entry_label)
+	event_log_vbox.move_child(entry_label, event_log_vbox.get_child_count() - 1)
+
+	event_log_vbox.visible = event_log_vbox.get_child_count() > 0

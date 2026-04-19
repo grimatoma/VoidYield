@@ -157,6 +157,7 @@ func sell_resource(resource_type: String, amount: int) -> int:
 	inventory_changed.emit(player_carried_ore, player_max_carry)
 	credits_changed.emit(credits)
 	ore_sold.emit(to_sell, earned)
+	EventLog.add("Sold %d ore for %d CR" % [to_sell, earned], "SHOP")
 	if resource_type == "shards":
 		materials_changed.emit(scrap_metal, player_carried_shards)
 	return earned
@@ -216,6 +217,7 @@ func sell_from_storage(resource_type: String, amount: int) -> int:
 	storage_changed.emit(storage_ore, storage_capacity)
 	credits_changed.emit(credits)
 	ore_sold.emit(to_sell, earned)
+	EventLog.add("Sold %d ore for %d CR" % [to_sell, earned], "SHOP")
 	return earned
 
 
@@ -353,6 +355,7 @@ func sell_all_ore() -> int:
 		credits += storage_earned
 		credits_changed.emit(credits)
 		ore_sold.emit(storage_earned, storage_earned)
+		EventLog.add("Sold %d ore for %d CR" % [storage_earned, storage_earned], "SHOP")
 	if had_storage:
 		storage_changed.emit(storage_ore, storage_capacity)
 	if had_carried:
@@ -452,6 +455,7 @@ func purchase_upgrade(upgrade_id: String) -> bool:
 	purchased_upgrades[upgrade_id] = purchased_upgrades.get(upgrade_id, 0) + 1
 	_apply_upgrade(upgrade_id, upgrade)
 	upgrade_purchased.emit(upgrade_id)
+	EventLog.add("Purchased %s" % upgrade.get("name", upgrade_id), "SHOP")
 	return true
 
 
@@ -490,6 +494,7 @@ func can_deploy_drone() -> bool:
 func register_drone(drone: Node2D) -> void:
 	active_drone_count += 1
 	drone_deployed.emit(drone)
+	EventLog.add("Drone deployed", "DRONE")
 
 
 func unregister_drone(_drone: Node2D) -> void:
@@ -498,6 +503,7 @@ func unregister_drone(_drone: Node2D) -> void:
 
 func on_drone_returned(drone: Node2D, ore_carried: int) -> void:
 	drone_returned.emit(drone, ore_carried)
+	EventLog.add("Drone returned with %d ore" % ore_carried, "DRONE")
 
 
 func despawn_all_drones() -> void:
@@ -517,6 +523,7 @@ func construct_building(building_id: String) -> void:
 	if building_id not in constructed_buildings:
 		constructed_buildings.append(building_id)
 		building_constructed.emit(building_id)
+		EventLog.add("Building constructed: %s" % building_id, "BUILD")
 
 
 # --- Save / Load ---
