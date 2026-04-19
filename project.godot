@@ -26,6 +26,8 @@ ProducerData="*res://autoloads/producer_data.gd"
 SaveManager="*res://autoloads/save_manager.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
 SettingsManager="*res://autoloads/settings_manager.gd"
+Recipes="*res://data/recipes.gd"
+ColonyManager="*res://autoloads/colony_manager.gd"
 
 [display]
 
