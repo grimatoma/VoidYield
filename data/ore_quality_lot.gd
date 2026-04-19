@@ -53,7 +53,7 @@ static func generate(tier: String) -> OreQualityLot:
 			mean = 500.0
 			std_dev = 100.0
 
-	var lot = OreQualityLot.new()
+	var lot = _create_lot()
 	lot.er = _clamp_attribute(_randn_normal(mean, std_dev))
 	lot.cr = _clamp_attribute(_randn_normal(mean, std_dev))
 	lot.cd = _clamp_attribute(_randn_normal(mean, std_dev))
@@ -95,7 +95,7 @@ func to_dict() -> Dictionary:
 
 ## Deserialize from dictionary.
 static func from_dict(d: Dictionary) -> OreQualityLot:
-	var lot = OreQualityLot.new()
+	var lot = _create_lot()
 	lot.er = float(d.get("er", "500"))
 	lot.cr = float(d.get("cr", "500"))
 	lot.cd = float(d.get("cd", "500"))
@@ -106,6 +106,13 @@ static func from_dict(d: Dictionary) -> OreQualityLot:
 	lot.pe = float(d.get("pe", "500"))
 	lot.sr = float(d.get("sr", "500"))
 	lot.ut = float(d.get("ut", "500"))
+	return lot
+
+
+## Create a new lot instance.
+static func _create_lot() -> Object:
+	var lot = Resource.new()
+	lot.set_script(load("res://data/ore_quality_lot.gd"))
 	return lot
 
 

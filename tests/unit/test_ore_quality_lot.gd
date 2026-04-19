@@ -2,22 +2,27 @@ extends "res://tests/framework/test_case.gd"
 ## TDD unit tests for OreQualityLot resource class.
 ## Covers: grade computation, BER formula, lot generation, serialisation.
 
-const OreQualityLot = preload("res://data/ore_quality_lot.gd")
+
+func _load_lot_class():
+	return load("res://data/ore_quality_lot.gd")
 
 
 func test_grade_A_when_er_gte_800() -> void:
+	var OreQualityLot = _load_lot_class()
 	var lot = OreQualityLot.new()
 	lot.er = 800
 	assert_eq(lot.grade, "A")
 
 
 func test_grade_F_when_er_lt_200() -> void:
+	var OreQualityLot = _load_lot_class()
 	var lot = OreQualityLot.new()
 	lot.er = 199
 	assert_eq(lot.grade, "F")
 
 
 func test_grade_boundaries() -> void:
+	var OreQualityLot = _load_lot_class()
 	var test_cases = [
 		[800, "A"],
 		[799, "B"],
@@ -35,6 +40,7 @@ func test_grade_boundaries() -> void:
 
 
 func test_ber_output_formula() -> void:
+	var OreQualityLot = _load_lot_class()
 	var lot = OreQualityLot.new()
 	lot.er = 800
 	lot.fl = 200
@@ -46,6 +52,7 @@ func test_ber_output_formula() -> void:
 
 
 func test_ber_output_zero_concentration() -> void:
+	var OreQualityLot = _load_lot_class()
 	var lot = OreQualityLot.new()
 	lot.er = 800
 	lot.fl = 200
@@ -57,6 +64,7 @@ func test_ber_output_zero_concentration() -> void:
 
 
 func test_generate_rich_tier_mean_in_range() -> void:
+	var OreQualityLot = _load_lot_class()
 	# Generate 100 lots with "rich" tier, check mean ER is in expected range
 	var er_values = []
 	for i in 100:
@@ -75,6 +83,7 @@ func test_generate_rich_tier_mean_in_range() -> void:
 
 
 func test_generate_clamps_to_1000_max() -> void:
+	var OreQualityLot = _load_lot_class()
 	# Generate 50 lots, ensure no attribute exceeds 1000
 	for i in 50:
 		var lot = OreQualityLot.generate("motherlode")
@@ -91,6 +100,7 @@ func test_generate_clamps_to_1000_max() -> void:
 
 
 func test_generate_clamps_to_1_min() -> void:
+	var OreQualityLot = _load_lot_class()
 	# Generate 50 lots, ensure no attribute is below 1
 	for i in 50:
 		var lot = OreQualityLot.generate("poor")
@@ -107,6 +117,7 @@ func test_generate_clamps_to_1_min() -> void:
 
 
 func test_roundtrip_serialisation() -> void:
+	var OreQualityLot = _load_lot_class()
 	var original = OreQualityLot.new()
 	original.er = 850
 	original.cr = 750
