@@ -16,7 +16,7 @@
 	"thruster_boots": {
 		"name": "Thruster Boots",
 		"description": "+20% movement speed",
-		"cost": 10,
+		"cost": 5,
 		"category": "player",
 		"max_purchases": 1
 	},

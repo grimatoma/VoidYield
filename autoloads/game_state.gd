@@ -318,10 +318,12 @@ func dump_inventory_to_storage() -> int:
 
 func sell_all_ore() -> int:
 	## Sells everything in the storage pool + player inventory.
-	## Returns total credits earned.
-	var total_earned: int = 0
+	## Returns total credits earned (storage + carried).
+	var carried_earned = sell_all_carried()  # Sell carried first (adds credits directly)
 
-	# Sell from storage pool first
+	var total_earned: int = carried_earned
+
+	# Then sell from storage pool
 	var common_stored = storage_ore - storage_rare_ore - storage_aethite - storage_voidstone - storage_shards
 	if common_stored > 0:
 		total_earned += common_stored * ore_prices.get("common", 1)
@@ -335,30 +337,18 @@ func sell_all_ore() -> int:
 		total_earned += storage_shards * ore_prices.get("shards", 3)
 
 	var had_storage = storage_ore > 0
+	var had_carried = carried_earned > 0
 	storage_ore = 0
 	storage_rare_ore = 0
 	storage_aethite = 0
 	storage_voidstone = 0
 	storage_shards = 0
 
-	# Also sell anything the player is still carrying
-	var common_carried = get_common_carried()
-	total_earned += common_carried         * ore_prices.get("common",    1)
-	total_earned += player_rare_ore        * ore_prices.get("rare",      5)
-	total_earned += player_aethite         * ore_prices.get("aethite",   8)
-	total_earned += player_voidstone       * ore_prices.get("voidstone", 15)
-	total_earned += player_carried_shards  * ore_prices.get("shards",    3)
-	var had_carried = player_carried_ore > 0
-	player_carried_ore    = 0
-	player_rare_ore       = 0
-	player_aethite        = 0
-	player_voidstone      = 0
-	player_carried_shards = 0
-
-	if total_earned > 0:
-		credits += total_earned
+	var storage_earned = total_earned - carried_earned
+	if storage_earned > 0:
+		credits += storage_earned
 		credits_changed.emit(credits)
-		ore_sold.emit(total_earned, total_earned)
+		ore_sold.emit(storage_earned, storage_earned)
 	if had_storage:
 		storage_changed.emit(storage_ore, storage_capacity)
 	if had_carried:
