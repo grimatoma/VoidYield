@@ -1,0 +1,863 @@
+Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org
+
+[ProducerData] Loaded 2 drones, 8 upgrades, 4 ship parts.
+[SaveManager] Debug mode — skipping save load.
+[AudioManager] Ready. SFX pool: 8 players.
+[SaveManager] Save files deleted.
+==================================================
+ VoidYield Test Runner
+  update_golden = false
+  filter        = ''
+  unit / e2e    = true / true
+==================================================
+
+▶ test_galaxy_map_flow
+[Main] VoidYield initialized.
+  ✓ test_cannot_travel_to_current_location
+[Main] VoidYield initialized.
+  ✓ test_cannot_travel_to_locked_planet
+[Main] VoidYield initialized.
+[Main] Traveled to planet_b.
+  ✓ test_cuj_craft_launch_select_travel
+[Main] VoidYield initialized.
+[Main] Traveled to planet_b.
+[Main] Traveled to asteroid_a1.
+  ✓ test_cuj_launch_pad_return_to_a1
+[Main] VoidYield initialized.
+ERROR: Parameter "t" is null.
+   at: texture_2d_get (./servers/rendering/dummy/storage/texture_storage.h:106)
+   GDScript backtrace (most recent call first):
+       [0] take_screenshot (res://tests/framework/e2e_test_case.gd:97)
+       [1] wait_frames (res://tests/framework/test_case.gd:178)
+  ✗ test_galaxy_map_golden
+      └ screenshot capture returned null
+[Main] VoidYield initialized.
+  ✓ test_opens_and_shows_three_bodies
+[Main] VoidYield initialized.
+  ✓ test_select_body_updates_action_panel
+[Main] VoidYield initialized.
+[Main] Traveled to planet_b.
+  ✓ test_travel_to_planet_b_transitions_world
+
+▶ test_main_boot
+[Main] VoidYield initialized.
+  ✓ test_hud_and_panels_registered
+[Main] VoidYield initialized.
+  ✓ test_initial_current_planet_is_a1
+[Main] VoidYield initialized.
+ERROR: Parameter "t" is null.
+   at: texture_2d_get (./servers/rendering/dummy/storage/texture_storage.h:106)
+   GDScript backtrace (most recent call first):
+       [0] take_screenshot (res://tests/framework/e2e_test_case.gd:97)
+       [1] wait_frames (res://tests/framework/test_case.gd:178)
+  ✗ test_initial_hud_matches_golden
+      └ screenshot capture returned null
+[Main] VoidYield initialized.
+  ✗ test_player_spawns_in_asteroid_field
+      └ expected 700.000000 ~= 280.000000 (±2.000000)
+      └ expected 450.000000 ~= 420.000000 (±2.000000)
+
+▶ test_sell_and_craft_cuj
+[Main] VoidYield initialized.
+  ✓ test_core_loop_mine_deposit_sell
+[Main] VoidYield initialized.
+  ✗ test_craft_ship_part_via_panel
+      └ expected true  got false
+      └ expected true  got false
+      └ expected a ✓ BUILT marker on the hull row — expected true  got false
+
+▶ test_shop_flow
+[Main] VoidYield initialized.
+  ✓ test_opening_shop_panel_shows_upgrades_tab
+[Main] VoidYield initialized.
+  ✗ test_purchasing_upgrade_deducts_credits_and_marks_installed
+      └ expected 99  got 50
+[Main] VoidYield initialized.
+  ✓ test_resources_tab_sells_from_carried_ore
+[Main] VoidYield initialized.
+ERROR: Parameter "t" is null.
+   at: texture_2d_get (./servers/rendering/dummy/storage/texture_storage.h:106)
+   GDScript backtrace (most recent call first):
+       [0] take_screenshot (res://tests/framework/e2e_test_case.gd:97)
+       [1] wait_frames (res://tests/framework/test_case.gd:178)
+  ✗ test_shop_panel_golden_upgrades_tab
+      └ screenshot capture returned null
+
+▶ test_spaceship_flow
+[Main] VoidYield initialized.
+  ✓ test_launch_disabled_until_ship_ready
+[Main] VoidYield initialized.
+  ✓ test_launch_enables_after_all_parts_crafted
+[Main] VoidYield initialized.
+  ✓ test_launch_opens_galaxy_map
+[Main] VoidYield initialized.
+ERROR: Parameter "t" is null.
+   at: texture_2d_get (./servers/rendering/dummy/storage/texture_storage.h:106)
+   GDScript backtrace (most recent call first):
+       [0] take_screenshot (res://tests/framework/e2e_test_case.gd:97)
+       [1] wait_frames (res://tests/framework/test_case.gd:178)
+  ✗ test_spaceship_panel_golden
+      └ screenshot capture returned null
+
+▶ test_virtual_click_cuj
+[Main] VoidYield initialized.
+  ✓ test_click_over_open_panel_is_ignored
+[Main] VoidYield initialized.
+ERROR: Condition "!is_inside_tree()" is true. Returning: Rect2()
+   at: get_viewport_rect (scene/main/canvas_item.cpp:1127)
+   GDScript backtrace (most recent call first):
+       [0] close (res://scenes/ui/shop_panel.gd:116)
+       [1] <anonymous lambda> (res://scenes/world/asteroid_field.gd:23)
+       [2] close_shop (res://scenes/world/shop_terminal.gd:31)
+       [3] on_player_left (res://scenes/world/shop_terminal.gd:36)
+       [4] _on_interactable_area_exited (res://scenes/player/player.gd:205)
+  ✓ test_click_shop_terminal_opens_shop_panel
+
+▶ test_audio_manager
+  ✓ test_audio_manager_autoload_exists
+  ✓ test_get_music_volume_returns_clamped_value
+  ✓ test_get_sfx_volume_returns_clamped_value
+  ✓ test_music_bus_exists
+  ✓ test_play_music_with_null_stops_music
+  ✓ test_play_sfx_with_null_does_not_crash
+  ✓ test_set_music_volume_clamps_to_valid_range
+  ✓ test_set_sfx_volume_clamps_to_valid_range
+  ✓ test_sfx_bus_exists
+
+▶ test_cargo_drone
+  ✓ test_deliver_correct_amount
+  ✓ test_deliver_resets_to_zero
+  ✓ test_initial_zero
+  ✓ test_pickup_capped
+  ✓ test_pickup_fills
+  ✓ test_pickup_returns_actual
+
+▶ test_colony_manager
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_add_housing_advanced_module (res://tests/unit/test_colony_manager.gd:216)
+   GDScript backtrace (most recent call first):
+       [0] test_add_housing_advanced_module (res://tests/unit/test_colony_manager.gd:216)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_add_housing_advanced_module
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_add_housing_basic_module (res://tests/unit/test_colony_manager.gd:202)
+   GDScript backtrace (most recent call first):
+       [0] test_add_housing_basic_module (res://tests/unit/test_colony_manager.gd:202)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_add_housing_basic_module
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_add_housing_standard_module (res://tests/unit/test_colony_manager.gd:210)
+   GDScript backtrace (most recent call first):
+       [0] test_add_housing_standard_module (res://tests/unit/test_colony_manager.gd:210)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_add_housing_standard_module
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_growth_timer_resets_after_trigger (res://tests/unit/test_colony_manager.gd:58)
+   GDScript backtrace (most recent call first):
+       [0] test_growth_timer_resets_after_trigger (res://tests/unit/test_colony_manager.gd:58)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_growth_timer_resets_after_trigger
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_growth_triggers_after_90s_with_needs_met (res://tests/unit/test_colony_manager.gd:35)
+   GDScript backtrace (most recent call first):
+       [0] test_growth_triggers_after_90s_with_needs_met (res://tests/unit/test_colony_manager.gd:35)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_growth_triggers_after_90s_with_needs_met
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_initial_housing_capacity (res://tests/unit/test_colony_manager.gd:15)
+   GDScript backtrace (most recent call first):
+       [0] test_initial_housing_capacity (res://tests/unit/test_colony_manager.gd:15)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_initial_housing_capacity
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_initial_morale (res://tests/unit/test_colony_manager.gd:28)
+   GDScript backtrace (most recent call first):
+       [0] test_initial_morale (res://tests/unit/test_colony_manager.gd:28)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_initial_morale
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_initial_needs_unmet (res://tests/unit/test_colony_manager.gd:20)
+   GDScript backtrace (most recent call first):
+       [0] test_initial_needs_unmet (res://tests/unit/test_colony_manager.gd:20)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_initial_needs_unmet
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_luxury_goods_adds_morale_bonus (res://tests/unit/test_colony_manager.gd:174)
+   GDScript backtrace (most recent call first):
+       [0] test_luxury_goods_adds_morale_bonus (res://tests/unit/test_colony_manager.gd:174)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_luxury_goods_adds_morale_bonus
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_morale_0_3_when_two_basic_needs_unmet (res://tests/unit/test_colony_manager.gd:167)
+   GDScript backtrace (most recent call first):
+       [0] test_morale_0_3_when_two_basic_needs_unmet (res://tests/unit/test_colony_manager.gd:167)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_morale_0_3_when_two_basic_needs_unmet
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_morale_0_6_when_one_basic_need_unmet (res://tests/unit/test_colony_manager.gd:159)
+   GDScript backtrace (most recent call first):
+       [0] test_morale_0_6_when_one_basic_need_unmet (res://tests/unit/test_colony_manager.gd:159)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_morale_0_6_when_one_basic_need_unmet
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_morale_changed_signal_fires (res://tests/unit/test_colony_manager.gd:185)
+   GDScript backtrace (most recent call first):
+       [0] test_morale_changed_signal_fires (res://tests/unit/test_colony_manager.gd:185)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_morale_changed_signal_fires
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_morale_full_when_all_basic_needs_met (res://tests/unit/test_colony_manager.gd:151)
+   GDScript backtrace (most recent call first):
+       [0] test_morale_full_when_all_basic_needs_met (res://tests/unit/test_colony_manager.gd:151)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_morale_full_when_all_basic_needs_met
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_morale_zero_when_all_basic_needs_unmet (res://tests/unit/test_colony_manager.gd:145)
+   GDScript backtrace (most recent call first):
+       [0] test_morale_zero_when_all_basic_needs_unmet (res://tests/unit/test_colony_manager.gd:145)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_morale_zero_when_all_basic_needs_unmet
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_needs_changed_signal_fires (res://tests/unit/test_colony_manager.gd:125)
+   GDScript backtrace (most recent call first):
+       [0] test_needs_changed_signal_fires (res://tests/unit/test_colony_manager.gd:125)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_needs_changed_signal_fires
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_no_growth_at_housing_capacity (res://tests/unit/test_colony_manager.gd:102)
+   GDScript backtrace (most recent call first):
+       [0] test_no_growth_at_housing_capacity (res://tests/unit/test_colony_manager.gd:102)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_no_growth_at_housing_capacity
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_no_growth_when_food_unmet (res://tests/unit/test_colony_manager.gd:82)
+   GDScript backtrace (most recent call first):
+       [0] test_no_growth_when_food_unmet (res://tests/unit/test_colony_manager.gd:82)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_no_growth_when_food_unmet
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_no_growth_when_power_unmet (res://tests/unit/test_colony_manager.gd:92)
+   GDScript backtrace (most recent call first):
+       [0] test_no_growth_when_power_unmet (res://tests/unit/test_colony_manager.gd:92)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_no_growth_when_power_unmet
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_no_growth_when_water_unmet (res://tests/unit/test_colony_manager.gd:72)
+   GDScript backtrace (most recent call first):
+       [0] test_no_growth_when_water_unmet (res://tests/unit/test_colony_manager.gd:72)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_no_growth_when_water_unmet
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_roundtrip_serialization (res://tests/unit/test_colony_manager.gd:224)
+   GDScript backtrace (most recent call first):
+       [0] test_roundtrip_serialization (res://tests/unit/test_colony_manager.gd:224)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_roundtrip_serialization
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_set_need_updates_state (res://tests/unit/test_colony_manager.gd:117)
+   GDScript backtrace (most recent call first):
+       [0] test_set_need_updates_state (res://tests/unit/test_colony_manager.gd:117)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_set_need_updates_state
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'Node (colony_manager.gd)'.
+   at: test_starts_with_4_pioneers (res://tests/unit/test_colony_manager.gd:10)
+   GDScript backtrace (most recent call first):
+       [0] test_starts_with_4_pioneers (res://tests/unit/test_colony_manager.gd:10)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_starts_with_4_pioneers
+
+▶ test_deposit_node
+  ✓ test_advance_survey_sets_stage
+  ✓ test_initial_survey_stage_zero
+  ✓ test_quality_generated_at_stage_2
+  ✓ test_quality_not_regenerated_at_stage_3
+  ✓ test_quality_null_before_stage_2
+  ✓ test_slot_limit_large_is_3
+  ✓ test_slot_limit_medium_is_2
+  ✓ test_slot_limit_motherlode_is_3
+  ✓ test_slot_limit_small_is_1
+  ✗ test_survey_advanced_signal_emitted
+      └ survey_advanced signal should be emitted — expected true  got false
+      └ signal should pass the correct stage (2) — expected 2  got -1
+
+▶ test_drone_bay
+SCRIPT ERROR: Invalid type in function 'enqueue' in base 'Node (DroneTaskQueue)'. Cannot convert argument 2 from String to Object.
+   at: test_dispatch_pending_assigns_tasks (res://tests/unit/test_drone_bay.gd:61)
+   GDScript backtrace (most recent call first):
+       [0] test_dispatch_pending_assigns_tasks (res://tests/unit/test_drone_bay.gd:61)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_dispatch_pending_assigns_tasks
+SCRIPT ERROR: Invalid type in function 'enqueue' in base 'Node (DroneTaskQueue)'. Cannot convert argument 2 from String to Object.
+   at: test_dispatch_pending_only_idle_drones (res://tests/unit/test_drone_bay.gd:74)
+   GDScript backtrace (most recent call first):
+       [0] test_dispatch_pending_only_idle_drones (res://tests/unit/test_drone_bay.gd:74)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_dispatch_pending_only_idle_drones
+  ✓ test_drone_count_correct
+SCRIPT ERROR: Invalid type in function 'enqueue' in base 'Node (DroneTaskQueue)'. Cannot convert argument 2 from String to Object.
+   at: test_drone_dispatched_signal_fires (res://tests/unit/test_drone_bay.gd:113)
+   GDScript backtrace (most recent call first):
+       [0] test_drone_dispatched_signal_fires (res://tests/unit/test_drone_bay.gd:113)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_drone_dispatched_signal_fires
+  ✓ test_drone_registered_signal_fires
+SCRIPT ERROR: Invalid type in function 'enqueue' in base 'Node (DroneTaskQueue)'. Cannot convert argument 2 from String to Object.
+   at: test_idle_count_decreases_after_dispatch (res://tests/unit/test_drone_bay.gd:128)
+   GDScript backtrace (most recent call first):
+       [0] test_idle_count_decreases_after_dispatch (res://tests/unit/test_drone_bay.gd:128)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_idle_count_decreases_after_dispatch
+  ✓ test_idle_drones_all_idle_initially
+  ✓ test_register_adds_drone
+  ✓ test_request_haul_enqueues_task
+  ✓ test_request_repair_enqueues_task
+  ✓ test_unregister_removes_drone
+
+▶ test_drone_task_queue
+  ✓ test_assign_empty_returns_empty_dict
+  ✓ test_assign_highest_priority
+  ✓ test_assign_moves_to_active
+  ✓ test_assigned_signal
+  ✓ test_cancel_for_target_removes_all
+  ✓ test_complete_removes_from_active
+  ✓ test_completed_signal
+  ✓ test_enqueue_adds_task
+
+▶ test_event_log
+  ✓ test_add_entry_stores_it
+  ✓ test_add_trims_to_max
+  ✓ test_clear_empties_log
+  ✓ test_entry_added_signal_fires
+  ✓ test_filter_by_category
+  ✓ test_get_recent_returns_count
+  ✓ test_initial_empty
+
+▶ test_fabricator
+  ✓ test_can_run_false_no_inputs
+  ✓ test_can_run_false_no_recipe
+  ✓ test_can_run_true_with_inputs
+  ✓ test_collect_output_removes_from_buffer
+  ✓ test_cycle_completed_signal_fires
+  ✓ test_initial_not_running
+  ✓ test_load_input_capped_at_20
+  ✓ test_load_input_returns_actual_loaded
+  ✓ test_load_input_within_limit
+  ✓ test_output_buffer_capped_at_10
+  ✓ test_set_recipe_sets_id
+  ✓ test_start_sets_running
+  ✓ test_stop_clears_running
+  ✓ test_tick_advances_progress
+  ✓ test_tick_completes_cycle_after_duration
+
+▶ test_fleet_manager
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_auto_dispatch_assigns_idle_drones (res://tests/unit/test_fleet_manager.gd:67)
+   GDScript backtrace (most recent call first):
+       [0] test_auto_dispatch_assigns_idle_drones (res://tests/unit/test_fleet_manager.gd:67)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_auto_dispatch_assigns_idle_drones
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_auto_dispatch_returns_count (res://tests/unit/test_fleet_manager.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] test_auto_dispatch_returns_count (res://tests/unit/test_fleet_manager.gd:85)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_auto_dispatch_returns_count
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_fleet_dispatched_signal_fires (res://tests/unit/test_fleet_manager.gd:140)
+   GDScript backtrace (most recent call first):
+       [0] test_fleet_dispatched_signal_fires (res://tests/unit/test_fleet_manager.gd:140)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_fleet_dispatched_signal_fires
+  ✓ test_setup_links_components
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_utilization_one_when_all_busy (res://tests/unit/test_fleet_manager.gd:118)
+   GDScript backtrace (most recent call first):
+       [0] test_utilization_one_when_all_busy (res://tests/unit/test_fleet_manager.gd:118)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_utilization_one_when_all_busy
+  ✓ test_utilization_zero_when_all_idle
+
+▶ test_game_loop
+  ✓ test_setup_links_components
+  ✓ test_storage_signal_triggers_haul_request
+  ✓ test_tick_dispatches_pending_tasks
+
+▶ test_game_state
+  ✓ test_add_to_inventory_respects_capacity
+  ✓ test_add_to_inventory_tracks_subtypes
+  ✓ test_buy_resource_to_storage_limited_by_credits_and_space
+  ✓ test_can_craft_ship_part_requires_materials_and_credits
+  ✓ test_craft_ship_part_consumes_materials
+  ✓ test_credits_changed_signal_fires_on_sale
+  ✓ test_drone_deploy_limit
+  ✓ test_dump_inventory_to_storage_transfers_within_space
+  ✓ test_is_ship_ready_requires_all_four_parts
+  ✓ test_purchase_upgrade_applies_effect
+  ✓ test_save_and_load_roundtrips_state
+  ✗ test_scaling_upgrade_doubles_cost_each_level
+      └ second level costs 2 — expected 2  got 50
+      └ expected 4  got 100
+  ✓ test_sell_all_carried
+  ✓ test_sell_all_ore_drains_pool_and_inventory
+  ✓ test_sell_resource_computes_credits_and_clears_subtype
+  ✓ test_sell_resource_rejects_amount_zero_or_negative
+  ✓ test_spend_credits_rejects_when_insufficient
+
+▶ test_game_state_reset
+  ✓ test_reset_clears_all_carried_ore
+  ✓ test_reset_clears_all_ship_parts
+  ✓ test_reset_clears_credits
+  ✓ test_reset_clears_purchased_upgrades
+  ✓ test_reset_clears_scrap_metal
+  ✓ test_reset_clears_storage_pool
+  ✓ test_reset_emits_credits_changed_with_zero
+  ✓ test_reset_emits_inventory_changed
+  ✓ test_reset_emits_storage_changed
+  ✓ test_reset_is_idempotent
+  ✓ test_reset_keeps_starting_buildings_only
+  ✓ test_reset_restores_default_carry_capacity
+  ✓ test_reset_restores_default_fleet_size
+  ✓ test_reset_restores_default_mine_time
+  ✓ test_reset_restores_default_move_speed
+  ✓ test_reset_restores_default_planet
+  ✓ test_reset_then_get_save_data_gives_defaults
+
+▶ test_game_state_tech_tree
+SCRIPT ERROR: Invalid call. Nonexistent function 'reset' in base 'Node (tech_tree.gd)'.
+   at: before_each (res://tests/unit/test_game_state_tech_tree.gd:10)
+   GDScript backtrace (most recent call first):
+       [0] before_each (res://tests/unit/test_game_state_tech_tree.gd:10)
+       [1] _run_suite (res://tests/framework/test_runner.gd:135)
+SCRIPT ERROR: Invalid call. Nonexistent function 'reset' in base 'Node (tech_tree.gd)'.
+   at: test_load_restores_tech_tree_unlocked_nodes (res://tests/unit/test_game_state_tech_tree.gd:43)
+   GDScript backtrace (most recent call first):
+       [0] test_load_restores_tech_tree_unlocked_nodes (res://tests/unit/test_game_state_tech_tree.gd:43)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+SCRIPT ERROR: Invalid call. Nonexistent function 'reset' in base 'Node (tech_tree.gd)'.
+   at: after_each (res://tests/unit/test_game_state_tech_tree.gd:16)
+   GDScript backtrace (most recent call first):
+       [0] after_each (res://tests/unit/test_game_state_tech_tree.gd:16)
+       [1] _run_suite (res://tests/framework/test_runner.gd:144)
+  ✓ test_load_restores_tech_tree_unlocked_nodes
+SCRIPT ERROR: Invalid call. Nonexistent function 'reset' in base 'Node (tech_tree.gd)'.
+   at: before_each (res://tests/unit/test_game_state_tech_tree.gd:10)
+   GDScript backtrace (most recent call first):
+       [0] before_each (res://tests/unit/test_game_state_tech_tree.gd:10)
+       [1] _run_suite (res://tests/framework/test_runner.gd:135)
+SCRIPT ERROR: Invalid call. Nonexistent function 'reset' in base 'Node (tech_tree.gd)'.
+   at: after_each (res://tests/unit/test_game_state_tech_tree.gd:16)
+   GDScript backtrace (most recent call first):
+       [0] after_each (res://tests/unit/test_game_state_tech_tree.gd:16)
+       [1] _run_suite (res://tests/framework/test_runner.gd:144)
+  ✓ test_save_includes_research_points
+SCRIPT ERROR: Invalid call. Nonexistent function 'reset' in base 'Node (tech_tree.gd)'.
+   at: before_each (res://tests/unit/test_game_state_tech_tree.gd:10)
+   GDScript backtrace (most recent call first):
+       [0] before_each (res://tests/unit/test_game_state_tech_tree.gd:10)
+       [1] _run_suite (res://tests/framework/test_runner.gd:135)
+SCRIPT ERROR: Invalid call. Nonexistent function 'reset' in base 'Node (tech_tree.gd)'.
+   at: after_each (res://tests/unit/test_game_state_tech_tree.gd:16)
+   GDScript backtrace (most recent call first):
+       [0] after_each (res://tests/unit/test_game_state_tech_tree.gd:16)
+       [1] _run_suite (res://tests/framework/test_runner.gd:144)
+  ✓ test_save_includes_tech_tree_data
+
+▶ test_harvester_base
+  ✓ test_collect_hopper_deposits_to_linked_depot
+  ✓ test_collect_hopper_empties_it
+  ✓ test_collect_hopper_returns_deposited_amount
+  ✓ test_cycle_adds_to_hopper
+  ✓ test_cycle_completed_signal_emitted
+  ✓ test_cycle_deducts_fuel
+  ✓ test_cycle_emits_rp_generated_signal
+  ✓ test_cycle_uses_ber_formula
+  ✓ test_hopper_clamped_at_capacity
+  ✓ test_hopper_collected_signal_emitted
+  ✓ test_initial_fuel_full
+  ✓ test_initial_hopper_empty
+  ✓ test_is_full_returns_false_when_hopper_not_full
+  ✓ test_is_full_returns_true_when_hopper_at_capacity
+  ✓ test_is_out_of_fuel_returns_false_when_sufficient
+  ✓ test_is_out_of_fuel_returns_true_when_insufficient
+  ✓ test_no_cycle_when_out_of_fuel
+  ✓ test_refuel_adds_fuel
+  ✓ test_refuel_clamped_at_capacity
+  ✓ test_rp_generated_amount_matches_rp_per_cycle
+  ✓ test_tick_does_not_cycle_before_time
+
+▶ test_industrial_site
+  ✓ test_can_place_when_slots_available
+  ✓ test_cannot_overfill_site
+  ✓ test_cannot_place_when_slots_full
+  ✓ test_free_slots_calculation
+  ✓ test_new_site_has_no_buildings
+  ✓ test_place_building_tracks_used_slots
+  ✓ test_place_emits_signal
+  ✓ test_place_returns_false_when_insufficient_slots
+  ✓ test_remove_building_frees_slots
+  ✓ test_remove_emits_signal
+
+▶ test_main_scene
+  ✓ test_process_ticks_game_loop
+  ✓ test_register_harvester_links_to_systems
+  ✓ test_setup_initializes_all_systems
+
+▶ test_number_format
+  ✓ test_format_number_adds_commas
+  ✓ test_format_number_handles_negatives
+  ✓ test_format_storage_uses_slash
+  ✓ test_format_time
+  ✓ test_format_with_unit_below_threshold
+  ✓ test_format_with_unit_millions_and_billions
+  ✓ test_format_with_unit_thousands
+
+▶ test_ore_quality_lot
+  ✓ test_ber_output_formula
+  ✓ test_ber_output_zero_concentration
+  ✓ test_generate_clamps_to_1000_max
+  ✓ test_generate_clamps_to_1_min
+  ✓ test_generate_rich_tier_mean_in_range
+  ✓ test_grade_A_when_er_gte_800
+  ✓ test_grade_F_when_er_lt_200
+  ✓ test_grade_boundaries
+  ✓ test_roundtrip_serialisation
+
+▶ test_planet_unlock
+  ✓ test_asteroid_a1_starts_unlocked
+  ✓ test_planet_b_starts_unlocked
+  ✓ test_planet_unlocked_signal_fires_with_correct_id
+  ✓ test_planet_unlocked_signal_not_emitted_if_already_unlocked
+  ✓ test_reset_clears_visited_planets
+  ✓ test_reset_restores_default_unlocked_planets
+  ✓ test_save_load_preserves_unlocked_planets
+  ✓ test_save_load_preserves_visited_planets
+  ✓ test_try_unlock_planet_returns_false_when_already_unlocked
+  ✓ test_try_unlock_planet_returns_false_when_conditions_not_met
+  ✓ test_try_unlock_planet_returns_true_when_conditions_met
+  ✓ test_unknown_a3_starts_locked
+  ✓ test_visiting_a1_adds_to_visited_set
+  ✓ test_visiting_a1_does_not_unlock_a3
+  ✓ test_visiting_planet_b_adds_to_visited_set
+  ✓ test_visiting_planet_b_unlocks_a3
+
+▶ test_processing_plant
+  ✓ test_can_run_when_inputs_available
+  ✓ test_cannot_run_when_inputs_missing
+  ✓ test_cannot_run_when_output_buffer_full
+  ✓ test_cannot_run_when_recipe_not_set
+  ✓ test_collect_output_removes_from_buffer
+  ✓ test_collect_output_respects_available_amount
+  ✓ test_cycle_consumes_inputs
+  ✓ test_cycle_emits_signal
+  ✓ test_cycle_resets_progress
+  ✓ test_default_quality_gives_1x_speed
+  ✓ test_high_pe_quality_increases_speed
+  ✗ test_high_ut_quality_increases_yield
+      └ High UT should increase yield > 1 — expected 1 > 1
+  ✓ test_initial_state_not_running
+  ✓ test_load_input_accumulates
+  ✓ test_load_input_adds_to_buffer
+  ✓ test_multiple_cycles_in_sequence
+  ✓ test_output_buffer_capped_at_20
+  ✓ test_set_ore_quality_updates_modifiers
+  ✓ test_set_recipe_rejects_unknown_recipe
+  ✓ test_set_recipe_rejects_wrong_tier
+  ✓ test_set_recipe_valid_tier1
+  ✓ test_start_stop_toggle_running
+  ✓ test_tick_advances_progress
+  ✓ test_tick_completes_cycle_at_recipe_time
+  ✓ test_tick_does_nothing_when_cannot_run
+  ✓ test_tick_does_nothing_when_not_running
+
+▶ test_producer_data
+  ✓ test_can_purchase_flips_off_when_maxed
+  ✓ test_drone_cargo_rack_adds_capacity
+  ✓ test_drone_drill_upgrade_reduces_mine_time
+  ✓ test_get_drone_returns_entry
+  ✓ test_get_drone_unknown_returns_empty_dict
+  ✓ test_get_upgrade_and_ship_part_lookups
+  ✓ test_scaling_upgrade_cost_escalates_with_purchases
+  ✓ test_shop_drones_tag_each_entry_with_id
+  ✓ test_shop_upgrades_tag_each_entry_with_id_and_cost
+
+▶ test_producer_data_contracts
+  ✓ test_all_drones_have_required_fields
+  ✓ test_all_ship_parts_have_required_fields
+  ✓ test_all_upgrades_have_required_fields
+  ✓ test_drill_bit_upgrade_exists_with_correct_category
+  ✓ test_fleet_license_is_bay_only
+  ✓ test_fuel_cell_requires_zero_credits
+  ✓ test_heavy_drone_carry_capacity_exceeds_scout
+  ✓ test_heavy_drone_cost_exceeds_scout
+  ✓ test_heavy_drone_uses_distinct_scene
+  ✓ test_hull_plating_requires_zero_shards
+  ✓ test_scout_drone_cost_is_real_value
+  ✓ test_ship_part_costs_are_real_values
+  ✓ test_upgrade_carry_is_data_driven_not_hardcoded
+  ✓ test_upgrade_costs_are_real_values
+
+▶ test_quality_modifiers
+  ✓ test_quality_tier_a_grade_returns_premium
+  ✓ test_quality_tier_f_grade_returns_low
+  ✓ test_quality_tier_null_returns_standard
+  ✓ test_speed_modifier_clamped_to_range
+  ✓ test_speed_modifier_high_pe_gives_high_multiplier
+  ✓ test_speed_modifier_null_lot_returns_one
+  ✓ test_yield_modifier_clamped_to_range
+  ✓ test_yield_modifier_high_ut_gives_high_multiplier
+  ✓ test_yield_modifier_null_lot_returns_one
+
+▶ test_refinery_drone
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_assign_circuit_sets_targets (res://tests/unit/test_refinery_drone.gd:51)
+   GDScript backtrace (most recent call first):
+       [0] test_assign_circuit_sets_targets (res://tests/unit/test_refinery_drone.gd:51)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_assign_circuit_sets_targets
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_assign_circuit_transitions_state (res://tests/unit/test_refinery_drone.gd:61)
+   GDScript backtrace (most recent call first):
+       [0] test_assign_circuit_transitions_state (res://tests/unit/test_refinery_drone.gd:61)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_assign_circuit_transitions_state
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_circuit_completed_signal_on_deliver (res://tests/unit/test_refinery_drone.gd:166)
+   GDScript backtrace (most recent call first):
+       [0] test_circuit_completed_signal_on_deliver (res://tests/unit/test_refinery_drone.gd:166)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_circuit_completed_signal_on_deliver
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_deliver_deducts_fuel (res://tests/unit/test_refinery_drone.gd:130)
+   GDScript backtrace (most recent call first):
+       [0] test_deliver_deducts_fuel (res://tests/unit/test_refinery_drone.gd:130)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_deliver_deducts_fuel
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_deliver_deposits_to_depot (res://tests/unit/test_refinery_drone.gd:103)
+   GDScript backtrace (most recent call first):
+       [0] test_deliver_deposits_to_depot (res://tests/unit/test_refinery_drone.gd:103)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_deliver_deposits_to_depot
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_deliver_resets_carrying (res://tests/unit/test_refinery_drone.gd:116)
+   GDScript backtrace (most recent call first):
+       [0] test_deliver_resets_carrying (res://tests/unit/test_refinery_drone.gd:116)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_deliver_resets_carrying
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_fuel_low_signal_when_low_fuel (res://tests/unit/test_refinery_drone.gd:150)
+   GDScript backtrace (most recent call first):
+       [0] test_fuel_low_signal_when_low_fuel (res://tests/unit/test_refinery_drone.gd:150)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_fuel_low_signal_when_low_fuel
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_harvest_collects_from_deposit (res://tests/unit/test_refinery_drone.gd:80)
+   GDScript backtrace (most recent call first):
+       [0] test_harvest_collects_from_deposit (res://tests/unit/test_refinery_drone.gd:80)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_harvest_collects_from_deposit
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_harvest_fills_carrying (res://tests/unit/test_refinery_drone.gd:91)
+   GDScript backtrace (most recent call first):
+       [0] test_harvest_fills_carrying (res://tests/unit/test_refinery_drone.gd:91)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_harvest_fills_carrying
+  ✓ test_initial_fuel_full
+  ✓ test_initial_state_idle
+  ✓ test_is_available_when_idle
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_is_not_available_when_busy (res://tests/unit/test_refinery_drone.gd:191)
+   GDScript backtrace (most recent call first):
+       [0] test_is_not_available_when_busy (res://tests/unit/test_refinery_drone.gd:191)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_is_not_available_when_busy
+  ✓ test_refuel_restores_fuel
+SCRIPT ERROR: Invalid type in function 'assign_circuit' in base 'Node2D (RefineryDrone)'. The Object-derived class of argument 1 (RefCounted (MockDeposit)) is not a subclass of the expected argument class.
+   at: test_tick_in_moving_transitions_to_harvesting (res://tests/unit/test_refinery_drone.gd:70)
+   GDScript backtrace (most recent call first):
+       [0] test_tick_in_moving_transitions_to_harvesting (res://tests/unit/test_refinery_drone.gd:70)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_tick_in_moving_transitions_to_harvesting
+
+▶ test_resource_quality_inspector
+  ✓ test_clear_removes_lot
+  ✓ test_get_attribute_no_lot_returns_zero
+  ✓ test_get_attribute_with_lot
+  ✓ test_get_grade_no_lot_returns_dash
+  ✓ test_get_grade_with_lot
+  ✓ test_get_summary_empty_when_no_lot
+  ✓ test_get_summary_with_lot_has_all_fields
+  ✓ test_initial_no_lot
+  ✓ test_inspect_sets_lot
+  ✓ test_lot_updated_signal_fires
+
+▶ test_save_manager
+[SaveManager] Save files deleted.
+WARNING: [SaveManager] JSON parse failed for user://save.json.
+   at: push_warning (core/variant/variant_utility.cpp:1034)
+   GDScript backtrace (most recent call first):
+       [0] _read_slot (res://autoloads/save_manager.gd:98)
+       [1] load_game (res://autoloads/save_manager.gd:54)
+       [2] test_corrupted_json_does_not_crash (res://tests/unit/test_save_manager.gd:138)
+       [3] _run_suite (res://tests/framework/test_runner.gd:141)
+[SaveManager] Save files deleted.
+  ✓ test_corrupted_json_does_not_crash
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+  ✓ test_delete_save_is_idempotent_when_no_files
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+  ✓ test_delete_save_removes_autosave_slot
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+  ✓ test_delete_save_removes_main_slot
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+  ✓ test_has_save_false_when_no_file
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Save files deleted.
+  ✓ test_has_save_true_after_immediate_save
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+[SaveManager] No save file — starting fresh.
+[SaveManager] Save files deleted.
+  ✓ test_load_game_with_no_file_leaves_state_unchanged
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Game loaded (v0.2).
+[SaveManager] Save files deleted.
+  ✓ test_save_and_load_preserves_credits
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Game loaded (v0.2).
+[SaveManager] Save files deleted.
+  ✓ test_save_and_load_preserves_current_planet
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Game loaded (v0.2).
+[SaveManager] Save files deleted.
+  ✓ test_save_and_load_preserves_inventory
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Game loaded (v0.2).
+[SaveManager] Save files deleted.
+  ✓ test_save_and_load_preserves_ship_parts
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Game loaded (v0.2).
+[SaveManager] Save files deleted.
+  ✓ test_save_and_load_preserves_storage_pool
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Game loaded (v0.2).
+[SaveManager] Save files deleted.
+  ✓ test_save_and_load_preserves_upgrades
+[SaveManager] Save files deleted.
+[SaveManager] Saved → user://save.json
+[SaveManager] Saved → user://save.json
+[SaveManager] Game loaded (v0.2).
+[SaveManager] Save files deleted.
+  ✓ test_save_immediate_bypasses_cooldown
+[SaveManager] Save files deleted.
+WARNING: [SaveManager] Version mismatch (0.1 vs expected 0.2) — wiping save.
+   at: push_warning (core/variant/variant_utility.cpp:1034)
+   GDScript backtrace (most recent call first):
+       [0] _apply_payload (res://autoloads/save_manager.gd:109)
+       [1] load_game (res://autoloads/save_manager.gd:56)
+       [2] test_version_mismatch_wipes_save_file (res://tests/unit/test_save_manager.gd:123)
+       [3] _run_suite (res://tests/framework/test_runner.gd:141)
+[SaveManager] Save files deleted.
+[SaveManager] Save files deleted.
+  ✓ test_version_mismatch_wipes_save_file
+
+▶ test_storage_depot
+  ✓ test_capacity_reached_signal_when_full
+  ✓ test_deposit_adds_ore
+  ✓ test_deposit_capped_at_capacity
+  ✓ test_deposit_mixed_types
+  ✓ test_deposit_returns_actual_deposited
+  ✓ test_free_space_decreases_on_deposit
+  ✓ test_get_amount_returns_zero_for_unknown
+  ✓ test_has_enough_false_when_insufficient
+  ✓ test_has_enough_true_when_sufficient
+  ✓ test_initial_empty
+  ✓ test_inventory_changed_signal_on_deposit
+  ✓ test_inventory_changed_signal_on_withdraw
+  ✓ test_total_stored_sums_all
+  ✓ test_withdraw_clamped_to_available
+  ✓ test_withdraw_removes_ore
+  ✓ test_withdraw_returns_actual_withdrawn
+
+▶ test_survey_tool
+  ✓ test_initial_not_scanning
+  ✓ test_scan_clears_is_scanning
+  ✓ test_scan_complete_signal
+  ✓ test_scan_deposit_advances_survey
+  ✓ test_scan_multiple_deposits
+  ✓ test_scan_sets_is_scanning
+
+▶ test_tech_tree
+  ✓ test_add_rp_increases_total
+  ✓ test_can_unlock_root_node_with_enough_resources
+  ✓ test_cannot_unlock_already_unlocked_node
+  ✓ test_cannot_unlock_if_insufficient_credits
+  ✓ test_cannot_unlock_if_insufficient_rp
+  ✓ test_cannot_unlock_if_missing_prerequisite
+  ✓ test_get_node_data
+  ✓ test_get_node_data_invalid
+  ✓ test_initial_rp_is_zero
+  ✓ test_is_unlocked
+  ✓ test_node_unlocked_signal_fires
+  ✓ test_prerequisite_chain_enforced
+  ✓ test_roundtrip_serialization
+  ✓ test_rp_changed_signal_fires
+  ✓ test_unlock_adds_to_unlocked_list
+  ✓ test_unlock_deducts_rp_and_credits
+
+▶ test_zone_manager
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_add_deposit_to_zone (res://tests/unit/test_zone_manager.gd:54)
+   GDScript backtrace (most recent call first):
+       [0] test_add_deposit_to_zone (res://tests/unit/test_zone_manager.gd:54)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_add_deposit_to_zone
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_assign_drone_circuit (res://tests/unit/test_zone_manager.gd:68)
+   GDScript backtrace (most recent call first):
+       [0] test_assign_drone_circuit (res://tests/unit/test_zone_manager.gd:68)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_assign_drone_circuit
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_create_zone_empty (res://tests/unit/test_zone_manager.gd:43)
+   GDScript backtrace (most recent call first):
+       [0] test_create_zone_empty (res://tests/unit/test_zone_manager.gd:43)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_create_zone_empty
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_drones_in_zone (res://tests/unit/test_zone_manager.gd:96)
+   GDScript backtrace (most recent call first):
+       [0] test_drones_in_zone (res://tests/unit/test_zone_manager.gd:96)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_drones_in_zone
+SCRIPT ERROR: Invalid type in function 'create_zone' in base 'Node (ZoneManager)'. The Object-derived class of argument 2 (RefCounted (MockDepot)) is not a subclass of the expected argument class.
+   at: test_zone_count_correct (res://tests/unit/test_zone_manager.gd:81)
+   GDScript backtrace (most recent call first):
+       [0] test_zone_count_correct (res://tests/unit/test_zone_manager.gd:81)
+       [1] _run_suite (res://tests/framework/test_runner.gd:141)
+  ✓ test_zone_count_correct
+
+[SUMMARY] passed=355 failed=10 suites=36
+ERROR: 8 RID allocations of type 'P12GodotShape2D' were leaked at exit.
+WARNING: 95 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2692)
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2641)
+ERROR: 43 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:810)
