@@ -26,15 +26,14 @@ func test_add_rp_increases_total() -> void:
 
 
 func test_rp_changed_signal_fires() -> void:
-	var signal_fired := false
-	var captured_rp := 0.0
+	var captured := {"fired": false, "rp": 0.0}
 	TechTree.rp_changed.connect(func(new_rp: float):
-		signal_fired = true
-		captured_rp = new_rp
+		captured.fired = true
+		captured.rp = new_rp
 	)
 	TechTree.add_rp(30.0)
-	assert_true(signal_fired, "rp_changed signal should fire")
-	assert_eq(captured_rp, 30.0, "signal should carry new RP value")
+	assert_true(captured.fired, "rp_changed signal should fire")
+	assert_eq(captured.rp, 30.0, "signal should carry new RP value")
 
 
 # --- Unlock Conditions ---
@@ -61,7 +60,7 @@ func test_cannot_unlock_if_insufficient_rp() -> void:
 
 func test_cannot_unlock_if_insufficient_credits() -> void:
 	TechTree.add_rp(100.0)  # plenty of RP
-	GameState.credits = 100  # not enough: 1.A costs 200 CR
+	GameState.credits = 10  # not enough: 1.A costs 50 CR
 	assert_false(TechTree.can_unlock("1.A"), "should not unlock with insufficient credits")
 
 
@@ -70,9 +69,9 @@ func test_cannot_unlock_if_insufficient_credits() -> void:
 func test_unlock_deducts_rp_and_credits() -> void:
 	GameState.credits = 1000
 	TechTree.add_rp(100.0)
-	TechTree.unlock("1.A")  # costs 50 RP + 200 CR
+	TechTree.unlock("1.A")  # costs 50 RP + 50 CR
 	assert_eq(TechTree.research_points, 50.0, "RP should be deducted")
-	assert_eq(GameState.credits, 800, "credits should be deducted")
+	assert_eq(GameState.credits, 950, "credits should be deducted")
 
 
 func test_unlock_adds_to_unlocked_list() -> void:
@@ -85,15 +84,14 @@ func test_unlock_adds_to_unlocked_list() -> void:
 func test_node_unlocked_signal_fires() -> void:
 	GameState.credits = 1000
 	TechTree.add_rp(100.0)
-	var signal_fired := false
-	var captured_id := ""
+	var captured := {"fired": false, "id": ""}
 	TechTree.node_unlocked.connect(func(node_id: String):
-		signal_fired = true
-		captured_id = node_id
+		captured.fired = true
+		captured.id = node_id
 	)
 	TechTree.unlock("1.A")
-	assert_true(signal_fired, "node_unlocked signal should fire")
-	assert_eq(captured_id, "1.A", "signal should carry node ID")
+	assert_true(captured.fired, "node_unlocked signal should fire")
+	assert_eq(captured.id, "1.A", "signal should carry node ID")
 
 
 func test_cannot_unlock_already_unlocked_node() -> void:

@@ -21,7 +21,8 @@ func get_grade() -> String:
 func get_attribute(attr: String) -> float:
 	if current_lot == null:
 		return 0.0
-	return current_lot.get(attr, 0.0)
+	var val = current_lot.get(attr)
+	return float(val) if val != null else 0.0
 
 
 func get_summary() -> Dictionary:

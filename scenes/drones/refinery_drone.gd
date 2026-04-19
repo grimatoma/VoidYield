@@ -13,15 +13,15 @@ var state: State = State.IDLE
 var fuel_level: float = FUEL_CAPACITY
 var carrying: int = 0
 var cargo_type: String = ""
-var assigned_deposit: Node = null
-var assigned_depot: Node = null
+var assigned_deposit = null  # Node
+var assigned_depot = null  # Node
 
 signal state_changed(new_state: State)
 signal circuit_completed(ore_type: String, amount: int)
 signal fuel_low(current_fuel: float)
 
 
-func assign_circuit(deposit: Node, depot: Node) -> void:
+func assign_circuit(deposit, depot) -> void:
 	assigned_deposit = deposit
 	assigned_depot = depot
 	_set_state(State.MOVING_TO_DEPOSIT)
@@ -58,13 +58,14 @@ func _do_deliver() -> void:
 		assigned_depot.deposit(cargo_type, carrying)
 
 	var amount_delivered = carrying
+	var delivered_type = cargo_type
 	carrying = 0
 	cargo_type = ""
 
 	fuel_level -= FUEL_PER_TRIP
 	fuel_level = max(fuel_level, 0.0)
 
-	circuit_completed.emit(assigned_depot.name if assigned_depot else "", amount_delivered)
+	circuit_completed.emit(delivered_type, amount_delivered)
 
 	if fuel_level < 30:
 		_set_state(State.REFUELING)
@@ -78,7 +79,7 @@ func _do_refuel() -> void:
 
 
 func refuel(amount: float) -> void:
-	fuel_level = mini(fuel_level + amount, FUEL_CAPACITY)
+	fuel_level = minf(fuel_level + amount, FUEL_CAPACITY)
 
 
 func get_state_name() -> String:

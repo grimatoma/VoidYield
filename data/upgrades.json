@@ -23,7 +23,7 @@
 	"storage_expansion": {
 		"name": "Storage Expansion",
 		"description": "+25 depot capacity",
-		"cost": 1,
+		"cost": 25,
 		"category": "outpost",
 		"max_purchases": 5,
 		"scales": true
