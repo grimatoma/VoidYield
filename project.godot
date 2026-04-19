@@ -35,6 +35,9 @@ RecipeRegistry="*res://autoloads/recipe_registry.gd"
 StrandingManager="*res://autoloads/stranding_manager.gd"
 GalaxyMap="*res://autoloads/galaxy_map.gd"
 PlanetBStartup="*res://autoloads/planet_b_startup.gd"
+LogisticsManager="*res://autoloads/logistics_manager.gd"
+A2Depot="*res://autoloads/a2_depot.gd"
+A2SecretCache="*res://autoloads/a2_secret_cache.gd"
 
 [display]
 
