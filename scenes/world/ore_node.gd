@@ -6,6 +6,8 @@ class_name OreNode
 
 enum State { FULL, CRACKED, DEPLETED }
 
+signal survey_completed(ore_node: Node2D)
+
 # --- Configuration ---
 @export var min_ore: int = 3
 @export var max_ore: int = 5
@@ -48,6 +50,7 @@ func _ready() -> void:
 	collision_mask = 0
 	_update_hold_duration()
 	_create_stage_label()
+	add_to_group("ore_nodes")
 
 
 func _load_sprite_texture() -> void:
@@ -200,6 +203,8 @@ func advance_survey(current_stage: int) -> void:
 			"voidstone": tier = "motherlode"
 		var lot = OreQualityLot.generate(tier)
 		quality_grade = lot.grade
+	if survey_stage >= 4:
+		survey_completed.emit(self)
 
 
 func _update_hold_duration() -> void:

@@ -21,6 +21,8 @@ const DESTINATIONS := {
 var _player: Node2D = null
 var _current_world: Node2D = null
 var _colony: ColonyManager
+var _zone_manager: ZoneManager = null
+var _fleet_manager: FleetManager = null
 
 
 func _ready() -> void:
@@ -58,11 +60,20 @@ func _ready() -> void:
 	_colony.set_need("food", true)
 	_colony.set_need("power", true)
 
+	# Initialize zone and fleet managers
+	_zone_manager = ZoneManager.new()
+	_fleet_manager = FleetManager.new()
+	var drone_bay = get_tree().get_first_node_in_group("drone_bay")
+	if drone_bay and _fleet_manager and _zone_manager:
+		_fleet_manager.setup(drone_bay, _zone_manager)
+
 	print("[Main] VoidYield initialized.")
 
 
 func _process(delta: float) -> void:
 	_colony.tick(delta)
+	if _fleet_manager:
+		_fleet_manager.tick(delta)
 
 
 func _input(event: InputEvent) -> void:
@@ -171,6 +182,31 @@ func return_to_a1() -> void:
 	_on_galaxy_travel_requested("asteroid_a1")
 
 
+func _setup_zone_signals() -> void:
+	# Connect to OreNode survey_completed signals for auto-zone creation
+	if not _zone_manager:
+		return
+
+	for ore_node in get_tree().get_nodes_in_group("ore_nodes"):
+		if ore_node.has_signal("survey_completed"):
+			ore_node.survey_completed.connect(func(node): _on_ore_node_surveyed(node))
+
+
+func _on_ore_node_surveyed(ore_node: Node2D) -> void:
+	if not _zone_manager:
+		return
+
+	# Create a zone if it doesn't exist, using the storage depot as the gathering point
+	var zone_id = "zone_asteroid_a1"
+	if not _zone_manager.zones.has(zone_id):
+		var storage = get_tree().get_first_node_in_group("storage_depot")
+		if storage:
+			_zone_manager.create_zone(zone_id, storage)
+
+	# Add the surveyed ore node to the zone
+	_zone_manager.add_deposit_to_zone(zone_id, ore_node)
+
+
 func _load_world(scene: PackedScene, player_spawn: Vector2) -> void:
 	# Close any open panels
 	if shop_panel.is_open:
@@ -200,3 +236,6 @@ func _load_world(scene: PackedScene, player_spawn: Vector2) -> void:
 	_player = PLAYER_SCENE.instantiate()
 	_current_world.add_child(_player)
 	_player.global_position = player_spawn
+
+	# Connect to OreNode survey signals for zone creation
+	_setup_zone_signals()
