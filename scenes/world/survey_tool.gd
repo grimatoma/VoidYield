@@ -15,6 +15,7 @@ func scan_deposits(deposits: Array, survey_stage: int) -> void:
 		if deposit and deposit.has_method("advance_survey"):
 			deposit.advance_survey(survey_stage)
 			_scanned_count += 1
+			AudioManager.play_survey_ping()
 
 	scan_completed.emit(_scanned_count)
 

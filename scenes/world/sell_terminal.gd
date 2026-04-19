@@ -24,6 +24,7 @@ func get_prompt_text() -> String:
 func interact(_player: Node2D) -> void:
 	if not is_sell_open:
 		is_sell_open = true
+		AudioManager.play_sell_blip()
 		sell_opened.emit()
 
 

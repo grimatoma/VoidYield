@@ -71,6 +71,7 @@ func deploy_drone(drone_id: String = "scout_drone") -> bool:
 
 	active_drones.append(drone_instance)
 	GameState.register_drone(drone_instance)
+	AudioManager.set_drone_hum(true)
 	return true
 
 
