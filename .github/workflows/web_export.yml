@@ -1,0 +1,119 @@
+# web_export.yml
+#
+# Exports VoidYield as a Godot 4.6.2 Web (HTML5 / GL Compatibility) build
+# and deploys it to GitHub Pages via the modern Actions Pages API.
+#
+# No gh-pages branch is used — artifacts are uploaded directly to Pages.
+#
+# Triggers:
+#   - Every push to `main`
+#   - Manually via "Run workflow" in the Actions tab (workflow_dispatch)
+#
+# Live URL once Pages is enabled:
+#   https://grimatoma.github.io/VoidYield/
+#
+# ONE-TIME SETUP REQUIRED in repo settings:
+#   Settings → Pages → Build and deployment → Source → "GitHub Actions"
+
+name: Web Export → GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permissions required by the GitHub Pages deployment API
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent overlapping deploys; don't cancel a deploy that's already running
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  export_and_deploy:
+    name: Export Web Build & Deploy to Pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      # ── 1. Source ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Cache Godot binary + templates ─────────────────────────────────
+      #   Key includes the exact version so a version bump busts the cache.
+      - name: Cache Godot 4.6.2 files
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/godot/export_templates/4.6.2.stable
+            /usr/local/bin/godot
+          key: godot-4.6.2-stable-linux
+
+      # ── 3. Download Godot (only when cache misses) ─────────────────────────
+      - name: Download Godot 4.6.2 Linux headless + export templates
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          BASE="https://github.com/godotengine/godot-builds/releases/download/4.6.2-stable"
+          wget -q "${BASE}/Godot_v4.6.2-stable_linux.x86_64.zip"
+          wget -q "${BASE}/Godot_v4.6.2-stable_export_templates.tpz"
+
+          # Install the headless binary
+          unzip -q Godot_v4.6.2-stable_linux.x86_64.zip
+          mv Godot_v4.6.2-stable_linux.x86_64 /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+
+          # Install export templates
+          unzip -q Godot_v4.6.2-stable_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/4.6.2.stable
+          mkdir -p ~/.config/godot
+          mv templates/* ~/.local/share/godot/export_templates/4.6.2.stable/
+
+          # Tidy up zips
+          rm -f Godot_v4.6.2-stable_linux.x86_64.zip Godot_v4.6.2-stable_export_templates.tpz
+
+      # ── 4. Prime the editor (asset import pass) ───────────────────────────
+      #   Opens the project in editor mode briefly so Godot can generate the
+      #   .godot/ import cache.  The process is intentionally killed after 30 s;
+      #   exit code 124 (timeout) is expected and handled by continue-on-error.
+      - name: Import project assets
+        continue-on-error: true
+        run: timeout 30 godot --headless --path "$GITHUB_WORKSPACE" -e || true
+
+      # ── 5. Web export ──────────────────────────────────────────────────────
+      #   Uses the "Web" preset defined in export_presets.cfg.
+      #   The output path on the command line overrides the preset's export_path.
+      #
+      #   Thread support is OFF (variant/thread_support=false in the preset) so
+      #   the build is single-threaded and does NOT require SharedArrayBuffer —
+      #   meaning GitHub Pages serves it correctly without COOP/COEP headers.
+      #   The progressive_web_app/ensure_cross_origin_isolation_headers=true
+      #   setting adds a service-worker as belt-and-suspenders for any host
+      #   where cross-origin isolation IS available.
+      - name: Export Web build
+        run: |
+          mkdir -p build/web
+          godot --headless --path "$GITHUB_WORKSPACE" \
+            --export-release "Web" "$GITHUB_WORKSPACE/build/web/index.html"
+          echo "=== Build output ==="
+          ls -lh build/web/
+
+      # ── 6. GitHub Pages deployment ─────────────────────────────────────────
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
