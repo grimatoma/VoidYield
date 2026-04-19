@@ -28,6 +28,7 @@ SaveManager="*res://autoloads/save_manager.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
 SettingsManager="*res://autoloads/settings_manager.gd"
 ColonyManager="*res://autoloads/colony_manager.gd"
+ConsumptionManager="*res://autoloads/consumption_manager.gd"
 EventLog="*res://autoloads/event_log.gd"
 
 [display]
