@@ -38,6 +38,7 @@ PlanetBStartup="*res://autoloads/planet_b_startup.gd"
 LogisticsManager="*res://autoloads/logistics_manager.gd"
 A2Depot="*res://autoloads/a2_depot.gd"
 A2SecretCache="*res://autoloads/a2_secret_cache.gd"
+A3Unlock="*res://autoloads/a3_unlock.gd"
 
 [display]
 
