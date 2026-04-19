@@ -1,10 +1,38 @@
 class_name SurveyTool
 extends Node2D
+## Survey Tool with tier system supporting radius upgrades and deep scan (M12).
 
 var is_scanning: bool = false
 var _scanned_count: int = 0
+var tier: int = 1
 
 signal scan_completed(deposit_count: int)
+signal tier_upgraded(new_tier: int)
+
+
+func _ready() -> void:
+	if SurveyToolSystem:
+		tier = SurveyToolSystem.upgrade_level
+
+
+func get_scan_radius() -> float:
+	if SurveyToolSystem:
+		return SurveyToolSystem.get_scan_radius()
+	return 30.0
+
+
+func can_deep_scan() -> bool:
+	if SurveyToolSystem:
+		return SurveyToolSystem.can_deep_scan()
+	return false
+
+
+func upgrade_tier(new_tier: int) -> bool:
+	if SurveyToolSystem and SurveyToolSystem.upgrade(new_tier):
+		tier = new_tier
+		tier_upgraded.emit(new_tier)
+		return true
+	return false
 
 
 func scan_deposits(deposits: Array, survey_stage: int) -> void:
