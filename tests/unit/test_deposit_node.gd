@@ -43,11 +43,11 @@ func test_quality_not_regenerated_at_stage_3() -> void:
 	deposit.concentration = 75.0
 	deposit.advance_survey(2)
 	var first_quality = deposit.quality
-	var first_er = first_quality.attributes.get("ER", -1)
+	var first_er = first_quality.er
 
 	deposit.advance_survey(3)
 	var second_quality = deposit.quality
-	var second_er = second_quality.attributes.get("ER", -1)
+	var second_er = second_quality.er
 
 	# Same object (identity check via ER value being unchanged)
 	assert_eq(first_er, second_er, "quality ER should not change when advancing from stage 2 to 3")
