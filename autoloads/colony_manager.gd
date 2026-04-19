@@ -1,5 +1,4 @@
 extends Node
-class_name ColonyManager
 ## ColonyManager — Manages Pioneer population, needs, and growth.
 
 const GROWTH_INTERVAL: float = 90.0
