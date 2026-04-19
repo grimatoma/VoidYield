@@ -1,4 +1,3 @@
-class_name EventLog
 extends Node
 ## Central event log for game messages. Stores recent events and emits on new entries.
 
