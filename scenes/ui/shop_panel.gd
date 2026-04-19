@@ -684,6 +684,32 @@ func _add_drone_assignment_section() -> void:
 		if not is_instance_valid(drone): continue
 		_add_assignment_row(drone, i + 1)
 
+	# Add RECALL ALL button
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 8)
+	item_list.add_child(spacer)
+
+	var recall_card = _make_card()
+	var recall_margin = MarginContainer.new()
+	recall_margin.add_theme_constant_override("margin_left", 8)
+	recall_margin.add_theme_constant_override("margin_top", 6)
+	recall_margin.add_theme_constant_override("margin_right", 8)
+	recall_margin.add_theme_constant_override("margin_bottom", 6)
+	recall_card.add_child(recall_margin)
+
+	var recall_btn = Button.new()
+	recall_btn.text = "RECALL ALL"
+	recall_btn.custom_minimum_size = Vector2(0, 28)
+	recall_btn.add_theme_color_override("font_color", COLOR_AMBER)
+	recall_btn.add_theme_font_size_override("font_size", 12)
+	recall_margin.add_child(recall_btn)
+	recall_btn.pressed.connect(func():
+		for drone in drones:
+			if is_instance_valid(drone):
+				drone.current_state = 0
+	)
+	item_list.add_child(recall_card)
+
 
 func _add_assignment_row(drone: Node, index: int) -> void:
 	var card = _make_card()
