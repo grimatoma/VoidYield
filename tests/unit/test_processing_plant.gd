@@ -232,3 +232,52 @@ func test_multiple_cycles_in_sequence() -> void:
 	plant.load_input("common", 5)
 	plant.tick(8.0)
 	assert_eq(plant._output_buffer["steel_bar"], 2)
+
+
+func test_default_quality_gives_1x_speed() -> void:
+	var plant = ProcessingPlantScript.new()
+	# No quality set (null) should give 1.0x speed modifier
+	assert_eq(plant.effective_speed, 1.0, "Default quality should give 1.0x speed")
+
+
+func test_high_pe_quality_increases_speed() -> void:
+	var plant = ProcessingPlantScript.new()
+	var lot = preload("res://data/ore_quality_lot.gd").new()
+	lot.pe = 1000.0  # High PE
+
+	plant.set_ore_quality(lot)
+	var modifier = plant.effective_speed
+	assert_gt(modifier, 1.0, "High PE should increase speed > 1.0x")
+
+
+func test_high_ut_quality_increases_yield() -> void:
+	var plant = ProcessingPlantScript.new()
+	var lot = preload("res://data/ore_quality_lot.gd").new()
+	lot.ut = 1000.0  # High UT
+
+	plant.set_ore_quality(lot)
+	plant.set_recipe("smelt_vorax")
+	plant.load_input("common", 5)
+	plant.start()
+	plant.tick(8.0)
+
+	# With high UT yield modifier, should get more output
+	var output = plant._output_buffer.get("steel_bar", 0)
+	assert_gt(output, 1, "High UT should increase yield > 1")
+
+
+func test_set_ore_quality_updates_modifiers() -> void:
+	var plant = ProcessingPlantScript.new()
+	var lot1 = preload("res://data/ore_quality_lot.gd").new()
+	lot1.pe = 500.0  # Neutral PE
+
+	plant.set_ore_quality(lot1)
+	var speed1 = plant.effective_speed
+
+	var lot2 = preload("res://data/ore_quality_lot.gd").new()
+	lot2.pe = 1000.0  # High PE
+
+	plant.set_ore_quality(lot2)
+	var speed2 = plant.effective_speed
+
+	assert_gt(speed2, speed1, "Speed should increase when quality improves")

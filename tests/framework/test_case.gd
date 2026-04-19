@@ -1,4 +1,3 @@
-class_name TestCase
 extends Node
 ## Base class for all VoidYield tests.
 ##
