@@ -25,6 +25,9 @@ const LOOK_AHEAD_SMOOTHING: float = 3.0
 # --- Direction for sprite (future animation) ---
 var facing_direction: Vector2 = Vector2.DOWN
 
+# --- Survey Tool ---
+var survey_tool: SurveyTool
+
 
 func _ready() -> void:
 	interaction_area.body_entered.connect(_on_interactable_entered)
@@ -32,6 +35,9 @@ func _ready() -> void:
 	interaction_area.area_entered.connect(_on_interactable_area_entered)
 	interaction_area.area_exited.connect(_on_interactable_area_exited)
 	_load_dir_textures()
+
+	survey_tool = SurveyTool.new()
+	add_child(survey_tool)
 
 
 func _load_dir_textures() -> void:
@@ -154,10 +160,16 @@ func _process_mining(delta: float) -> void:
 
 
 func _complete_mining() -> void:
-	if mining_target and mining_target.has_method("interact"):
-		mining_target.interact(self)
-		# Screen shake — juice!
-		_do_screen_shake(1.5, 0.1)
+	if mining_target:
+		var ore_node = mining_target as OreNode
+		if ore_node and ore_node.survey_stage < 4:
+			# Perform survey action
+			survey_tool.scan_deposits([ore_node], ore_node.survey_stage)
+			ore_node._update_hold_duration()
+		elif mining_target.has_method("interact"):
+			mining_target.interact(self)
+			# Screen shake — juice!
+			_do_screen_shake(1.5, 0.1)
 	is_mining = false
 	mining_target = null
 	mining_progress = 0.0
