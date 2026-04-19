@@ -89,12 +89,12 @@ func test_dump_inventory_to_storage_transfers_within_space() -> void:
 
 
 func test_buy_resource_to_storage_limited_by_credits_and_space() -> void:
-	GameState.credits = 50
+	GameState.credits = 100
 	GameState.storage_capacity = 20
-	# Common buy price is 1 * 2.0 = 2 credits each. Space = 20. Request = 30.
+	# Common sell price is 2 CR → buy price is 2 * 2.0 = 4 CR each. Space = 20. Request = 30.
 	var bought = GameState.buy_resource_to_storage("common", 30)
 	assert_eq(bought, 20, "capped by storage space")
-	assert_eq(GameState.credits, 50 - 20 * 2)
+	assert_eq(GameState.credits, 100 - 20 * 4)
 
 
 func test_sell_all_ore_drains_pool_and_inventory() -> void:

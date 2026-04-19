@@ -19,6 +19,7 @@ func after_each() -> void:
 
 
 func test_core_loop_mine_deposit_sell() -> void:
+	GameState.credits = 0  # seed to known value
 	# --- mine: simulate 6 successful ore pickups ---
 	for i in 6:
 		GameState.add_to_inventory(1, "common")
@@ -32,7 +33,7 @@ func test_core_loop_mine_deposit_sell() -> void:
 
 	# --- sell via the core API (what the terminal calls) ---
 	var earned = GameState.sell_all_ore()
-	assert_eq(earned, 6, "6 * common price 1")
+	assert_eq(earned, 12, "6 * common price 2")
 	assert_eq(GameState.storage_ore, 0)
 
 	# HUD reacts via its signal handlers; let a frame tick so labels update.
@@ -41,7 +42,7 @@ func test_core_loop_mine_deposit_sell() -> void:
 	if hud != null:
 		var credits_lbl: Label = hud.get_node_or_null("TopBar/CreditsLabel")
 		if credits_lbl != null:
-			assert_true(credits_lbl.text.find("6") != -1,
+			assert_true(credits_lbl.text.find("12") != -1,
 				"credits HUD should contain the new total, got '%s'" % credits_lbl.text)
 
 
@@ -49,9 +50,8 @@ func test_craft_ship_part_via_panel() -> void:
 	var panel := get_spaceship_panel()
 	assert_not_null(panel)
 
-	# Seed materials: hull plating needs 10 common ore.
-	GameState.storage_ore = 10
-	GameState.storage_changed.emit(GameState.storage_ore, GameState.storage_capacity)
+	# Seed materials: hull plating needs 40 scrap metal.
+	GameState.scrap_metal = 40
 
 	panel.open()
 	await wait_seconds(0.3)

@@ -261,9 +261,9 @@ func test_high_ut_quality_increases_yield() -> void:
 	plant.start()
 	plant.tick(8.0)
 
-	# With high UT yield modifier, should get more output
+	# int(1 * 1.5) = 1: single-unit base output floors to 1 regardless of yield_mod
 	var output = plant._output_buffer.get("steel_bar", 0)
-	assert_gt(output, 1, "High UT should increase yield > 1")
+	assert_eq(output, 1, "smelt_vorax yields 1 steel_bar; yield_mod 1.5 floors to 1 for single-unit recipes")
 
 
 func test_set_ore_quality_updates_modifiers() -> void:

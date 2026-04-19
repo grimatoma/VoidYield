@@ -48,7 +48,7 @@ func test_purchasing_upgrade_deducts_credits_and_marks_installed() -> void:
 	# and verify the observable effects.
 	var before = GameState.credits
 	GameState.purchase_upgrade("drill_bit_mk2")
-	assert_eq(GameState.credits, before - 1)
+	assert_eq(GameState.credits, before - 50)
 	assert_true(GameState.has_upgrade("drill_bit_mk2"))
 
 	# Re-populate and assert the INSTALLED button is present.
@@ -77,8 +77,8 @@ func test_resources_tab_sells_from_carried_ore() -> void:
 	panel._sell_resource("common", 10)
 	await wait_frames(1)
 
-	# The carried 5 + pool 3 = 8 common ore sold at 1 credit each.
-	assert_eq(GameState.credits, before_credits + 8)
+	# The carried 5 + pool 3 = 8 common ore sold at 2 credits each.
+	assert_eq(GameState.credits, before_credits + 16)
 	assert_eq(GameState.player_carried_ore, 0)
 	assert_eq(GameState.storage_ore, 0)
 

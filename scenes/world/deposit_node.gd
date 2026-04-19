@@ -4,11 +4,13 @@ class_name DepositNode
 ## Distinct from OreNode (hand-minable surface rocks).
 ## Contains quality attributes, concentration, survey progression state.
 
+const OreQualityLot = preload("res://data/ore_quality_lot.gd")
+
 @export var ore_type: String = "common"
 @export var deposit_size: String = "medium"
 
 var concentration: float = 50.0
-var quality: OreQualityLot = null
+var quality = null
 var survey_stage: int = 0
 var is_revealed: bool = false
 

@@ -85,15 +85,14 @@ func test_slot_limit_motherlode_is_3() -> void:
 
 func test_survey_advanced_signal_emitted() -> void:
 	var deposit = DepositNode.new()
-	var signal_received = false
-	var received_stage = -1
+	var captured := {"fired": false, "stage": -1}
 
 	deposit.survey_advanced.connect(func(stage: int) -> void:
-		signal_received = true
-		received_stage = stage
+		captured.fired = true
+		captured.stage = stage
 	)
 
 	deposit.advance_survey(2)
 
-	assert_true(signal_received, "survey_advanced signal should be emitted")
-	assert_eq(received_stage, 2, "signal should pass the correct stage (2)")
+	assert_true(captured.fired, "survey_advanced signal should be emitted")
+	assert_eq(captured.stage, 2, "signal should pass the correct stage (2)")

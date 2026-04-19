@@ -14,7 +14,7 @@ const TechTreePanelScene   = preload("res://scenes/ui/tech_tree_panel.tscn")
 
 # Maps galaxy-map destination ids to (scene, spawn) for world loading.
 const DESTINATIONS := {
-	"asteroid_a1": {"scene": ASTEROID_FIELD_SCENE, "spawn": Vector2(700, 450)},
+	"asteroid_a1": {"scene": ASTEROID_FIELD_SCENE, "spawn": Vector2(280, 420)},
 	"planet_b":    {"scene": PLANET_B_SCENE,       "spawn": Vector2(280, 330)},
 }
 
@@ -52,7 +52,7 @@ func _ready() -> void:
 	tech_tree_panel.visible = false
 
 	# Load initial world (A1)
-	_load_world(ASTEROID_FIELD_SCENE, Vector2(700, 450))
+	_load_world(ASTEROID_FIELD_SCENE, Vector2(280, 420))
 
 	# Initialize colony manager
 	_colony = ColonyManager.new()

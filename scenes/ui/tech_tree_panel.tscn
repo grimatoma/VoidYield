@@ -44,7 +44,7 @@ margin_bottom = 8.0
 
 [node name="HeaderPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = Control.SIZE_EXPAND_FILL
+size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 32)
 theme_override_styles/panel = SubResource("StyleBoxFlat_header")
 
@@ -63,7 +63,7 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="VBoxContainer/HeaderPanel/HeaderMargin/TitleRow"]
 layout_mode = 2
-size_flags_horizontal = Control.SIZE_EXPAND_FILL
+size_flags_horizontal = 3
 text = "TECH TREE"
 
 [node name="CloseButton" type="Button" parent="VBoxContainer/HeaderPanel/HeaderMargin/TitleRow"]
@@ -73,7 +73,7 @@ text = "X"
 
 [node name="RPPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = Control.SIZE_EXPAND_FILL
+size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 20)
 
 [node name="RPMargin" type="MarginContainer" parent="VBoxContainer/RPPanel"]
@@ -96,7 +96,7 @@ custom_minimum_size = Vector2(0, 12)
 
 [node name="TabsPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = Control.SIZE_EXPAND_FILL
+size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 24)
 theme_override_styles/panel = SubResource("StyleBoxFlat_tabs")
 
@@ -112,15 +112,15 @@ theme_override_constants/margin_bottom = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = Control.SIZE_EXPAND_FILL
+size_flags_vertical = 3
 
 [node name="ItemList" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
-size_flags_horizontal = Control.SIZE_EXPAND_FILL
+size_flags_horizontal = 3
 
 [node name="FooterPanel" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = Control.SIZE_EXPAND_FILL
+size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 20)
 theme_override_styles/panel = SubResource("StyleBoxFlat_footer")
 

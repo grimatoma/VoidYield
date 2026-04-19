@@ -191,6 +191,8 @@ func get_luxury_needs(tier: String) -> Array:
 func get_productivity_multiplier(planet_id: String) -> float:
 	"""Calculate productivity multiplier based on basic needs satisfaction.
 	Uses the LOWEST basic need % to determine multiplier."""
+	if planet_id not in population_data:
+		return 1.0  # Uninitialised planet has no population → no unmet needs → full productivity
 	var tier = get_tier(planet_id)
 	var basic_needs = get_basic_needs(tier)
 

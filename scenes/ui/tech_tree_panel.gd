@@ -76,7 +76,8 @@ func close() -> void:
 # --- Item List Population ---
 
 func _populate_items() -> void:
-	item_list.clear()
+	for child in item_list.get_children():
+		child.queue_free()
 	var unlockable_nodes = _get_unlockable_nodes()
 
 	for node_id in unlockable_nodes:
