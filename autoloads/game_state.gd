@@ -82,6 +82,9 @@ var constructed_buildings: Array[String] = ["sell_terminal", "shop_terminal"]
 var research_points: float = 0.0
 var unlocked_tech_nodes: Array[String] = []
 
+# --- Survey Tool ---
+var survey_tool_tier: int = 1  # Tier I (30px, ±15%), II (60px, ±5%), III (120px, ±1%)
+
 # --- Debug ---
 var debug_click_mode: bool = true  # Click any interactable to trigger it instantly
 
@@ -90,7 +93,9 @@ var current_interaction_target: Node2D = null
 
 
 func _ready() -> void:
-	pass
+	# Wire tech tree unlocks to survey tool tier advancement
+	if TechTree:
+		TechTree.node_unlocked.connect(_on_tech_node_unlocked)
 
 
 # --- Inventory (player carried ore) ---
@@ -526,6 +531,50 @@ func construct_building(building_id: String) -> void:
 		EventLog.add("Building constructed: %s" % building_id, "BUILD")
 
 
+# --- Survey Tool Tier System ---
+
+func get_survey_tool_tier() -> int:
+	"""Get current Survey Tool tier (1, 2, or 3)."""
+	return survey_tool_tier
+
+
+func get_survey_range(tier: int) -> int:
+	"""Get scan range in pixels for a tier."""
+	match tier:
+		1: return 30
+		2: return 60
+		3: return 120
+		_: return 30
+
+
+func get_survey_precision(tier: int) -> float:
+	"""Get precision (as ±% decimal) for a tier."""
+	match tier:
+		1: return 0.15
+		2: return 0.05
+		3: return 0.01
+		_: return 0.15
+
+
+func can_deep_scan() -> bool:
+	"""Can perform Deep Scan (15s hold to reveal 3 top attributes) at Tier II+."""
+	return survey_tool_tier >= 2
+
+
+func survey_shows_all_attributes() -> bool:
+	"""Shows all 11 attributes at Tier III."""
+	return survey_tool_tier >= 3
+
+
+func _on_tech_node_unlocked(node_id: String) -> void:
+	"""Called when a tech tree node is unlocked."""
+	match node_id:
+		"3.S":  # Survey Tool Mk.II
+			survey_tool_tier = maxf(survey_tool_tier, 2)
+		"3.T":  # Survey Tool Mk.III
+			survey_tool_tier = maxf(survey_tool_tier, 3)
+
+
 # --- Save / Load ---
 
 func get_save_data() -> Dictionary:
@@ -553,6 +602,7 @@ func get_save_data() -> Dictionary:
 		"constructed_buildings": constructed_buildings,
 		"unlocked_planets": unlocked_planets.duplicate(),
 		"visited_planets": visited_planets.duplicate(),
+		"survey_tool_tier": survey_tool_tier,
 		"tech_tree": TechTree.get_save_data(),
 	}
 
@@ -578,6 +628,7 @@ func load_save_data(data: Dictionary) -> void:
 	max_fleet_size        = data.get("max_fleet_size", 1)
 	purchased_upgrades    = data.get("purchased_upgrades", {})
 	research_points       = data.get("research_points", 0.0)
+	survey_tool_tier      = data.get("survey_tool_tier", 1)
 
 	var raw_unlocked = data.get("unlocked_planets", ["asteroid_a1", "planet_b"])
 	unlocked_planets.clear()
@@ -671,6 +722,7 @@ func reset_to_defaults() -> void:
 	constructed_buildings = ["sell_terminal", "shop_terminal"]
 	research_points       = 0.0
 	unlocked_tech_nodes   = []
+	survey_tool_tier      = 1
 	for part_id in spaceship_parts_crafted:
 		spaceship_parts_crafted[part_id] = false
 	unlocked_planets = ["asteroid_a1", "planet_b"]

@@ -98,6 +98,7 @@ func interact(player: Node2D) -> void:
 			_try_drop_material()
 			particles.restart()
 			_spawn_number_pop(player)
+			AudioManager.play_mine_sound()
 		if ore_remaining <= 0:
 			_set_state(State.DEPLETED)
 		elif ore_remaining <= total_ore / 2.0:

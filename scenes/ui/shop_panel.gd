@@ -861,12 +861,14 @@ func _purchase_drone(drone_id: String) -> void:
 	var drone_bay = get_tree().get_first_node_in_group("drone_bay")
 	if drone_bay:
 		drone_bay.deploy_drone(drone_id)
+		AudioManager.play_purchase_chime()
 		item_purchased.emit(drone_id, "drone")
 		_populate_items()
 
 
 func _purchase_upgrade(upgrade_id: String) -> void:
 	if GameState.purchase_upgrade(upgrade_id):
+		AudioManager.play_purchase_chime()
 		item_purchased.emit(upgrade_id, "upgrade")
 		_populate_items()
 
