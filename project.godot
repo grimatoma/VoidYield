@@ -34,6 +34,7 @@ EventLog="*res://autoloads/event_log.gd"
 RecipeRegistry="*res://autoloads/recipe_registry.gd"
 StrandingManager="*res://autoloads/stranding_manager.gd"
 GalaxyMap="*res://autoloads/galaxy_map.gd"
+PlanetBStartup="*res://autoloads/planet_b_startup.gd"
 
 [display]
 
