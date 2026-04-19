@@ -1,6 +1,8 @@
 extends Node
 ## TechTree — Tech tree progression system managing RP accumulation and node unlocks.
 
+const TechTreeData = preload("res://data/tech_tree_data.gd")
+
 var research_points: float = 0.0
 var unlocked_nodes: Array[String] = []
 

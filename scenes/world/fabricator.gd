@@ -1,6 +1,7 @@
 class_name Fabricator
 extends Node2D
 
+const RECIPES = preload("res://data/recipes.gd")
 const FACTORY_TIER = 2
 const SLOT_COST = 2
 
@@ -32,10 +33,10 @@ func can_run() -> bool:
 	if current_recipe_id.is_empty():
 		return false
 
-	if not Recipes.ALL.has(current_recipe_id):
+	if not RECIPES.ALL.has(current_recipe_id):
 		return false
 
-	var recipe = Recipes.ALL[current_recipe_id]
+	var recipe = RECIPES.ALL[current_recipe_id]
 	for input_type in recipe.inputs:
 		if _input_buffers.get(input_type, 0) < recipe.inputs[input_type]:
 			return false
@@ -47,7 +48,7 @@ func tick(delta: float) -> void:
 	if not is_running or not can_run():
 		return
 
-	var recipe = Recipes.ALL[current_recipe_id]
+	var recipe = RECIPES.ALL[current_recipe_id]
 	var duration = recipe.time
 
 	_progress += delta
@@ -56,7 +57,7 @@ func tick(delta: float) -> void:
 
 
 func _complete_cycle() -> void:
-	var recipe = Recipes.ALL[current_recipe_id]
+	var recipe = RECIPES.ALL[current_recipe_id]
 
 	# Consume inputs
 	for input_type in recipe.inputs:
