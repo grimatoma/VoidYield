@@ -28,6 +28,7 @@ var quality_grade: String = ""
 # --- Node References ---
 @onready var sprite: Sprite2D = $Sprite
 @onready var collision: CollisionShape2D = $CollisionShape2D
+@onready var particles: CPUParticles2D = $OreParticles
 
 var stage_label: Label = null
 
@@ -95,6 +96,7 @@ func interact(player: Node2D) -> void:
 		if added > 0:
 			ore_remaining -= 1
 			_try_drop_material()
+			particles.restart()
 			_spawn_number_pop(player)
 		if ore_remaining <= 0:
 			_set_state(State.DEPLETED)
@@ -133,6 +135,7 @@ func drone_mine(_drone: Node2D) -> int:
 	ore_remaining -= mined
 	if mined > 0:
 		_try_drop_material()
+		particles.restart()
 	if ore_remaining <= 0:
 		_set_state(State.DEPLETED)
 		release_claim()
