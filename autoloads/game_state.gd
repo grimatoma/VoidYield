@@ -18,16 +18,16 @@ signal planet_unlocked(planet_id: String)
 
 # --- Player Stats ---
 var player_move_speed: float = 120.0
-var player_max_carry: int = 10000  # TODO: restore to 10 after testing
+var player_max_carry: int = 10
 var player_mine_time: float = 1.5  # seconds per mine action
 
 # --- Inventory (player carried) — all types share player_max_carry ---
 # player_carried_ore is the TOTAL across all types (used for capacity)
-var player_carried_ore: int = 10000  # TODO: restore to 0 after testing (2000 × 5 types)
-var player_rare_ore: int = 2000      # krysite subset  # TODO: restore to 0 after testing
-var player_aethite: int = 2000       # planet B common subset  # TODO: restore to 0 after testing
-var player_voidstone: int = 2000     # planet B rare subset  # TODO: restore to 0 after testing
-var player_carried_shards: int = 2000 # crystal shards subset  # TODO: restore to 0 after testing
+var player_carried_ore: int = 0
+var player_rare_ore: int = 0
+var player_aethite: int = 0
+var player_voidstone: int = 0
+var player_carried_shards: int = 0
 
 # --- Sell Prices ---
 var ore_prices: Dictionary = {
@@ -39,18 +39,18 @@ var ore_prices: Dictionary = {
 }
 
 # --- Economy ---
-var credits: int = 500  # TODO: restore to 0 after testing
+var credits: int = 0
 
 # --- Storage Depot ---
-var storage_ore: int = 10000      # TODO: restore to 0 after testing
-var storage_capacity: int = 10000  # TODO: restore to 50 after testing
-var storage_rare_ore: int = 2000  # TODO: restore to 0 after testing
-var storage_aethite: int = 2000   # TODO: restore to 0 after testing
-var storage_voidstone: int = 2000 # TODO: restore to 0 after testing
-var storage_shards: int = 2000    # TODO: restore to 0 after testing
+var storage_ore: int = 0
+var storage_capacity: int = 50
+var storage_rare_ore: int = 0
+var storage_aethite: int = 0
+var storage_voidstone: int = 0
+var storage_shards: int = 0
 
 # --- Crafting Materials ---
-var scrap_metal: int = 2000  # TODO: restore to 0 after testing
+var scrap_metal: int = 0
 
 # --- Spaceship Parts ---
 var spaceship_parts_crafted: Dictionary = {
@@ -69,7 +69,7 @@ var unlocked_planets: Array[String] = ["asteroid_a1", "planet_b"]
 var visited_planets: Array[String] = []
 
 # --- Drones ---
-var max_fleet_size: int = 2  # TODO: restore to 1 after testing
+var max_fleet_size: int = 1
 var active_drone_count: int = 0
 
 # --- Upgrades Purchased ---
@@ -673,3 +673,31 @@ func reset_to_defaults() -> void:
 	inventory_changed.emit(player_carried_ore, player_max_carry)
 	storage_changed.emit(storage_ore, storage_capacity)
 	materials_changed.emit(scrap_metal, player_carried_shards)
+
+
+func debug_fill_resources() -> void:
+	## Fills resources for testing purposes.
+	player_max_carry = 10000
+	player_rare_ore = 1000
+	player_aethite = 1000
+	player_voidstone = 1000
+	player_carried_shards = 1000
+	player_carried_ore = 5000
+
+	storage_capacity = 10000
+	storage_ore = 5000
+	storage_rare_ore = 1000
+	storage_aethite = 1000
+	storage_voidstone = 1000
+	storage_shards = 1000
+
+	credits = 5000
+	scrap_metal = 500
+	max_fleet_size = 5
+
+	credits_changed.emit(credits)
+	inventory_changed.emit(player_carried_ore, player_max_carry)
+	storage_changed.emit(storage_ore, storage_capacity)
+	materials_changed.emit(scrap_metal, player_carried_shards)
+
+	print("[DEBUG] Resources filled: %d ore, %d credits" % [player_carried_ore, credits])

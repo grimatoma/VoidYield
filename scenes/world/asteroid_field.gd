@@ -10,6 +10,9 @@ extends Node2D
 
 var shop_panel: Node = null
 var spaceship_panel: Node = null
+var processing_plant: Node2D = null
+
+const ProcessingPlantScene = preload("res://scenes/world/processing_plant.tscn")
 
 
 func _ready() -> void:
@@ -33,6 +36,15 @@ func _ready() -> void:
 	if spaceship and spaceship_panel:
 		spaceship.ship_opened.connect(func(s): spaceship_panel.open(s))
 		spaceship.ship_closed.connect(func(): spaceship_panel.close())
+
+	# Instantiate and wire ProcessingPlant
+	processing_plant = ProcessingPlantScene.instantiate()
+	processing_plant.global_position = Vector2(600, 200)
+	add_child(processing_plant)
+
+	if processing_plant and shop_panel:
+		processing_plant.plant_opened.connect(func(): shop_panel.open_processing_plant(processing_plant))
+		processing_plant.plant_closed.connect(func(): shop_panel.close())
 
 
 func _setup_navigation() -> void:

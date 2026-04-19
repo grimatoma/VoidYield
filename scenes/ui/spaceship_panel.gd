@@ -101,27 +101,28 @@ func _add_header(text: String) -> void:
 
 
 func _add_materials_row() -> void:
-	var hbox = HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 16)
+	var row1 = HBoxContainer.new()
+	row1.add_theme_constant_override("separation", 12)
 
 	var scrap_lbl = Label.new()
-	scrap_lbl.text = "▪ Scrap Metal: %d" % GameState.scrap_metal
+	scrap_lbl.text = "▪ Scrap: %d" % GameState.scrap_metal
+	scrap_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scrap_lbl.add_theme_color_override("font_color", Color(0.75, 0.72, 0.65))
-	hbox.add_child(scrap_lbl)
+	row1.add_child(scrap_lbl)
 
 	var shards_lbl = Label.new()
 	shards_lbl.text = "◆ Shards: %d" % GameState.storage_shards
+	shards_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	shards_lbl.add_theme_color_override("font_color", Color(0.65, 0.4, 1.0))
-	hbox.add_child(shards_lbl)
+	row1.add_child(shards_lbl)
 
 	var credits_lbl = Label.new()
 	credits_lbl.text = "CR: %d" % GameState.credits
 	credits_lbl.add_theme_color_override("font_color", Color(0.831, 0.659, 0.263))
-	hbox.add_child(credits_lbl)
+	row1.add_child(credits_lbl)
 
-	item_list.add_child(hbox)
+	item_list.add_child(row1)
 
-	# Divider
 	var sep = HSeparator.new()
 	item_list.add_child(sep)
 

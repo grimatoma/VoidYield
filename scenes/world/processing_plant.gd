@@ -17,6 +17,8 @@ var _input_buffer: Dictionary = {}
 var _output_buffer: Dictionary = {}
 
 signal cycle_completed(recipe_id: String, outputs: Dictionary)
+signal plant_opened
+signal plant_closed
 
 
 func set_recipe(recipe_id: String) -> bool:
@@ -122,3 +124,21 @@ func _complete_cycle() -> void:
 
 	# Reset progress for next cycle
 	_progress = 0.0
+
+
+# --- Interactable Interface ---
+
+func interact(_player: Node2D) -> void:
+	plant_opened.emit()
+
+
+func close_plant() -> void:
+	plant_closed.emit()
+
+
+func get_prompt_text() -> String:
+	return "[E] Processing Plant (Tier %d)" % FACTORY_TIER
+
+
+func is_interactable() -> bool:
+	return true

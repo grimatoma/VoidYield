@@ -94,11 +94,23 @@ func open_drone_bay(bay: Node2D = null) -> void:
 	_open_panel()
 
 
+func open_processing_plant(plant: Node2D = null) -> void:
+	_bay_mode = false
+	_current_tab = "factory"
+	shop_terminal_ref = plant
+	_open_panel()
+
+
 func _open_panel() -> void:
 	is_open = true
 	position.x = get_viewport_rect().size.x
 	visible = true
-	title_label.text = "DRONE BAY" if _bay_mode else "SHOP TERMINAL"
+	if _bay_mode:
+		title_label.text = "DRONE BAY"
+	elif _current_tab == "factory":
+		title_label.text = "PROCESSING PLANT"
+	else:
+		title_label.text = "SHOP TERMINAL"
 	footer_hint.text = "[E] / CLICK ROW TO BUY    ESC CLOSE"
 	_build_tabs()
 	_populate_items()
@@ -115,8 +127,15 @@ func close() -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "position:x", get_viewport_rect().size.x, 0.2).set_ease(Tween.EASE_IN)
 	tween.tween_callback(func(): visible = false)
-	if shop_terminal_ref and shop_terminal_ref.has_method("close_shop"):
-		shop_terminal_ref.close_shop()
+	if shop_terminal_ref:
+		if _current_tab == "factory" and shop_terminal_ref.has_method("close_plant"):
+			shop_terminal_ref.close_plant()
+		elif shop_terminal_ref.has_method("close_shop"):
+			shop_terminal_ref.close_shop()
+		elif shop_terminal_ref.has_method("close_bay"):
+			shop_terminal_ref.close_bay()
+		elif shop_terminal_ref.has_method("close_sell"):
+			shop_terminal_ref.close_sell()
 	if shop_terminal_ref and shop_terminal_ref.has_method("close_bay"):
 		shop_terminal_ref.close_bay()
 	if shop_terminal_ref and shop_terminal_ref.has_method("close_sell"):

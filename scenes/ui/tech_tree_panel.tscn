@@ -1,0 +1,106 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqvd3r8n0gufsp5"]
+
+[ext_resource type="Script" path="res://scenes/ui/tech_tree_panel.gd" id="1_p1h1n"]
+
+[node name="TechTreePanel" type="PanelContainer"]
+anchors_right = 1.0
+anchors_bottom = 1.0
+offset_left = 640.0
+offset_right = 960.0
+custom_minimum_size = Vector2(300, 540)
+script = ExtResource("1_p1h1n")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 292.0
+margin_bottom = 532.0
+
+[node name="HeaderPanel" type="PanelContainer" parent="VBoxContainer"]
+margin_right = 284.0
+margin_bottom = 32.0
+
+[node name="HeaderMargin" type="MarginContainer" parent="VBoxContainer/HeaderPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 280.0
+margin_bottom = 28.0
+
+[node name="TitleRow" type="HBoxContainer" parent="VBoxContainer/HeaderPanel/HeaderMargin"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 276.0
+margin_bottom = 24.0
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/HeaderPanel/HeaderMargin/TitleRow"]
+margin_right = 244.0
+margin_bottom = 24.0
+size_flags_horizontal = Control.SIZE_EXPAND_FILL
+text = "TECH TREE"
+
+[node name="CloseButton" type="Button" parent="VBoxContainer/HeaderPanel/HeaderMargin/TitleRow"]
+margin_left = 248.0
+margin_right = 276.0
+margin_bottom = 24.0
+text = "X"
+
+[node name="RPPanel" type="PanelContainer" parent="VBoxContainer"]
+margin_top = 36.0
+margin_right = 284.0
+margin_bottom = 56.0
+
+[node name="RPMargin" type="MarginContainer" parent="VBoxContainer/RPPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 280.0
+margin_bottom = 16.0
+
+[node name="RPRow" type="HBoxContainer" parent="VBoxContainer/RPPanel/RPMargin"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 276.0
+margin_bottom = 12.0
+
+[node name="RPLabel" type="Label" parent="VBoxContainer/RPPanel/RPMargin/RPRow"]
+margin_right = 276.0
+margin_bottom = 12.0
+text = "Research Points: 0.0"
+
+[node name="TabsPanel" type="PanelContainer" parent="VBoxContainer"]
+margin_top = 60.0
+margin_right = 284.0
+margin_bottom = 80.0
+
+[node name="TabsRow" type="HBoxContainer" parent="VBoxContainer/TabsPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 280.0
+margin_bottom = 16.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+margin_top = 84.0
+margin_right = 284.0
+margin_bottom = 500.0
+size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+[node name="ItemList" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+margin_right = 284.0
+
+[node name="FooterPanel" type="PanelContainer" parent="VBoxContainer"]
+margin_top = 504.0
+margin_right = 284.0
+margin_bottom = 524.0
+
+[node name="FooterMargin" type="MarginContainer" parent="VBoxContainer/FooterPanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 280.0
+margin_bottom = 16.0
+
+[node name="FooterHint" type="Label" parent="VBoxContainer/FooterPanel/FooterMargin"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 276.0
+margin_bottom = 12.0
+text = "RESEARCH POINTS: 0"
+custom_minimum_size = Vector2(0, 12)

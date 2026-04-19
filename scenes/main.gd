@@ -10,6 +10,7 @@ extends Node2D
 const ASTEROID_FIELD_SCENE = preload("res://scenes/world/asteroid_field.tscn")
 const PLANET_B_SCENE       = preload("res://scenes/world/planet_b.tscn")
 const PLAYER_SCENE         = preload("res://scenes/player/player.tscn")
+const TechTreePanelScene   = preload("res://scenes/ui/tech_tree_panel.tscn")
 
 # Maps galaxy-map destination ids to (scene, spawn) for world loading.
 const DESTINATIONS := {
@@ -19,6 +20,7 @@ const DESTINATIONS := {
 
 var _player: Node2D = null
 var _current_world: Node2D = null
+var _colony: ColonyManager
 
 
 func _ready() -> void:
@@ -41,10 +43,25 @@ func _ready() -> void:
 	spaceship_panel.launch_requested.connect(_on_launch_requested)
 	galaxy_map_panel.travel_requested.connect(_on_galaxy_travel_requested)
 
+	# Instantiate and add tech tree panel
+	var tech_tree_panel = TechTreePanelScene.instantiate()
+	$UILayer.add_child(tech_tree_panel)
+	tech_tree_panel.add_to_group("tech_tree_panel")
+
 	# Load initial world (A1)
 	_load_world(ASTEROID_FIELD_SCENE, Vector2(700, 450))
 
+	# Initialize colony manager
+	_colony = ColonyManager.new()
+	_colony.set_need("water", true)
+	_colony.set_need("food", true)
+	_colony.set_need("power", true)
+
 	print("[Main] VoidYield initialized.")
+
+
+func _process(delta: float) -> void:
+	_colony.tick(delta)
 
 
 func _input(event: InputEvent) -> void:

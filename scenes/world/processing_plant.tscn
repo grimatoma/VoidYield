@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://brtqs0jodctd3c2h"]
+
+[ext_resource type="Script" path="res://scenes/world/processing_plant.gd" id="1_i1s2k"]
+[ext_resource type="Texture2D" uid="uid://bdp3fcxbhzqrvx7y" path="res://assets/sprites/buildings/shop_terminal.png" id="2_x3r8e"]
+
+[sub_resource type="RectangleShape2D" id="1"]
+size = Vector2(44, 44)
+
+[node name="ProcessingPlant" type="Node2D"]
+script = ExtResource("1_i1s2k")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_x3r8e")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("1")

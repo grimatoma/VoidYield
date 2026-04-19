@@ -22,6 +22,12 @@ const NumberFormat = preload("res://scripts/utils/number_format.gd")
 @onready var interaction_prompt:   Label       = $InteractionPrompt
 @onready var mining_progress_bar:  ProgressBar = $MiningProgressBar
 
+# ── Debug controls ──────────────────────────────────────────────────────────────
+var debug_fill_button: Button = null
+
+# ── Research button ──────────────────────────────────────────────────────────────
+var research_button: Button = null
+
 
 func _ready() -> void:
 	GameState.credits_changed.connect(_on_credits_changed)
@@ -39,8 +45,43 @@ func _ready() -> void:
 
 	mining_progress_bar.visible = false
 
+	# Setup debug fill button (only visible when debug_click_mode is true)
+	debug_fill_button = Button.new()
+	debug_fill_button.text = "⚡ DEBUG FILL"
+	debug_fill_button.custom_minimum_size = Vector2(120, 30)
+	debug_fill_button.add_theme_font_size_override("font_size", 10)
+	debug_fill_button.add_theme_color_override("font_color", Color(0.831, 0.658, 0.270))
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.545, 0.227, 0.164, 0.8)
+	debug_fill_button.add_theme_stylebox_override("normal", style)
+	debug_fill_button.pressed.connect(_on_debug_fill_pressed)
+	add_child(debug_fill_button)
+	debug_fill_button.visible = GameState.debug_click_mode
+
+	# Setup research button
+	research_button = Button.new()
+	research_button.text = "🔬 RESEARCH"
+	research_button.custom_minimum_size = Vector2(120, 30)
+	research_button.add_theme_font_size_override("font_size", 10)
+	research_button.add_theme_color_override("font_color", Color(0.831, 0.658, 0.270))
+	var style2 = StyleBoxFlat.new()
+	style2.bg_color = Color(0.101, 0.101, 0.113, 0.9)
+	research_button.add_theme_stylebox_override("normal", style2)
+	research_button.pressed.connect(_on_research_pressed)
+	add_child(research_button)
+
 
 func _process(_delta: float) -> void:
+	# Position buttons in bottom-right corner
+	if debug_fill_button or research_button:
+		var viewport_size = get_viewport_rect().size
+		if debug_fill_button:
+			debug_fill_button.position = viewport_size - Vector2(debug_fill_button.custom_minimum_size.x + 10, debug_fill_button.custom_minimum_size.y + 10)
+			debug_fill_button.visible = GameState.debug_click_mode
+		if research_button:
+			var offset_y = debug_fill_button.custom_minimum_size.y + 15 if GameState.debug_click_mode else 10
+			research_button.position = viewport_size - Vector2(research_button.custom_minimum_size.x + 10, research_button.custom_minimum_size.y + offset_y)
+
 	var target = GameState.current_interaction_target
 	if target != null and target.has_method("get_prompt_text"):
 		var text = target.get_prompt_text()
@@ -117,3 +158,13 @@ func _bounce_label(label: Control) -> void:
 	var tween = create_tween()
 	tween.tween_property(label, "scale", Vector2(1.2, 1.2), 0.05)
 	tween.tween_property(label, "scale", Vector2(1.0, 1.0), 0.15)
+
+
+func _on_debug_fill_pressed() -> void:
+	GameState.debug_fill_resources()
+
+
+func _on_research_pressed() -> void:
+	var tech_tree_panel = get_tree().get_first_node_in_group("tech_tree_panel")
+	if tech_tree_panel:
+		tech_tree_panel.open()
