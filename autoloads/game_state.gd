@@ -78,6 +78,10 @@ var purchased_upgrades: Dictionary = {}
 # --- Buildings Constructed ---
 var constructed_buildings: Array[String] = ["sell_terminal", "shop_terminal"]
 
+# --- Tech Tree ---
+var research_points: float = 0.0
+var unlocked_tech_nodes: Array[String] = []
+
 # --- Debug ---
 var debug_click_mode: bool = true  # Click any interactable to trigger it instantly
 
@@ -571,6 +575,7 @@ func load_save_data(data: Dictionary) -> void:
 	current_planet        = data.get("current_planet", "asteroid_a1")
 	max_fleet_size        = data.get("max_fleet_size", 1)
 	purchased_upgrades    = data.get("purchased_upgrades", {})
+	research_points       = data.get("research_points", 0.0)
 
 	var raw_unlocked = data.get("unlocked_planets", ["asteroid_a1", "planet_b"])
 	unlocked_planets.clear()
@@ -581,6 +586,11 @@ func load_save_data(data: Dictionary) -> void:
 	visited_planets.clear()
 	for p in raw_visited:
 		visited_planets.append(str(p))
+
+	var raw_tech_nodes = data.get("unlocked_tech_nodes", [])
+	unlocked_tech_nodes.clear()
+	for node_id in raw_tech_nodes:
+		unlocked_tech_nodes.append(str(node_id))
 
 	var raw_parts = data.get("spaceship_parts_crafted", {})
 	for part_id in spaceship_parts_crafted:
@@ -651,6 +661,8 @@ func reset_to_defaults() -> void:
 	active_drone_count    = 0
 	purchased_upgrades    = {}
 	constructed_buildings = ["sell_terminal", "shop_terminal"]
+	research_points       = 0.0
+	unlocked_tech_nodes   = []
 	for part_id in spaceship_parts_crafted:
 		spaceship_parts_crafted[part_id] = false
 	unlocked_planets = ["asteroid_a1", "planet_b"]
