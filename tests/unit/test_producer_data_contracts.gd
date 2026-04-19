@@ -88,16 +88,15 @@ func test_all_ship_parts_have_required_fields() -> void:
 		var p := ProducerData.get_ship_part(part_id)
 		assert_false(p.is_empty(), "%s not found" % part_id)
 		assert_has(p, "name")
-		assert_has(p, "requires_ore")
-		assert_has(p, "requires_rare")
+		assert_has(p, "requires_scrap")
+		assert_has(p, "requires_shards")
 		assert_has(p, "credits_cost")
 
 
 func test_ship_part_costs_are_real_values() -> void:
-	## RED until JSON uses real values.
 	var hull := ProducerData.get_ship_part("hull_plating")
-	assert_ge(hull.get("requires_ore", 0), 50,
-			"hull_plating should require ≥ 50 common ore (real value = 80)")
+	assert_ge(hull.get("requires_scrap", 0), 30,
+			"hull_plating should require ≥ 30 scrap metal (real value = 40)")
 
 	var ion := ProducerData.get_ship_part("ion_drive")
 	assert_ge(ion.get("credits_cost", 0), 200,
@@ -108,10 +107,10 @@ func test_ship_part_costs_are_real_values() -> void:
 			"navigation_core credits cost should be ≥ 400 (real value = 500)")
 
 
-func test_hull_plating_requires_zero_rare() -> void:
+func test_hull_plating_requires_zero_shards() -> void:
 	var hull := ProducerData.get_ship_part("hull_plating")
-	assert_eq(hull.get("requires_rare", -1), 0,
-			"hull_plating needs no rare ore")
+	assert_eq(hull.get("requires_shards", -1), 0,
+			"hull_plating needs no shards")
 
 
 func test_fuel_cell_requires_zero_credits() -> void:

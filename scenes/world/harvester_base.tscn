@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://harvester_base"]
+
+[ext_resource type="Script" path="res://scenes/world/harvester_base.gd" id="1_harvester"]
+
+[node name="HarvesterBase" type="Node2D"]
+script = ExtResource("1_harvester")

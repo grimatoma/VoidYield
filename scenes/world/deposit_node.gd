@@ -23,7 +23,8 @@ func advance_survey(stage: int) -> void:
 	survey_stage = stage
 
 	if stage >= 2 and quality == null:
-		quality = OreQualityLot.generate(ore_type, concentration)
+		var tier = _concentration_to_tier(concentration)
+		quality = OreQualityLot.generate(tier)
 
 	survey_advanced.emit(stage)
 
@@ -44,3 +45,14 @@ func _get_harvester_slots_for_size(size: String) -> int:
 			return 3
 		_:
 			return 2  # default to medium
+
+
+func _concentration_to_tier(conc: float) -> String:
+	if conc >= 90:
+		return "motherlode"
+	elif conc >= 60:
+		return "rich"
+	elif conc >= 30:
+		return "average"
+	else:
+		return "poor"

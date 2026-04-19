@@ -24,7 +24,7 @@ func test_get_upgrade_and_ship_part_lookups() -> void:
 	assert_true(ProducerData.get_upgrade("missing").is_empty())
 
 	var p = ProducerData.get_ship_part("ion_drive")
-	assert_has(p, "requires_rare")
+	assert_has(p, "requires_shards")
 	assert_true(ProducerData.get_ship_part("no_part").is_empty())
 
 

@@ -25,6 +25,7 @@ func _ready() -> void:
 	GameState.credits_changed.connect(func(_a): if is_open: _populate())
 	GameState.storage_changed.connect(func(_s, _c): if is_open: _populate())
 	GameState.ship_part_crafted.connect(func(_id): if is_open: _populate())
+	GameState.materials_changed.connect(func(_s, _sh): if is_open: _populate())
 
 
 func _process(_delta: float) -> void:
@@ -103,18 +104,20 @@ func _add_materials_row() -> void:
 	var hbox = HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 16)
 
-	var common_stored = GameState.storage_ore - GameState.storage_rare_ore \
-		- GameState.storage_aethite - GameState.storage_voidstone - GameState.storage_shards
+	var scrap_lbl = Label.new()
+	scrap_lbl.text = "▪ Scrap Metal: %d" % GameState.scrap_metal
+	scrap_lbl.add_theme_color_override("font_color", Color(0.75, 0.72, 0.65))
+	hbox.add_child(scrap_lbl)
 
-	var ore_lbl = Label.new()
-	ore_lbl.text = "▪ Vorax: %d" % common_stored
-	ore_lbl.add_theme_color_override("font_color", Color(0.85, 0.65, 0.4))
-	hbox.add_child(ore_lbl)
+	var shards_lbl = Label.new()
+	shards_lbl.text = "◆ Shards: %d" % GameState.storage_shards
+	shards_lbl.add_theme_color_override("font_color", Color(0.65, 0.4, 1.0))
+	hbox.add_child(shards_lbl)
 
-	var rare_lbl = Label.new()
-	rare_lbl.text = "◆ Krysite: %d" % GameState.storage_rare_ore
-	rare_lbl.add_theme_color_override("font_color", Color(0.65, 0.4, 1.0))
-	hbox.add_child(rare_lbl)
+	var credits_lbl = Label.new()
+	credits_lbl.text = "CR: %d" % GameState.credits
+	credits_lbl.add_theme_color_override("font_color", Color(0.831, 0.659, 0.263))
+	hbox.add_child(credits_lbl)
 
 	item_list.add_child(hbox)
 
@@ -175,18 +178,16 @@ func _add_part_row(part_id: String) -> void:
 	# Requirements line (not shown for crafted or optional parts)
 	if not crafted and not optional:
 		var req_parts = []
-		var common_stored = GameState.storage_ore - GameState.storage_rare_ore \
-			- GameState.storage_aethite - GameState.storage_voidstone - GameState.storage_shards
-		if part.get("requires_ore", 0) > 0:
-			var have = common_stored
-			var need = part["requires_ore"]
+		if part.get("requires_scrap", 0) > 0:
+			var have = GameState.scrap_metal
+			var need = part["requires_scrap"]
 			var color = "green" if have >= need else "red"
-			req_parts.append("[color=%s]%d/%d Vorax[/color]" % [color, have, need])
-		if part.get("requires_rare", 0) > 0:
-			var have = GameState.storage_rare_ore
-			var need = part["requires_rare"]
+			req_parts.append("[color=%s]%d/%d Scrap[/color]" % [color, have, need])
+		if part.get("requires_shards", 0) > 0:
+			var have = GameState.storage_shards
+			var need = part["requires_shards"]
 			var color = "green" if have >= need else "red"
-			req_parts.append("[color=%s]%d/%d Krysite[/color]" % [color, have, need])
+			req_parts.append("[color=%s]%d/%d Shards[/color]" % [color, have, need])
 		if part.get("credits_cost", 0) > 0:
 			var have = GameState.credits
 			var need = part["credits_cost"]
