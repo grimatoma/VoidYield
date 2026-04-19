@@ -310,3 +310,64 @@ func test_collect_hopper_returns_deposited_amount() -> void:
 	var result = harvester.collect_hopper()
 	assert_eq(result.amount, 40, "Should return actual deposited (capped by depot capacity)")
 	assert_eq(depot.get_amount("rare"), 40, "Depot should be full")
+
+
+func test_cycle_emits_rp_generated_signal() -> void:
+	var harvester = HarvesterBaseClass.new()
+	harvester.base_ber = 10.0
+	harvester.cycle_time = 1.0
+	harvester.fuel_capacity = 100.0
+	harvester.fuel_level = 100.0
+	harvester.fuel_per_cycle = 5.0
+	harvester.hopper_capacity = 50
+	harvester.hopper_ore = 0
+	harvester.upgrade_multiplier = 1.0
+	harvester.rp_per_cycle = 1.0
+
+	var deposit = DepositNode.new()
+	deposit.quality.er = 800.0
+	deposit.quality.fl = 0.0
+	deposit.concentration = 100.0
+
+	harvester.linked_deposit = deposit
+	harvester.is_running = true
+	harvester._cycle_timer = harvester.cycle_time
+
+	var signal_amounts = []
+	harvester.rp_generated.connect(func(amount):
+		signal_amounts.append(amount)
+	)
+
+	harvester._run_cycle()
+	assert_eq(signal_amounts.size(), 1, "rp_generated signal emitted")
+	assert_eq(signal_amounts[0], 1.0, "signal passes rp_per_cycle amount")
+
+
+func test_rp_generated_amount_matches_rp_per_cycle() -> void:
+	var harvester = HarvesterBaseClass.new()
+	harvester.base_ber = 10.0
+	harvester.cycle_time = 1.0
+	harvester.fuel_capacity = 100.0
+	harvester.fuel_level = 100.0
+	harvester.fuel_per_cycle = 5.0
+	harvester.hopper_capacity = 50
+	harvester.hopper_ore = 0
+	harvester.upgrade_multiplier = 1.0
+	harvester.rp_per_cycle = 2.5
+
+	var deposit = DepositNode.new()
+	deposit.quality.er = 800.0
+	deposit.quality.fl = 0.0
+	deposit.concentration = 100.0
+
+	harvester.linked_deposit = deposit
+	harvester.is_running = true
+	harvester._cycle_timer = harvester.cycle_time
+
+	var signal_amounts = []
+	harvester.rp_generated.connect(func(amount):
+		signal_amounts.append(amount)
+	)
+
+	harvester._run_cycle()
+	assert_eq(signal_amounts[0], 2.5, "signal passes custom rp_per_cycle")

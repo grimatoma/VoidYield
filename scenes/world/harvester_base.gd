@@ -15,9 +15,11 @@ var linked_deposit = null  # DepositNode
 var linked_depot = null  # StorageDepot
 var _cycle_timer: float = 0.0
 var is_running: bool = false
+var rp_per_cycle: float = 1.0
 
 signal cycle_completed(ore_added: int)
 signal hopper_collected(amount: int)
+signal rp_generated(amount: float)
 
 
 func link_deposit(deposit) -> void:
@@ -55,6 +57,7 @@ func _run_cycle() -> void:
 	hopper_ore = min(hopper_ore, hopper_capacity)
 
 	cycle_completed.emit(ore_added)
+	rp_generated.emit(rp_per_cycle)
 
 
 func collect_hopper() -> Dictionary:
