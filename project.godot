@@ -33,6 +33,7 @@ TechTreeData="*res://data/tech_tree_data.gd"
 EventLog="*res://autoloads/event_log.gd"
 RecipeRegistry="*res://autoloads/recipe_registry.gd"
 StrandingManager="*res://autoloads/stranding_manager.gd"
+GalaxyMap="*res://autoloads/galaxy_map.gd"
 
 [display]
 
