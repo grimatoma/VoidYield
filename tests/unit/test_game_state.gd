@@ -106,11 +106,7 @@ func test_sell_all_ore_drains_pool_and_inventory() -> void:
 
 	var earned = GameState.sell_all_ore()
 	# Storage: 6 common + 2 rare = 6*1 + 2*5 = 16, Carried: 3 common = 3
-	# sell_all_ore returns 19 (16 storage + 3 carried).
-	# NOTE: credits end up at 22 because sell_all_carried→sell_resource adds
-	# carried credits (3) to GameState.credits internally, then sell_all_ore
-	# adds the full total_earned (19) again. This is a known double-count bug
-	# tracked here so any fix triggers a deliberate test update.
+	# sell_all_ore returns 19 (16 storage + 3 carried) with no double-count.
 	assert_eq(earned, 19)
 	assert_eq(GameState.storage_ore, 0)
 	assert_eq(GameState.player_carried_ore, 0)
@@ -137,17 +133,17 @@ func test_purchase_upgrade_applies_effect() -> void:
 
 func test_scaling_upgrade_doubles_cost_each_level() -> void:
 	GameState.credits = 1000
-	# storage_expansion base cost = 1, scales (×2 per level)
+	# storage_expansion base cost = 25, scales (×2 per level)
 	assert_true(GameState.purchase_upgrade("storage_expansion"), "first")
 	var after_first = GameState.credits
-	# Cost of next level = 2
+	# Cost of next level = 50
 	assert_true(GameState.purchase_upgrade("storage_expansion"), "second")
 	var spent_on_second = after_first - GameState.credits
-	assert_eq(spent_on_second, 2, "second level costs 2")
-	# Third level = 4
+	assert_eq(spent_on_second, 50, "second level costs 50")
+	# Third level = 100
 	var before_third = GameState.credits
 	assert_true(GameState.purchase_upgrade("storage_expansion"), "third")
-	assert_eq(before_third - GameState.credits, 4)
+	assert_eq(before_third - GameState.credits, 100)
 
 
 # --- Ship part crafting ----------------------------------------------------
