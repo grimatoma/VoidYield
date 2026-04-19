@@ -78,6 +78,10 @@ var purchased_upgrades: Dictionary = {}
 # --- Buildings Constructed ---
 var constructed_buildings: Array[String] = ["sell_terminal", "shop_terminal"]
 
+# --- Tech Tree ---
+var research_points: float = 0.0
+var unlocked_tech_nodes: Array[String] = []
+
 # --- Debug ---
 var debug_click_mode: bool = true  # Click any interactable to trigger it instantly
 
@@ -318,10 +322,12 @@ func dump_inventory_to_storage() -> int:
 
 func sell_all_ore() -> int:
 	## Sells everything in the storage pool + player inventory.
-	## Returns total credits earned.
-	var total_earned: int = 0
+	## Returns total credits earned (storage + carried).
+	var carried_earned = sell_all_carried()  # Sell carried first (adds credits directly)
 
-	# Sell from storage pool first
+	var total_earned: int = carried_earned
+
+	# Then sell from storage pool
 	var common_stored = storage_ore - storage_rare_ore - storage_aethite - storage_voidstone - storage_shards
 	if common_stored > 0:
 		total_earned += common_stored * ore_prices.get("common", 1)
@@ -335,30 +341,18 @@ func sell_all_ore() -> int:
 		total_earned += storage_shards * ore_prices.get("shards", 3)
 
 	var had_storage = storage_ore > 0
+	var had_carried = carried_earned > 0
 	storage_ore = 0
 	storage_rare_ore = 0
 	storage_aethite = 0
 	storage_voidstone = 0
 	storage_shards = 0
 
-	# Also sell anything the player is still carrying
-	var common_carried = get_common_carried()
-	total_earned += common_carried         * ore_prices.get("common",    1)
-	total_earned += player_rare_ore        * ore_prices.get("rare",      5)
-	total_earned += player_aethite         * ore_prices.get("aethite",   8)
-	total_earned += player_voidstone       * ore_prices.get("voidstone", 15)
-	total_earned += player_carried_shards  * ore_prices.get("shards",    3)
-	var had_carried = player_carried_ore > 0
-	player_carried_ore    = 0
-	player_rare_ore       = 0
-	player_aethite        = 0
-	player_voidstone      = 0
-	player_carried_shards = 0
-
-	if total_earned > 0:
-		credits += total_earned
+	var storage_earned = total_earned - carried_earned
+	if storage_earned > 0:
+		credits += storage_earned
 		credits_changed.emit(credits)
-		ore_sold.emit(total_earned, total_earned)
+		ore_sold.emit(storage_earned, storage_earned)
 	if had_storage:
 		storage_changed.emit(storage_ore, storage_capacity)
 	if had_carried:
@@ -551,6 +545,7 @@ func get_save_data() -> Dictionary:
 		"constructed_buildings": constructed_buildings,
 		"unlocked_planets": unlocked_planets.duplicate(),
 		"visited_planets": visited_planets.duplicate(),
+		"tech_tree": TechTree.get_save_data(),
 	}
 
 
@@ -580,6 +575,7 @@ func load_save_data(data: Dictionary) -> void:
 	current_planet        = data.get("current_planet", "asteroid_a1")
 	max_fleet_size        = data.get("max_fleet_size", 1)
 	purchased_upgrades    = data.get("purchased_upgrades", {})
+	research_points       = data.get("research_points", 0.0)
 
 	var raw_unlocked = data.get("unlocked_planets", ["asteroid_a1", "planet_b"])
 	unlocked_planets.clear()
@@ -591,6 +587,11 @@ func load_save_data(data: Dictionary) -> void:
 	for p in raw_visited:
 		visited_planets.append(str(p))
 
+	var raw_tech_nodes = data.get("unlocked_tech_nodes", [])
+	unlocked_tech_nodes.clear()
+	for node_id in raw_tech_nodes:
+		unlocked_tech_nodes.append(str(node_id))
+
 	var raw_parts = data.get("spaceship_parts_crafted", {})
 	for part_id in spaceship_parts_crafted:
 		spaceship_parts_crafted[part_id] = raw_parts.get(part_id, false)
@@ -599,6 +600,9 @@ func load_save_data(data: Dictionary) -> void:
 	constructed_buildings.clear()
 	for b in raw_buildings:
 		constructed_buildings.append(str(b))
+
+	var raw_tech_tree = data.get("tech_tree", {})
+	TechTree.load_save_data(raw_tech_tree)
 
 	credits_changed.emit(credits)
 	inventory_changed.emit(player_carried_ore, player_max_carry)
@@ -657,6 +661,8 @@ func reset_to_defaults() -> void:
 	active_drone_count    = 0
 	purchased_upgrades    = {}
 	constructed_buildings = ["sell_terminal", "shop_terminal"]
+	research_points       = 0.0
+	unlocked_tech_nodes   = []
 	for part_id in spaceship_parts_crafted:
 		spaceship_parts_crafted[part_id] = false
 	unlocked_planets = ["asteroid_a1", "planet_b"]

@@ -16,14 +16,14 @@
 	"thruster_boots": {
 		"name": "Thruster Boots",
 		"description": "+20% movement speed",
-		"cost": 60,
+		"cost": 5,
 		"category": "player",
 		"max_purchases": 1
 	},
 	"storage_expansion": {
 		"name": "Storage Expansion",
 		"description": "+25 depot capacity",
-		"cost": 100,
+		"cost": 1,
 		"category": "outpost",
 		"max_purchases": 5,
 		"scales": true

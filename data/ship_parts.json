@@ -2,7 +2,7 @@
 	"hull_plating": {
 		"name": "Hull Plating",
 		"description": "Salvaged metal panels welded to the frame.",
-		"requires_ore": 80,
+		"requires_ore": 10,
 		"requires_rare": 0,
 		"credits_cost": 0
 	},
@@ -10,8 +10,8 @@
 		"name": "Ion Drive",
 		"description": "Krysite-powered plasma thruster for deep space.",
 		"requires_ore": 0,
-		"requires_rare": 30,
-		"credits_cost": 300
+		"requires_rare": 5,
+		"credits_cost": 50
 	},
 	"navigation_core": {
 		"name": "Navigation Core",

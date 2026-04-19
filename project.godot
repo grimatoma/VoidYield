@@ -28,6 +28,8 @@ AudioManager="*res://autoloads/audio_manager.gd"
 SettingsManager="*res://autoloads/settings_manager.gd"
 Recipes="*res://data/recipes.gd"
 ColonyManager="*res://autoloads/colony_manager.gd"
+TechTree="*res://autoloads/tech_tree.gd"
+TechTreeData="*res://data/tech_tree_data.gd"
 
 [display]
 

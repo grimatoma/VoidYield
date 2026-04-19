@@ -1,73 +1,47 @@
-extends Interactable
-## StorageDepot — The shared ore pool. Player deposits carried ore here.
-## Also handles auto-sell when that upgrade is purchased.
+class_name StorageDepot
+extends Node2D
 
-@onready var sprite: Sprite2D = $Sprite
-@onready var fill_indicator: ColorRect = $FillIndicator
+var _inventory: Dictionary = {}
+var capacity: int = 500
 
-const COLOR_FILL = Color(0.85, 0.45, 0.15)    # Ore orange
-const COLOR_FULL = Color(0.7, 0.2, 0.15)      # Warning red
-
-var auto_sell_threshold: float = 0.8  # Sell at 80% capacity
+signal inventory_changed(type: String, amount: int)
+signal capacity_reached()
 
 
-func _ready() -> void:
-	is_held_interaction = false
-	GameState.storage_changed.connect(_on_storage_changed)
-	_update_fill_display()
+func deposit(type: String, amount: int) -> int:
+	var free = free_space()
+	var to_deposit = min(amount, free)
+	_inventory[type] = _inventory.get(type, 0) + to_deposit
+	inventory_changed.emit(type, to_deposit)
+	if total_stored() >= capacity:
+		capacity_reached.emit()
+	return to_deposit
 
 
-func _process(_delta: float) -> void:
-	# Auto-sell check
-	if GameState.has_upgrade("auto_sell"):
-		var fill_ratio = float(GameState.storage_ore) / float(GameState.storage_capacity)
-		if fill_ratio >= auto_sell_threshold:
-			GameState.sell_all_ore()
+func withdraw(type: String, amount: int) -> int:
+	var current = _inventory.get(type, 0)
+	var to_withdraw = min(amount, current)
+	_inventory[type] = current - to_withdraw
+	if _inventory[type] == 0:
+		_inventory.erase(type)
+	inventory_changed.emit(type, to_withdraw)
+	return to_withdraw
 
 
-func get_prompt_text() -> String:
-	if GameState.player_carried_ore <= 0:
-		return "[E] Storage (%d/%d)" % [GameState.storage_ore, GameState.storage_capacity]
-	return "[E] Deposit %d ore" % GameState.player_carried_ore
+func get_amount(type: String) -> int:
+	return _inventory.get(type, 0)
 
 
-func interact(_player: Node2D) -> void:
-	var deposited = GameState.dump_inventory_to_storage()
-	if deposited > 0:
-		# TODO: Play deposit sound (clatter of rocks into metal)
-		_spawn_deposit_pop(deposited)
+func total_stored() -> int:
+	var total = 0
+	for amount in _inventory.values():
+		total += amount
+	return total
 
 
-func is_interactable() -> bool:
-	return true
+func free_space() -> int:
+	return capacity - total_stored()
 
 
-func _on_storage_changed(_stored: int, _capacity: int) -> void:
-	_update_fill_display()
-
-
-func _update_fill_display() -> void:
-	if not is_instance_valid(fill_indicator):
-		return
-	var ratio = float(GameState.storage_ore) / float(maxi(GameState.storage_capacity, 1))
-	# Scale the fill indicator height
-	fill_indicator.scale.y = ratio
-	# Change color when near full
-	if ratio >= 0.9:
-		fill_indicator.color = COLOR_FULL
-	else:
-		fill_indicator.color = COLOR_FILL
-
-
-func _spawn_deposit_pop(amount: int) -> void:
-	var label = Label.new()
-	label.text = "+%d" % amount
-	label.add_theme_color_override("font_color", Color(0.85, 0.65, 0.2))
-	label.position = Vector2(-8, -32)
-	add_child(label)
-
-	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(label, "position:y", label.position.y - 20, 0.5)
-	tween.tween_property(label, "modulate:a", 0.0, 0.5)
-	tween.chain().tween_callback(label.queue_free)
+func has_enough(type: String, amount: int) -> bool:
+	return get_amount(type) >= amount

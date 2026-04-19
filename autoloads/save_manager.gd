@@ -74,6 +74,7 @@ func _write_slot(path: String) -> void:
 		"version":    SAVE_VERSION,
 		"timestamp":  Time.get_unix_time_from_system(),
 		"game_state": GameState.get_save_data(),
+		"tech_tree":  TechTree.get_save_data(),
 	}
 	var json_str := JSON.stringify(payload, "\t")
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -110,6 +111,8 @@ func _apply_payload(payload: Dictionary) -> void:
 		return
 	if payload.has("game_state"):
 		GameState.load_save_data(payload["game_state"])
-		print("[SaveManager] Game loaded (v%s)." % version)
 	else:
 		push_warning("[SaveManager] Payload missing 'game_state' key.")
+	if payload.has("tech_tree"):
+		TechTree.load_save_data(payload["tech_tree"])
+	print("[SaveManager] Game loaded (v%s)." % version)
