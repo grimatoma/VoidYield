@@ -1,4 +1,3 @@
-class_name TechTree
 extends Node
 ## TechTree — Tech tree progression system managing RP accumulation and node unlocks.
 

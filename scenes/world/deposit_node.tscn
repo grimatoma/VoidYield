@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://deposit_node"]
+
+[ext_resource type="Script" path="res://scenes/world/deposit_node.gd" id="1_deposit"]
+
+[node name="DepositNode" type="Node2D"]
+script = ExtResource("1_deposit")
