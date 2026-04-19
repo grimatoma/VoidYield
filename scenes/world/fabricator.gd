@@ -51,7 +51,12 @@ func tick(delta: float) -> void:
 	var recipe = RECIPES.ALL[current_recipe_id]
 	var duration = recipe.time
 
-	_progress += delta
+	# Apply productivity multiplier from ConsumptionManager
+	var productivity_mult = 1.0
+	if ConsumptionManager:
+		productivity_mult = ConsumptionManager.get_productivity_multiplier(GameState.current_planet)
+
+	_progress += delta * productivity_mult
 	if _progress >= duration:
 		_complete_cycle()
 
