@@ -30,6 +30,7 @@ const COLOR_BORDER      = Color(0.290, 0.290, 0.313)
 
 var is_open: bool = false
 var shop_terminal_ref: Node2D = null
+var fabricator_ref: Node2D = null
 var _bay_mode: bool = false
 var _current_tab: String = ""
 var _tab_buttons: Dictionary = {}
@@ -98,6 +99,15 @@ func open_processing_plant(plant: Node2D = null) -> void:
 	_bay_mode = false
 	_current_tab = "factory"
 	shop_terminal_ref = plant
+	fabricator_ref = null
+	_open_panel()
+
+
+func open_fabricator(fab: Node2D = null) -> void:
+	_bay_mode = false
+	_current_tab = "factory"
+	fabricator_ref = fab
+	shop_terminal_ref = null
 	_open_panel()
 
 
@@ -108,7 +118,7 @@ func _open_panel() -> void:
 	if _bay_mode:
 		title_label.text = "DRONE BAY"
 	elif _current_tab == "factory":
-		title_label.text = "PROCESSING PLANT"
+		title_label.text = "FABRICATOR" if fabricator_ref else "PROCESSING PLANT"
 	else:
 		title_label.text = "SHOP TERMINAL"
 	footer_hint.text = "[E] / CLICK ROW TO BUY    ESC CLOSE"
@@ -231,6 +241,11 @@ func _populate_items() -> void:
 			_add_drone_assignment_section()
 		"resources":
 			_add_resources_panel()
+		"factory":
+			if fabricator_ref:
+				_add_fabricator_section()
+			elif shop_terminal_ref:
+				_add_processing_plant_section()
 
 
 # --- Cards (mock-styled bordered rows) ---------------------------------------
@@ -661,6 +676,88 @@ func _make_trade_button(text: String, enabled: bool, is_buy: bool, on_press: Cal
 	if on_press.is_valid():
 		btn.pressed.connect(on_press)
 	return btn
+
+
+# --- FABRICATOR tab ---------------------------------------------------------
+
+func _add_fabricator_section() -> void:
+	if not fabricator_ref:
+		return
+
+	var recipes = {"craft_drill": "Basic Drill", "craft_surveyor": "Surveyor Kit", "craft_fuel_cell": "Fuel Cell"}
+
+	# Recipe selection card
+	var recipe_card = _make_card()
+	var recipe_margin = MarginContainer.new()
+	recipe_margin.add_theme_constant_override("margin_left", 8)
+	recipe_margin.add_theme_constant_override("margin_top", 6)
+	recipe_margin.add_theme_constant_override("margin_right", 8)
+	recipe_margin.add_theme_constant_override("margin_bottom", 6)
+	recipe_card.add_child(recipe_margin)
+
+	var recipe_vbox = VBoxContainer.new()
+	recipe_margin.add_child(recipe_vbox)
+
+	var recipe_label = Label.new()
+	recipe_label.text = "RECIPE:"
+	recipe_label.add_theme_color_override("font_color", COLOR_AMBER)
+	recipe_label.add_theme_font_size_override("font_size", 10)
+	recipe_vbox.add_child(recipe_label)
+
+	var recipe_btn = Button.new()
+	recipe_btn.text = recipes.get(fabricator_ref.current_recipe_id, "None Selected")
+	recipe_btn.custom_minimum_size = Vector2(0, 24)
+	recipe_btn.add_theme_color_override("font_color", COLOR_AMBER)
+	recipe_vbox.add_child(recipe_btn)
+
+	recipe_btn.pressed.connect(func():
+		fabricator_ref.current_recipe_id = recipes.keys()[0]
+		_populate_items()
+	)
+
+	item_list.add_child(recipe_card)
+
+	# Control buttons
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 8)
+	item_list.add_child(spacer)
+
+	var controls_card = _make_card()
+	var controls_margin = MarginContainer.new()
+	controls_margin.add_theme_constant_override("margin_left", 8)
+	controls_margin.add_theme_constant_override("margin_top", 6)
+	controls_margin.add_theme_constant_override("margin_right", 8)
+	controls_margin.add_theme_constant_override("margin_bottom", 6)
+	controls_card.add_child(controls_margin)
+
+	var controls_hbox = HBoxContainer.new()
+	controls_hbox.add_theme_constant_override("separation", 4)
+	controls_margin.add_child(controls_hbox)
+
+	var start_btn = Button.new()
+	start_btn.text = "START"
+	start_btn.custom_minimum_size = Vector2(64, 24)
+	start_btn.add_theme_color_override("font_color", COLOR_AMBER)
+	start_btn.pressed.connect(func(): fabricator_ref.start())
+	controls_hbox.add_child(start_btn)
+
+	var stop_btn = Button.new()
+	stop_btn.text = "STOP"
+	stop_btn.custom_minimum_size = Vector2(64, 24)
+	stop_btn.add_theme_color_override("font_color", COLOR_AMBER)
+	stop_btn.pressed.connect(func(): fabricator_ref.stop())
+	controls_hbox.add_child(stop_btn)
+
+	item_list.add_child(controls_card)
+
+
+func _add_processing_plant_section() -> void:
+	var lbl = Label.new()
+	lbl.text = "Processing Plant\n(Not yet implemented)"
+	lbl.add_theme_color_override("font_color", COLOR_TEXT_DIM)
+	lbl.add_theme_font_size_override("font_size", 10)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	item_list.add_child(lbl)
 
 
 # --- ASSIGNMENTS tab (drone bay) ---------------------------------------------

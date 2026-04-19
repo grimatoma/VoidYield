@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://dq8uap5g48wp6"]
+
+[ext_resource type="Script" path="res://scenes/world/fabricator.gd" id="1_k9m3z"]
+[ext_resource type="Texture2D" uid="uid://bdp3fcxbhzqrvx7y" path="res://assets/sprites/buildings/shop_terminal.png" id="2_x3r8e"]
+
+[sub_resource type="RectangleShape2D" id="1"]
+size = Vector2(44, 44)
+
+[node name="Fabricator" type="Node2D"]
+script = ExtResource("1_k9m3z")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_x3r8e")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("1")

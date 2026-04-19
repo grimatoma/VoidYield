@@ -86,3 +86,17 @@ func start() -> void:
 
 func stop() -> void:
 	is_running = false
+
+
+func get_prompt_text() -> String:
+	return "[E] Fabricator (Tier %d)" % FACTORY_TIER
+
+
+func interact(_player: Node2D) -> void:
+	var shop = get_tree().get_first_node_in_group("shop_panel")
+	if shop:
+		shop.open_fabricator(self)
+
+
+func is_interactable() -> bool:
+	return true

@@ -11,8 +11,10 @@ extends Node2D
 var shop_panel: Node = null
 var spaceship_panel: Node = null
 var processing_plant: Node2D = null
+var fabricator: Node2D = null
 
 const ProcessingPlantScene = preload("res://scenes/world/processing_plant.tscn")
+const FabricatorScene = preload("res://scenes/world/fabricator.tscn")
 
 
 func _ready() -> void:
@@ -45,6 +47,11 @@ func _ready() -> void:
 	if processing_plant and shop_panel:
 		processing_plant.plant_opened.connect(func(): shop_panel.open_processing_plant(processing_plant))
 		processing_plant.plant_closed.connect(func(): shop_panel.close())
+
+	# Instantiate and wire Fabricator
+	fabricator = FabricatorScene.instantiate()
+	fabricator.global_position = Vector2(650, 260)
+	add_child(fabricator)
 
 
 func _setup_navigation() -> void:
