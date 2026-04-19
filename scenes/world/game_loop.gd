@@ -1,12 +1,12 @@
 class_name GameLoop
 extends Node
 
-var storage: StorageDepot
-var drone_bay: DroneBay
-var task_queue: DroneTaskQueue
+var storage = null  # StorageDepot
+var drone_bay = null  # DroneBay
+var task_queue = null  # DroneTaskQueue
 
 
-func setup(depot: StorageDepot, bay: DroneBay, queue: DroneTaskQueue) -> void:
+func setup(depot, bay, queue) -> void:
 	storage = depot
 	drone_bay = bay
 	task_queue = queue

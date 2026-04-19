@@ -7,10 +7,10 @@ const DroneBayScript = preload("res://scenes/drones/drone_bay.gd")
 const DroneTaskQueueScript = preload("res://scenes/drones/drone_task_queue.gd")
 const GameLoopScript = preload("res://scenes/world/game_loop.gd")
 
-var storage: StorageDepot
-var drone_bay: DroneBay
-var drone_queue: DroneTaskQueue
-var game_loop: GameLoop
+var storage = null  # StorageDepot
+var drone_bay = null  # DroneBay
+var drone_queue = null  # DroneTaskQueue
+var game_loop = null  # GameLoop
 
 var _harvesters: Array = []
 var _game_loop_ticks: int = 0

@@ -10,7 +10,7 @@ class OreQualityLot:
 	var fl: float = 0.0
 
 ## Test double: DepositNode with quality
-class DepositNode:
+class MockDeposit:
 	extends Node2D
 	var quality: OreQualityLot
 	var concentration: float = 100.0
@@ -65,7 +65,7 @@ func test_cycle_deducts_fuel() -> void:
 	harvester.hopper_ore = 0
 	harvester.upgrade_multiplier = 1.0
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.quality.er = 800.0
 	deposit.quality.fl = 0.0
 	deposit.concentration = 100.0
@@ -91,7 +91,7 @@ func test_cycle_adds_to_hopper() -> void:
 	harvester.hopper_ore = 0
 	harvester.upgrade_multiplier = 1.0
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.quality.er = 800.0
 	deposit.quality.fl = 0.0
 	deposit.concentration = 100.0
@@ -115,7 +115,7 @@ func test_cycle_uses_ber_formula() -> void:
 	harvester.hopper_ore = 0
 	harvester.upgrade_multiplier = 1.0
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.quality.er = 800.0  # ER = 800
 	deposit.quality.fl = 0.0
 	deposit.concentration = 100.0
@@ -140,7 +140,7 @@ func test_hopper_clamped_at_capacity() -> void:
 	harvester.hopper_ore = 0
 	harvester.upgrade_multiplier = 1.0
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.quality.er = 1000.0
 	deposit.quality.fl = 0.0
 	deposit.concentration = 100.0
@@ -165,7 +165,7 @@ func test_no_cycle_when_out_of_fuel() -> void:
 	harvester.hopper_ore = 0
 	harvester.upgrade_multiplier = 1.0
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	harvester.linked_deposit = deposit
 	harvester.is_running = true
 	harvester._cycle_timer = harvester.cycle_time
@@ -245,7 +245,7 @@ func test_cycle_completed_signal_emitted() -> void:
 	harvester.hopper_ore = 0
 	harvester.upgrade_multiplier = 1.0
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.quality.er = 800.0
 	deposit.quality.fl = 0.0
 	deposit.concentration = 100.0
@@ -281,7 +281,7 @@ func test_hopper_collected_signal_emitted() -> void:
 func test_collect_hopper_deposits_to_linked_depot() -> void:
 	var harvester = HarvesterBaseClass.new()
 	harvester.hopper_ore = 30
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.ore_type = "common"
 	harvester.link_deposit(deposit)
 
@@ -298,7 +298,7 @@ func test_collect_hopper_deposits_to_linked_depot() -> void:
 func test_collect_hopper_returns_deposited_amount() -> void:
 	var harvester = HarvesterBaseClass.new()
 	harvester.hopper_ore = 50
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.ore_type = "rare"
 	harvester.link_deposit(deposit)
 
@@ -324,7 +324,7 @@ func test_cycle_emits_rp_generated_signal() -> void:
 	harvester.upgrade_multiplier = 1.0
 	harvester.rp_per_cycle = 1.0
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.quality.er = 800.0
 	deposit.quality.fl = 0.0
 	deposit.concentration = 100.0
@@ -355,7 +355,7 @@ func test_rp_generated_amount_matches_rp_per_cycle() -> void:
 	harvester.upgrade_multiplier = 1.0
 	harvester.rp_per_cycle = 2.5
 
-	var deposit = DepositNode.new()
+	var deposit = MockDeposit.new()
 	deposit.quality.er = 800.0
 	deposit.quality.fl = 0.0
 	deposit.concentration = 100.0

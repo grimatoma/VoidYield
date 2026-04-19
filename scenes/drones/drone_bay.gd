@@ -2,7 +2,7 @@ class_name DroneBay
 extends Node
 
 var drones: Array = []
-var task_queue: DroneTaskQueue = null
+var task_queue = null  # DroneTaskQueue
 
 signal drone_registered(drone: Node)
 signal drone_dispatched(drone: Node, task: Dictionary)
@@ -43,14 +43,14 @@ func request_haul(from_node: Node, to_node: Node, ore_type: String, amount: int,
 	if task_queue == null:
 		return
 
-	task_queue.enqueue(DroneTaskQueue.TaskType.HAUL, to_node, priority)
+	task_queue.enqueue(1, to_node, priority)
 
 
 func request_repair(target: Node, priority: int = 5) -> void:
 	if task_queue == null:
 		return
 
-	task_queue.enqueue(DroneTaskQueue.TaskType.REPAIR, target, priority)
+	task_queue.enqueue(3, target, priority)
 
 
 func drone_count() -> int:

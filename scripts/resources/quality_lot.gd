@@ -1,5 +1,4 @@
-class_name OreQualityLot
-## Placeholder OreQualityLot for testing. Full implementation in later phase.
+## Legacy placeholder — superseded by data/ore_quality_lot.gd. Do not use class_name here.
 ## Stores quality attributes for a batch of ore from a specific deposit.
 
 var ore_type: String

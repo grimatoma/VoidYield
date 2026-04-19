@@ -2,12 +2,12 @@ class_name ResourceQualityInspector
 extends Node
 ## Exposes ore quality lot data in a structured way for the UI to consume
 
-var current_lot: OreQualityLot = null
+var current_lot = null  # OreQualityLot
 
-signal lot_updated(lot: OreQualityLot)
+signal lot_updated(lot)
 
 
-func inspect(lot: OreQualityLot) -> void:
+func inspect(lot) -> void:
 	current_lot = lot
 	lot_updated.emit(lot)
 
