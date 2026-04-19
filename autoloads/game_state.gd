@@ -41,6 +41,14 @@ var ore_prices: Dictionary = {
 # --- Economy ---
 var credits: int = 500  # TODO: restore to 0 after testing
 
+# --- Storage Depot ---
+var storage_ore: int = 10000      # TODO: restore to 0 after testing
+var storage_capacity: int = 10000  # TODO: restore to 50 after testing
+var storage_rare_ore: int = 2000  # TODO: restore to 0 after testing
+var storage_aethite: int = 2000   # TODO: restore to 0 after testing
+var storage_voidstone: int = 2000 # TODO: restore to 0 after testing
+var storage_shards: int = 2000    # TODO: restore to 0 after testing
+
 # --- Crafting Materials ---
 var scrap_metal: int = 2000  # TODO: restore to 0 after testing
 
