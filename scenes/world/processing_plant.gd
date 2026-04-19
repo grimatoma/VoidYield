@@ -9,6 +9,7 @@ const OUTPUT_BUFFER_CAP: int = 20
 
 var current_recipe_id: String = ""
 var is_running: bool = false
+var ore_quality: OreQualityLot = null
 
 var _progress: float = 0.0
 var _input_buffer: Dictionary = {}
@@ -25,6 +26,15 @@ func set_recipe(recipe_id: String) -> bool:
 		return false
 	current_recipe_id = recipe_id
 	return true
+
+
+func set_ore_quality(lot: OreQualityLot) -> void:
+	ore_quality = lot
+
+
+var effective_speed: float:
+	get:
+		return QualityModifiers.get_speed_modifier(ore_quality)
 
 
 func load_input(resource_type: String, amount: int) -> int:
@@ -63,7 +73,8 @@ func tick(delta: float) -> void:
 	if not can_run():
 		return
 
-	_progress += delta
+	var speed_mod = QualityModifiers.get_speed_modifier(ore_quality)
+	_progress += delta * speed_mod
 	var recipe = Recipes.ALL[current_recipe_id]
 	var recipe_time = recipe.get("time", 0.0)
 
@@ -96,13 +107,17 @@ func _complete_cycle() -> void:
 		var required = inputs[resource_type]
 		_input_buffer[resource_type] -= required
 
-	# Add outputs
+	# Add outputs with yield modifier
+	var yield_mod = QualityModifiers.get_yield_modifier(ore_quality)
+	var modified_outputs = {}
 	for resource_type in outputs:
 		var amount = outputs[resource_type]
-		_output_buffer[resource_type] = _output_buffer.get(resource_type, 0) + amount
+		var modified = maxi(1, int(amount * yield_mod))
+		_output_buffer[resource_type] = _output_buffer.get(resource_type, 0) + modified
+		modified_outputs[resource_type] = modified
 
-	# Emit signal with outputs
-	cycle_completed.emit(current_recipe_id, outputs)
+	# Emit signal with modified outputs
+	cycle_completed.emit(current_recipe_id, modified_outputs)
 
 	# Reset progress for next cycle
 	_progress = 0.0
