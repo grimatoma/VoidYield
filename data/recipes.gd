@@ -19,6 +19,14 @@ const ALL: Dictionary = {
 		"outputs": {"krysite_ingot": 1},
 		"time": 12.0,
 	},
+	"fuel_synthesis": {
+		"name": "Synthesize Rocket Fuel",
+		"factory_tier": 1,
+		"slot_cost": 1,
+		"inputs": {"compressed_gas": 20},
+		"outputs": {"rocket_fuel": 10},
+		"time": 5.0,
+	},
 	# Tier 2 — Fabricator (slot_cost=2)
 	"craft_surveyor": {
 		"name": "Craft Surveyor Unit",
