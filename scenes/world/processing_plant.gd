@@ -9,7 +9,7 @@ const OUTPUT_BUFFER_CAP: int = 20
 
 var current_recipe_id: String = ""
 var is_running: bool = false
-var ore_quality: OreQualityLot = null
+var ore_quality = null  # OreQualityLot
 
 var _progress: float = 0.0
 var _input_buffer: Dictionary = {}
@@ -28,7 +28,7 @@ func set_recipe(recipe_id: String) -> bool:
 	return true
 
 
-func set_ore_quality(lot: OreQualityLot) -> void:
+func set_ore_quality(lot) -> void:
 	ore_quality = lot
 
 

@@ -3,6 +3,7 @@ extends "res://tests/framework/test_case.gd"
 ## Covers: initial state, survey stage advancement, quality generation,
 ##         slot limits by deposit size, and signal emission.
 
+const DepositNode = preload("res://scenes/world/deposit_node.gd")
 
 # --- Initial State Tests ---
 

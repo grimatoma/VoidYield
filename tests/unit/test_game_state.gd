@@ -153,21 +153,19 @@ func test_scaling_upgrade_doubles_cost_each_level() -> void:
 # --- Ship part crafting ----------------------------------------------------
 
 func test_can_craft_ship_part_requires_materials_and_credits() -> void:
-	# hull_plating: 10 ore, 0 rare, 0 credits
-	assert_false(GameState.can_craft_ship_part("hull_plating"), "no storage")
-	GameState.storage_ore = 10  # all common
+	# hull_plating: 40 scrap, 0 shards, 0 credits
+	assert_false(GameState.can_craft_ship_part("hull_plating"), "no scrap")
+	GameState.scrap_metal = 40
 	assert_true(GameState.can_craft_ship_part("hull_plating"))
 
 
 func test_craft_ship_part_consumes_materials() -> void:
-	# ion_drive: 0 ore, 5 rare, 50 credits
-	GameState.storage_ore = 5
-	GameState.storage_rare_ore = 5
-	GameState.credits = 100
+	# ion_drive: 0 scrap, 20 shards, 300 credits
+	GameState.storage_shards = 20
+	GameState.credits = 500
 	assert_true(GameState.craft_ship_part("ion_drive"))
-	assert_eq(GameState.storage_rare_ore, 0)
-	assert_eq(GameState.storage_ore, 0, "both common and rare come out of storage_ore total")
-	assert_eq(GameState.credits, 50)
+	assert_eq(GameState.storage_shards, 0)
+	assert_eq(GameState.credits, 200)
 	assert_true(GameState.spaceship_parts_crafted["ion_drive"])
 
 

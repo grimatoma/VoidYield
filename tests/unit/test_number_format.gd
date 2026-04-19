@@ -1,6 +1,8 @@
 extends "res://tests/framework/test_case.gd"
 ## Unit tests for NumberFormat (HUD formatting helpers).
 
+const NumberFormat = preload("res://scripts/utils/number_format.gd")
+
 func test_format_number_adds_commas() -> void:
 	assert_eq(NumberFormat.format_number(0), "0")
 	assert_eq(NumberFormat.format_number(999), "999")
