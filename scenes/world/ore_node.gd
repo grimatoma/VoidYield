@@ -1,4 +1,4 @@
-extends Interactable
+extends "res://scripts/interactable.gd"
 class_name OreNode
 ## OreNode — A mineable resource node in the asteroid field.
 ## Has multiple charges, transitions through visual states, respawns after depletion.

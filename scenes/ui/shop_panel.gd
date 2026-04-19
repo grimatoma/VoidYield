@@ -7,6 +7,8 @@ extends PanelContainer
 ##
 ## Visual style mirrors design_mocks/13_shop_panel.svg — dark amber industrial CRT.
 
+const ScoutDrone = preload("res://scenes/drones/scout_drone.gd")
+
 signal item_purchased(item_id: String, item_type: String)
 
 # --- Color palette (matches the SVG mock) ---

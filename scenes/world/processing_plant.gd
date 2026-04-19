@@ -3,6 +3,7 @@ extends Node2D
 ## Tier 1 factory — single recipe continuous conversion.
 ## Uses recipe system from data/recipes.gd.
 
+const Recipes = preload("res://data/recipes.gd")
 const FACTORY_TIER: int = 1
 const SLOT_COST: int = 1
 const OUTPUT_BUFFER_CAP: int = 20

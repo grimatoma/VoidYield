@@ -1,4 +1,4 @@
-extends Interactable
+extends "res://scripts/interactable.gd"
 ## Spaceship — Craftable launch vehicle. Open the shipyard panel to craft parts.
 ## Once all parts are built, the LAUNCH button sends the player to Planet B.
 

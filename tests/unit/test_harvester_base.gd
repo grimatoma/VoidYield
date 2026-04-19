@@ -4,20 +4,20 @@ extends "res://tests/framework/test_case.gd"
 
 var HarvesterBaseClass = preload("res://scenes/world/harvester_base.gd")
 
-## Test double: OreQualityLot (simulate with a dict)
-class OreQualityLot:
+## Test double: quality attributes (avoids shadowing global OreQualityLot)
+class MockOreQuality:
 	var er: float = 800.0
 	var fl: float = 0.0
 
 ## Test double: DepositNode with quality
 class MockDeposit:
 	extends Node2D
-	var quality: OreQualityLot
+	var quality: MockOreQuality
 	var concentration: float = 100.0
 	var ore_type: String = "common"
 
 	func _init() -> void:
-		quality = OreQualityLot.new()
+		quality = MockOreQuality.new()
 		concentration = 100.0
 
 	func ber_output(base_ber: float, concentration: float, upgrade_mult: float) -> float:

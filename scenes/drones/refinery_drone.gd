@@ -78,7 +78,7 @@ func _do_refuel() -> void:
 
 
 func refuel(amount: float) -> void:
-	fuel_level = mini(fuel_level + amount, FUEL_CAPACITY)
+	fuel_level = minf(fuel_level + amount, FUEL_CAPACITY)
 
 
 func get_state_name() -> String:

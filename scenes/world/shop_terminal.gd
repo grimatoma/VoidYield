@@ -1,4 +1,4 @@
-extends Interactable
+extends "res://scripts/interactable.gd"
 ## ShopTerminal — Opens the shop panel for purchasing drones and upgrades.
 ## Instant interaction — opens UI.
 

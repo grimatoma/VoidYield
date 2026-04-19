@@ -83,6 +83,13 @@ func assert_false(cond: bool, msg: String = "") -> bool:
 	return false
 
 
+func assert_le(a, b, msg: String = "") -> bool:
+	if a <= b:
+		return true
+	_record("expected %s <= %s" % [str(a), str(b)], msg)
+	return false
+
+
 func assert_gt(a, b, msg: String = "") -> bool:
 	if a > b:
 		return true

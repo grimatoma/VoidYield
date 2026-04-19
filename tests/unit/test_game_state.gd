@@ -114,7 +114,7 @@ func test_sell_all_ore_drains_pool_and_inventory() -> void:
 	assert_eq(earned, 19)
 	assert_eq(GameState.storage_ore, 0)
 	assert_eq(GameState.player_carried_ore, 0)
-	assert_eq(GameState.credits, 22, "includes double-counted carried credits — see NOTE")
+	assert_eq(GameState.credits, 19, "sell_all_ore returns correct total without double-counting")
 
 
 # --- Credits & upgrades ----------------------------------------------------

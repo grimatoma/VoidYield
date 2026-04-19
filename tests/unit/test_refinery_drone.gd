@@ -175,9 +175,9 @@ func test_circuit_completed_signal_on_deliver() -> void:
 func test_refuel_restores_fuel() -> void:
 	drone.fuel_level = 30.0
 
-	drone.refuel(50.0)
+	drone.refuel(200.0)  # More than capacity — should clamp
 
-	assert_eq(drone.fuel_level, RefineryDroneScript.FUEL_CAPACITY, "Should restore to capacity")
+	assert_eq(drone.fuel_level, RefineryDroneScript.FUEL_CAPACITY, "Should clamp at capacity")
 
 
 func test_is_available_when_idle() -> void:

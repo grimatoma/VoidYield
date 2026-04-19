@@ -1,4 +1,4 @@
-extends Interactable
+extends "res://scripts/interactable.gd"
 ## SellTerminal — Opens the shop panel's RESOURCES tab for buying / selling ore.
 ## Was instant-sell; now shows a proper trade menu.
 

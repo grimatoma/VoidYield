@@ -2,7 +2,13 @@
 ## Branch 1: Extraction, Branch 2: Processing & Crafting, Branch 3: Expansion
 
 const NODES: Dictionary = {
-	# --- Branch 1: Extraction ---
+	# --- Branch 1: Extraction (Mining chain) ---
+	"1.1": {"name": "Improved Drill Geometry", "rp_cost": 50,   "cr_cost": 0,    "branch": "Extraction", "requires": []},
+	"1.2": {"name": "Advanced Extraction",     "rp_cost": 200,  "cr_cost": 100,  "branch": "Extraction", "requires": ["1.1"]},
+	"1.3": {"name": "Precision Mining",        "rp_cost": 500,  "cr_cost": 200,  "branch": "Extraction", "requires": ["1.2"]},
+	"1.4": {"name": "Master Extraction",       "rp_cost": 1500, "cr_cost": 500,  "branch": "Extraction", "requires": ["1.3"]},
+
+	# --- Branch 1: Drone upgrades ---
 	"1.A": {"name": "Drone Drill I",           "rp_cost": 50,   "cr_cost": 50,   "branch": "Extraction", "requires": []},
 	"1.B": {"name": "Drone Drill II",          "rp_cost": 150,  "cr_cost": 100,  "branch": "Extraction", "requires": ["1.A"]},
 	"1.C": {"name": "Drone Drill III",         "rp_cost": 300,  "cr_cost": 200,  "branch": "Extraction", "requires": ["1.B"]},

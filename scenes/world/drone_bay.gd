@@ -1,4 +1,4 @@
-extends Interactable
+extends "res://scripts/interactable.gd"
 ## DroneBay — Spawns and manages active drones. Drones launch from here and return here.
 
 signal bay_opened

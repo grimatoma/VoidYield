@@ -1,4 +1,4 @@
-extends Interactable
+extends "res://scripts/interactable.gd"
 ## LaunchPad — On-planet launch point. Opens the galaxy map so the player
 ## can pick a destination (including returning to A1).
 

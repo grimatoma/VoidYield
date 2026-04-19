@@ -2,6 +2,8 @@ extends CanvasLayer
 ## HUD — Resource rail (top-left), credits panel (top-right), interaction prompt,
 ## and floating mining progress bar.  Layout matches design_mocks/11_hud_desktop.svg.
 
+const NumberFormat = preload("res://scripts/utils/number_format.gd")
+
 # ── Resource Rail ─────────────────────────────────────────────────────────────
 @onready var ore_value_label:     Label = $ResourceRail/RailVBox/OreRow/OreHBox/OreLabels/OreValue
 @onready var ore_pool_label:      Label = $ResourceRail/RailVBox/OreRow/OreHBox/OrePool
