@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://dqvd3r8n0gufsp5"]
+[gd_scene format=3 uid="uid://b8l2ysbpsixdk"]
 
 [ext_resource type="Script" path="res://scenes/ui/tech_tree_panel.gd" id="1_p1h1n"]
 

@@ -165,6 +165,5 @@ func _on_debug_fill_pressed() -> void:
 
 
 func _on_research_pressed() -> void:
-	var tech_tree_panel = get_tree().get_first_node_in_group("tech_tree_panel")
-	if tech_tree_panel:
-		tech_tree_panel.open()
+	# TODO: Implement research button when tech_tree_panel is fixed
+	print("[HUD] Research button pressed - feature coming soon!")
