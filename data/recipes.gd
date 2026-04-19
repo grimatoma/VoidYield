@@ -20,6 +20,30 @@ const ALL: Dictionary = {
 		"time": 12.0,
 	},
 	# Tier 2 — Fabricator (slot_cost=2)
+	"craft_surveyor": {
+		"name": "Craft Surveyor Unit",
+		"factory_tier": 2,
+		"slot_cost": 2,
+		"inputs": {"steel_bar": 3, "krysite_ingot": 1},
+		"outputs": {"surveyor_unit": 1},
+		"time": 24.0,
+	},
+	"craft_fuel_cell": {
+		"name": "Craft Fuel Cell",
+		"factory_tier": 2,
+		"slot_cost": 2,
+		"inputs": {"krysite_ingot": 2, "steel_bar": 1},
+		"outputs": {"fuel_cell": 1},
+		"time": 18.0,
+	},
+	"craft_drone_frame": {
+		"name": "Craft Drone Frame",
+		"factory_tier": 2,
+		"slot_cost": 2,
+		"inputs": {"steel_bar": 5, "krysite_ingot": 1},
+		"outputs": {"drone_frame": 1},
+		"time": 30.0,
+	},
 	"craft_drill": {
 		"name": "Craft Basic Drill",
 		"factory_tier": 2,

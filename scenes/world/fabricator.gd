@@ -14,6 +14,15 @@ signal cycle_completed(recipe_id: String)
 
 
 func set_recipe(id: String) -> void:
+	if not id in Recipes.ALL:
+		current_recipe_id = ""
+		return
+	
+	var recipe = Recipes.ALL[id]
+	if recipe.get("factory_tier") != FACTORY_TIER:
+		current_recipe_id = ""
+		return
+	
 	current_recipe_id = id
 	_progress = 0.0
 	_input_buffers.clear()

@@ -129,3 +129,33 @@ func test_cycle_completed_signal_fires() -> void:
 
 	assert_gt(signal_received.size(), 0, "Signal should fire on cycle complete")
 	assert_eq(signal_received[0], "craft_drill", "Signal should pass recipe ID")
+
+
+func test_set_recipe_accepts_tier2_recipe() -> void:
+	fabricator.set_recipe("craft_drill")
+	assert_eq(fabricator.current_recipe_id, "craft_drill", "Should accept tier-2 recipe")
+
+
+func test_set_recipe_rejects_tier1_recipe() -> void:
+	fabricator.set_recipe("smelt_vorax")
+	assert_eq(fabricator.current_recipe_id, "", "Should reject tier-1 recipe (smelt_vorax)")
+
+
+func test_set_recipe_rejects_tier3_recipe() -> void:
+	fabricator.set_recipe("craft_harvester")
+	assert_eq(fabricator.current_recipe_id, "", "Should reject tier-3 recipe (craft_harvester)")
+
+
+func test_set_recipe_accepts_craft_surveyor() -> void:
+	fabricator.set_recipe("craft_surveyor")
+	assert_eq(fabricator.current_recipe_id, "craft_surveyor", "Should accept craft_surveyor (tier-2)")
+
+
+func test_set_recipe_accepts_craft_fuel_cell() -> void:
+	fabricator.set_recipe("craft_fuel_cell")
+	assert_eq(fabricator.current_recipe_id, "craft_fuel_cell", "Should accept craft_fuel_cell (tier-2)")
+
+
+func test_set_recipe_accepts_craft_drone_frame() -> void:
+	fabricator.set_recipe("craft_drone_frame")
+	assert_eq(fabricator.current_recipe_id, "craft_drone_frame", "Should accept craft_drone_frame (tier-2)")
