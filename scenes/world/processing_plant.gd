@@ -77,6 +77,14 @@ func tick(delta: float) -> void:
 		return
 
 	var speed_mod = QualityModifiers.get_speed_modifier(ore_quality)
+
+	# Apply productivity multiplier from ConsumptionManager
+	var productivity_mult = 1.0
+	if ConsumptionManager:
+		productivity_mult = ConsumptionManager.get_productivity_multiplier(GameState.current_planet)
+
+	speed_mod *= productivity_mult
+
 	_progress += delta * speed_mod
 	var recipe = Recipes.ALL[current_recipe_id]
 	var recipe_time = recipe.get("time", 0.0)

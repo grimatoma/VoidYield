@@ -51,7 +51,13 @@ func _run_cycle() -> void:
 
 	fuel_level -= fuel_per_cycle
 
-	var output = linked_deposit.ber_output(base_ber, linked_deposit.concentration, upgrade_multiplier)
+	# Apply productivity multiplier from ConsumptionManager (affects base_ber)
+	var productivity_mult = 1.0
+	if ConsumptionManager:
+		productivity_mult = ConsumptionManager.get_productivity_multiplier(GameState.current_planet)
+
+	var effective_ber = base_ber * upgrade_multiplier * productivity_mult
+	var output = linked_deposit.ber_output(effective_ber, linked_deposit.concentration, 1.0)
 	var ore_added = int(floor(output))
 	hopper_ore += ore_added
 	hopper_ore = min(hopper_ore, hopper_capacity)
