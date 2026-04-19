@@ -35,6 +35,22 @@ const ALL: Dictionary = {
 		"outputs": {"rocket_fuel": 10},
 		"time": 5.0,
 	},
+	"bio_extract": {
+		"name": "Extract Bio-Resin",
+		"factory_tier": 1,
+		"slot_cost": 1,
+		"inputs": {"bio_resin_raw": 5},
+		"outputs": {"processed_resin": 1},
+		"time": 10.0,
+	},
+	"synthesize_rations": {
+		"name": "Synthesize Rations",
+		"factory_tier": 1,
+		"slot_cost": 1,
+		"inputs": {"processed_resin": 3},
+		"outputs": {"rations": 2},
+		"time": 8.0,
+	},
 	# Tier 2 — Fabricator (slot_cost=2)
 	"craft_surveyor": {
 		"name": "Craft Surveyor Unit",
@@ -67,6 +83,14 @@ const ALL: Dictionary = {
 		"inputs": {"steel_bar": 4, "common": 2},
 		"outputs": {"basic_drill": 1},
 		"time": 20.0,
+	},
+	"craft_bio_circuit": {
+		"name": "Craft Bio-Circuit Board",
+		"factory_tier": 2,
+		"slot_cost": 2,
+		"inputs": {"krysite_ingot": 2, "processed_resin": 2},
+		"outputs": {"bio_circuit": 1},
+		"time": 25.0,
 	},
 	# Tier 3 — Assembly Complex (slot_cost=3)
 	"craft_harvester": {
