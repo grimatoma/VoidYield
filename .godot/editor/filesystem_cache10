@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1776554612
+::res://::1776556024
 export_presets.cfg::TextFile::-1::1776228775::0::1::::<><><>0<>0<><>::
 ::res://addons/::1776532205
 ::res://addons/TileMapDual/::1776532210
@@ -73,7 +73,7 @@ settings_manager.gd::GDScript::5039313407635463139::1776536409::0::1::::<>Node<>
 drones.json::JSON::-1::1776523863::0::1::::<><><>0<>0<><>::
 ship_parts.json::JSON::-1::1776523863::0::1::::<><><>0<>0<><>::
 upgrades.json::JSON::-1::1776523863::0::1::::<><><>0<>0<><>::
-::res://design_mocks/::1776555092
+::res://design_mocks/::1776555374
 _shared.md::TextFile::-1::1776217510::0::1::::<><><>0<>0<><>::
 01_survey_flow.svg::CompressedTexture2D::5016253830373371639::1776540418::1776555131::1::::<><><>0<>0<>31d195d8bd83c80c3d54c4575bbed249<>res://.godot/imported/01_survey_flow.svg-53df034527153be0641d0a4818746e7c.ctex::
 02_harvester_gas_loop.svg::CompressedTexture2D::3264754786191047878::1776540465::1776555131::1::::<><><>0<>0<>a07ed1d1c0b85102d8bcf4a12048cd41<>res://.godot/imported/02_harvester_gas_loop.svg-ef5b0d954bd4c1685a5e09dad3233036.ctex::
@@ -101,6 +101,8 @@ _shared.md::TextFile::-1::1776217510::0::1::::<><><>0<>0<><>::
 24_launch_transition.svg::CompressedTexture2D::4726787647949437705::1776304178::1776555131::1::::<><><>0<>0<>420b81d16c2dca600f533ceb03b7d71e<>res://.godot/imported/24_launch_transition.svg-789173b77bb286946aee61dacea9be4f.ctex::
 25_boot_splash.svg::CompressedTexture2D::3676185083393807265::1776304178::1776555131::1::::<><><>0<>0<>fa88027651b78b9213a9ba4ea6c4ee8a<>res://.godot/imported/25_boot_splash.svg-506a20f1d0ad43f405cb62f230eef5bc.ctex::
 26_factory_floor.svg::CompressedTexture2D::8938742614442007776::1776555092::1776555131::1::::<><><>0<>0<>441cec269df87ffbe4c6ae2f3e2e1b10<>res://.godot/imported/26_factory_floor.svg-5520fd610088ab17fc95f95d6cd97e73.ctex::
+27_production_dashboard.svg::CompressedTexture2D::6901692441069708164::1776555191::1776556025::1::::<><><>0<>0<>e45e56c243bcebb73bcdc540362d9487<>res://.godot/imported/27_production_dashboard.svg-f84b4b0afe7b1a8ed1cfd2e336420454.ctex::
+28_offline_event_log.svg::CompressedTexture2D::2857801336412467138::1776555374::1776556025::1::::<><><>0<>0<>d5402a6bef69f6ca63c32273e30e30a5<>res://.godot/imported/28_offline_event_log.svg-08bbca075c1d2108e4359981ad7d5b62.ctex::
 ::res://docs/::1776554612
 GAME_DESIGN.md::TextFile::-1::1776555012::0::1::::<><><>0<>0<><>::
 VOID_YIELD_GDD.md::TextFile::-1::1776041120::0::1::::<><><>0<>0<><>::

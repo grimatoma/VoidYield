@@ -15,48 +15,25 @@ git add -A
 
 echo.
 echo Committing everything...
-git commit -m "docs: full game design + spec architecture + CI/CD (v0.4)
+git commit -m "design: 40 UI/gameplay SVG mocks + implementation roadmap (v0.5)
 
-Design documentation (docs/):
-- GAME_DESIGN.md v0.4 master (vision, pillars, 5-phase arc, system map, reading guide)
-- 18 spec files covering all game systems, each with Dependencies + Implementation Notes
+design_mocks/ui/ - 40 SVG mock-ups covering full game arc:
+  Menus: main_menu, settings_menu, pause_menu
+  HUD/overlays: hud_gameplay, production_overlay, coverage_overlay
+  Panels: inventory, survey_tool, production_dashboard, tech_tree,
+          fleet, drone_bay, resource_quality_inspector, event_log, save_load
+  Galaxy/planet: galaxy_map, planet_select_tooltip
+  Gameplay composites: mining_operation, factory_complex, drone_swarm,
+    planet_b_landing, rocket_assembly, a1_start, first_harvester, manual_selling,
+    survey_active, deposit_found, drone_v1, drone_v2_network, repair_drone,
+    processing_plant, crafting_chain, quality_crafting, colony_early, colony_crisis,
+    launchpad_building, planet_b_surface, interplanetary_logistics,
+    warp_gate_construction, prestige_screen
 
-Specs (docs/specs/):
-  00_a2_transit        - transit asteroid, Gas Depot, A3 unlock role
-  01_resource_quality  - SWG-style ore quality attributes (BER formula + FL term)
-  02_surveying         - 4-stage scan, deposit journal, survey markers
-  03_harvesters        - BER formula with FL, deposit slots table, fuel/hopper loops
-  04_drone_swarm       - 3-tier control, Repair Drone added, [B] key fix
-  05_factories         - Processing Plant/Fabricator/Assembly Complex, power system
-  06_consumption       - crew tier cascade, 4 starting Pioneers, 90s growth cycle
-  07_logistics         - ships BUILT at Launchpad, Repair Drone wired, 20 units/trip
-  08_vehicles          - Rover/Speeder/Shuttle, Planet C Rocket Fuel note
-  09_planets           - A1/B/C identities, Atmospheric Water Extractor, Warp Gate
-  10_spacecraft        - component assembly, naming distinction fix
-  11_tech_tree         - Crystal Bore (1.Z), Assembly Complex (2.Z), Repair Drone (2.S)
-  12_economy           - Steel Bars->Plates two-step chain, Crafting Station=0 slots
-  13_art_direction     - optimistic retro-futurism palette, animated systems
-  14_ui_systems        - Production Dashboard, offline sim (30s steps, 960-step cap)
-  15_save_load         - serialization list, autosave, prestige persistence rules
-  16_input_map         - all key bindings, controller map, uniqueness rule enforced
-  17_world_generation  - hand-crafted maps A1/B/C/A2, deposit spawn rules, data files
-
-Contradictions resolved (9): [O]/[B] key conflict, cargo ship construction method,
-Repair Drone existence, drone carry capacity, FL in BER formula, auto-dispatch phase,
-Steel Bars naming, Planet B water recipe, Planet C prestige survey data
-
-Gameplay engine changes:
-- Fullscreen: CANVAS_ITEMS scaling, F11 toggle, DEFAULT_FULLSCREEN=true
-- Procedural asteroid background (asteroid_background.gd)
-- OptionsPanel wired into main menu
-- Building labels enlarged + brightened
-- Player spawn moved from SellTerminal range
-
-CI/CD:
-- .github/workflows/web_export.yml (Godot 4.6.2 web build auto-deploys to GitHub Pages)
-- Live at: https://grimatoma.github.io/VoidYield/ (enable Pages in repo settings first)
-
-Design mockups (design_mocks/): 13 SVG diagrams in amber/retro-futurism palette"
+docs/IMPLEMENTATION_ROADMAP.md - 627-line playable-first roadmap:
+  15 milestones M0-M14, each ending with a testable game state
+  Systems iterated across milestones (logistics v1/v2/v3, crafting v1/v2, etc.)
+  Spec file reference index and cross-cutting concerns"
 
 echo.
 echo Pushing to GitHub...
