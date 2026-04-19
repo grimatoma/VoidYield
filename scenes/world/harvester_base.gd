@@ -12,6 +12,7 @@ var fuel_level: float = 100.0
 var hopper_ore: int = 0
 var upgrade_multiplier: float = 1.0
 var linked_deposit = null  # DepositNode
+var linked_depot = null  # StorageDepot
 var _cycle_timer: float = 0.0
 var is_running: bool = false
 
@@ -22,6 +23,10 @@ signal hopper_collected(amount: int)
 func link_deposit(deposit) -> void:
 	linked_deposit = deposit
 	is_running = fuel_level > 0 and hopper_ore < hopper_capacity
+
+
+func link_depot(depot) -> void:
+	linked_depot = depot
 
 
 func tick(delta: float) -> void:
@@ -52,11 +57,17 @@ func _run_cycle() -> void:
 	cycle_completed.emit(ore_added)
 
 
-func collect_hopper() -> int:
+func collect_hopper() -> Dictionary:
 	var amount = hopper_ore
+	var ore_type = linked_deposit.ore_type if linked_deposit else "common"
+	var amount_deposited = amount
+
+	if linked_depot:
+		amount_deposited = linked_depot.deposit(ore_type, amount)
+
 	hopper_ore = 0
 	hopper_collected.emit(amount)
-	return amount
+	return {"ore_type": ore_type, "amount": amount_deposited}
 
 
 func refuel(amount: float) -> void:

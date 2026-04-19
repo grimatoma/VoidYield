@@ -14,6 +14,7 @@ class DepositNode:
 	extends Node2D
 	var quality: OreQualityLot
 	var concentration: float = 100.0
+	var ore_type: String = "common"
 
 	func _init() -> void:
 		quality = OreQualityLot.new()
@@ -179,7 +180,7 @@ func test_collect_hopper_empties_it() -> void:
 	harvester.hopper_ore = 25
 
 	var collected = harvester.collect_hopper()
-	assert_eq(collected, 25, "collect_hopper returns hopper amount")
+	assert_eq(collected.amount, 25, "collect_hopper returns dict with amount")
 	assert_eq(harvester.hopper_ore, 0, "hopper emptied after collection")
 
 
@@ -275,3 +276,37 @@ func test_hopper_collected_signal_emitted() -> void:
 	harvester.collect_hopper()
 	assert_eq(signal_amounts.size(), 1, "hopper_collected signal emitted")
 	assert_eq(signal_amounts[0], 25, "signal passes correct amount")
+
+
+func test_collect_hopper_deposits_to_linked_depot() -> void:
+	var harvester = HarvesterBaseClass.new()
+	harvester.hopper_ore = 30
+	var deposit = DepositNode.new()
+	deposit.ore_type = "common"
+	harvester.link_deposit(deposit)
+
+	var StorageDepotClass = preload("res://scenes/world/storage_depot.gd")
+	var depot = StorageDepotClass.new()
+	harvester.link_depot(depot)
+
+	var result = harvester.collect_hopper()
+	assert_eq(result.ore_type, "common", "Should return ore type")
+	assert_eq(result.amount, 30, "Should return deposited amount")
+	assert_eq(depot.get_amount("common"), 30, "Depot should receive ore")
+
+
+func test_collect_hopper_returns_deposited_amount() -> void:
+	var harvester = HarvesterBaseClass.new()
+	harvester.hopper_ore = 50
+	var deposit = DepositNode.new()
+	deposit.ore_type = "rare"
+	harvester.link_deposit(deposit)
+
+	var StorageDepotClass = preload("res://scenes/world/storage_depot.gd")
+	var depot = StorageDepotClass.new()
+	depot.capacity = 40  # Less than hopper amount
+	harvester.link_depot(depot)
+
+	var result = harvester.collect_hopper()
+	assert_eq(result.amount, 40, "Should return actual deposited (capped by depot capacity)")
+	assert_eq(depot.get_amount("rare"), 40, "Depot should be full")
