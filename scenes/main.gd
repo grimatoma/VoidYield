@@ -10,8 +10,7 @@ extends Node2D
 const ASTEROID_FIELD_SCENE = preload("res://scenes/world/asteroid_field.tscn")
 const PLANET_B_SCENE       = preload("res://scenes/world/planet_b.tscn")
 const PLAYER_SCENE         = preload("res://scenes/player/player.tscn")
-# TODO: Fix tech_tree_panel tscn parsing issue
-# const TechTreePanelScene   = preload("res://scenes/ui/tech_tree_panel.tscn")
+const TechTreePanelScene   = preload("res://scenes/ui/tech_tree_panel.tscn")
 
 # Maps galaxy-map destination ids to (scene, spawn) for world loading.
 const DESTINATIONS := {
@@ -44,11 +43,11 @@ func _ready() -> void:
 	spaceship_panel.launch_requested.connect(_on_launch_requested)
 	galaxy_map_panel.travel_requested.connect(_on_galaxy_travel_requested)
 
-	# TODO: Fix tech_tree_panel tscn parsing issue
 	# Instantiate and add tech tree panel
-	# var tech_tree_panel = TechTreePanelScene.instantiate()
-	# $UILayer.add_child(tech_tree_panel)
-	# tech_tree_panel.add_to_group("tech_tree_panel")
+	var tech_tree_panel = TechTreePanelScene.instantiate()
+	$UILayer.add_child(tech_tree_panel)
+	tech_tree_panel.add_to_group("tech_tree_panel")
+	tech_tree_panel.visible = false
 
 	# Load initial world (A1)
 	_load_world(ASTEROID_FIELD_SCENE, Vector2(700, 450))
