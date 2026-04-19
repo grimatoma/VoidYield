@@ -541,6 +541,7 @@ func get_save_data() -> Dictionary:
 		"constructed_buildings": constructed_buildings,
 		"unlocked_planets": unlocked_planets.duplicate(),
 		"visited_planets": visited_planets.duplicate(),
+		"tech_tree": TechTree.get_save_data(),
 	}
 
 
@@ -589,6 +590,9 @@ func load_save_data(data: Dictionary) -> void:
 	constructed_buildings.clear()
 	for b in raw_buildings:
 		constructed_buildings.append(str(b))
+
+	var raw_tech_tree = data.get("tech_tree", {})
+	TechTree.load_save_data(raw_tech_tree)
 
 	credits_changed.emit(credits)
 	inventory_changed.emit(player_carried_ore, player_max_carry)
