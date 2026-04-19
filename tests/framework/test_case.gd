@@ -156,13 +156,11 @@ func _record(detail: String, msg: String) -> void:
 func reset_game_state() -> void:
 	## Delegates to GameState.reset_to_defaults() then clears runtime-only fields
 	## (current_interaction_target) that are not part of persisted save data.
-	if GameState == null:
-		# In headless test mode, GameState might not auto-initialize; fetch it from the tree.
-		GameState = get_tree().root.get_node_or_null("GameState")
-	if GameState != null:
-		GameState.reset_to_defaults()
-		GameState.current_interaction_target = null
-		GameState.interaction_target_changed.emit(null)
+	var gs = GameState if GameState != null else get_tree().root.get_node_or_null("GameState")
+	if gs != null:
+		gs.reset_to_defaults()
+		gs.current_interaction_target = null
+		gs.interaction_target_changed.emit(null)
 
 
 # --- Wait helpers (for E2E tests) ---
