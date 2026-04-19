@@ -18,7 +18,7 @@ signal planet_unlocked(planet_id: String)
 
 # --- Player Stats ---
 var player_move_speed: float = 120.0
-var player_max_carry: int = 10
+var player_max_carry: int = 15
 var player_mine_time: float = 1.5  # seconds per mine action
 
 # --- Inventory (player carried) — all types share player_max_carry ---
@@ -31,7 +31,7 @@ var player_carried_shards: int = 0
 
 # --- Sell Prices ---
 var ore_prices: Dictionary = {
-	"common": 1,
+	"common": 2,
 	"rare": 5,
 	"aethite": 8,
 	"voidstone": 15,
@@ -649,7 +649,7 @@ func launch_to_planet_b() -> void:
 func reset_to_defaults() -> void:
 	## Resets all runtime state to fresh-game values. Called by "New Game" on the main menu.
 	player_move_speed     = 120.0
-	player_max_carry      = 10
+	player_max_carry      = 15
 	player_mine_time      = 1.5
 	player_carried_ore    = 0
 	player_rare_ore       = 0

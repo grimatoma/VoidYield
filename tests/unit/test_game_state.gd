@@ -60,8 +60,8 @@ func test_sell_all_carried() -> void:
 	GameState.add_to_inventory(2, "aethite")
 	GameState.add_to_inventory(1, "voidstone")
 	var earned = GameState.sell_all_carried()
-	# 2*1 (common) + 2*8 (aethite) + 1*15 (voidstone) = 2 + 16 + 15 = 33
-	assert_eq(earned, 33)
+	# 2*2 (common) + 2*8 (aethite) + 1*15 (voidstone) = 4 + 16 + 15 = 35
+	assert_eq(earned, 35)
 	assert_eq(GameState.player_carried_ore, 0)
 
 
@@ -105,12 +105,12 @@ func test_sell_all_ore_drains_pool_and_inventory() -> void:
 	GameState.add_to_inventory(3, "common")
 
 	var earned = GameState.sell_all_ore()
-	# Storage: 6 common + 2 rare = 6*1 + 2*5 = 16, Carried: 3 common = 3
-	# sell_all_ore returns 19 (16 storage + 3 carried) with no double-count.
-	assert_eq(earned, 19)
+	# Storage: 6 common + 2 rare = 6*2 + 2*5 = 22, Carried: 3 common = 6
+	# sell_all_ore returns 28 (22 storage + 6 carried) with no double-count.
+	assert_eq(earned, 28)
 	assert_eq(GameState.storage_ore, 0)
 	assert_eq(GameState.player_carried_ore, 0)
-	assert_eq(GameState.credits, 19, "sell_all_ore returns correct total without double-counting")
+	assert_eq(GameState.credits, 28, "sell_all_ore returns correct total without double-counting")
 
 
 # --- Credits & upgrades ----------------------------------------------------

@@ -17,7 +17,7 @@ func test_reset_clears_credits() -> void:
 func test_reset_restores_default_carry_capacity() -> void:
 	GameState.player_max_carry = 9999
 	GameState.reset_to_defaults()
-	assert_eq(GameState.player_max_carry, 10)
+	assert_eq(GameState.player_max_carry, 15)
 
 
 func test_reset_restores_default_move_speed() -> void:
@@ -155,7 +155,7 @@ func test_reset_is_idempotent() -> void:
 	GameState.reset_to_defaults()
 	GameState.reset_to_defaults()
 	assert_eq(GameState.credits, 0)
-	assert_eq(GameState.player_max_carry, 10)
+	assert_eq(GameState.player_max_carry, 15)
 	assert_eq(GameState.storage_capacity, 50)
 
 
@@ -167,6 +167,6 @@ func test_reset_then_get_save_data_gives_defaults() -> void:
 	GameState.reset_to_defaults()
 	var data := GameState.get_save_data()
 	assert_eq(data.get("credits"), 0)
-	assert_eq(data.get("player_max_carry"), 10)
+	assert_eq(data.get("player_max_carry"), 15)
 	assert_eq(data.get("storage_capacity"), 50)
 	assert_eq(data.get("storage_ore"), 0)

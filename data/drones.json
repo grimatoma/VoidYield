@@ -2,7 +2,7 @@
 	"scout_drone": {
 		"name": "Scout Drone",
 		"description": "Tiny hovering mining bot. Nimble, cheap, and expendable.",
-		"cost": 25,
+		"cost": 20,
 		"speed": 60.0,
 		"carry_capacity": 3,
 		"mine_time": 3.0,
