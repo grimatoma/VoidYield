@@ -42,6 +42,7 @@ A3Unlock="*res://autoloads/a3_unlock.gd"
 ColonyTiers="*res://autoloads/colony_tiers.gd"
 SurveyToolSystem="*res://autoloads/survey_tool_system.gd"
 SectorManager="*res://autoloads/sector_manager.gd"
+OfflineEventLog="*res://autoloads/offline_event_log.gd"
 
 [display]
 
